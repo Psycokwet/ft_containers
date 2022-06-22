@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/22 20:10:10 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/22 20:13:12 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -211,11 +211,9 @@ endef
 ## -------------------------------- COMPILE --------------------------------
 #
 
-pwett :
-	echo $(OBJS_MINE) $(OBJ_PATH)_mine/.o
 all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
+$(OBJ_PATH)_mine/%.o: $(SRC_PATH)%.cpp 
 	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} -DSTL=true $(LDFLAGS) -c $< -o $@
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
