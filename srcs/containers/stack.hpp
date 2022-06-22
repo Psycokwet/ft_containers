@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/22 20:11:29 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/22 20:32:51 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ namespace ft
 		//  See queue::c for notes on this name.
 		_Sequence c;
 
+	public:
 		// explicit allow to avoid automatic conversion of a container to my stack for example
 		explicit stack(const _Sequence &__c = _Sequence())
 			: c(__c) {}
@@ -106,71 +107,7 @@ namespace ft
 
 		template <typename _Tp1, typename _Seq1>
 		friend bool operator<(const stack<_Tp1, _Seq1> &, const stack<_Tp1, _Seq1> &);
-
-		/**
-		 *  @brief  Stack equality comparison.
-		 *  @param  __x  A %stack.
-		 *  @param  __y  A %stack of the same type as @a __x.
-		 *  @return  True iff the size and elements of the stacks are equal.
-		 *
-		 *  This is an equivalence relation.  Complexity and semantics
-		 *  depend on the underlying sequence type, but the expected rules
-		 *  are: this relation is linear in the size of the sequences, and
-		 *  stacks are considered equivalent if their sequences compare
-		 *  equal.
-		 */
-		template <typename _Tp, typename _Seq>
-		bool operator==(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
-		{
-			return __x.c == __y.c;
-		}
-
-		/**
-		 *  @brief  Stack ordering relation.
-		 *  @param  __x  A %stack.
-		 *  @param  __y  A %stack of the same type as @a x.
-		 *  @return  True iff @a x is lexicographically less than @a __y.
-		 *
-		 *  This is an total ordering relation.  Complexity and semantics
-		 *  depend on the underlying sequence type, but the expected rules
-		 *  are: this relation is linear in the size of the sequences, the
-		 *  elements must be comparable with @c <, and
-		 *  std::lexicographical_compare() is usually used to make the
-		 *  determination.
-		 */
-		template <typename _Tp, typename _Seq>
-		bool operator<(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
-		{
-			return __x.c < __y.c;
-		}
-
-		/// Based on operator==
-		template <typename _Tp, typename _Seq>
-		bool operator!=(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
-		{
-			return !(__x == __y);
-		}
-
-		/// Based on operator<
-		template <typename _Tp, typename _Seq>
-		bool operator>(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
-		{
-			return __y < __x;
-		}
-
-		/// Based on operator<
-		template <typename _Tp, typename _Seq>
-		bool operator<=(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
-		{
-			return !(__y < __x);
-		}
-
-		/// Based on operator<
-		template <typename _Tp, typename _Seq>
-		bool operator>=(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
-		{
-			return !(__x < __y);
-		}
-	}
+	};
+}
 
 #endif

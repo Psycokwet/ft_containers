@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/22 20:13:12 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/22 20:45:04 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,7 +92,7 @@ DCOLORS :=  	$(addprefix -D, $(DCOLORS))
 # -------------------------------- Paths --------------------------------
 #
 
-INC_DIR					= include/
+INC_DIR					= srcs/containers/
 
 LAST_RUN_LOGS_FOLDER	= logs
 SAVED_LOGS_FOLDER		= pastLogs
@@ -165,7 +165,7 @@ CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address -MD
 CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
-CPPFLAGS		+= $(DCOLORS)
+# CPPFLAGS		+= $(DCOLORS)
 
 LDFLAGS			= -I$(INC_DIR)
 
@@ -189,7 +189,7 @@ endif
 SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
 SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
 OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
-OBJS_MINE			= 	$(addprefix $(OBJ_PATH)_mine/, $(SRCS_FILES_EXT:.cpp=_mine.o))
+OBJS_MINE			= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o_mine.o))
 DEPS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=d))
 -include $(DEPS)
 
@@ -213,18 +213,18 @@ endef
 
 all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 
-$(OBJ_PATH)_mine/%.o: $(SRC_PATH)%.cpp 
-	@mkdir -p $(dir $@)
-	${CXX} ${CPPFLAGS} -DSTL=true $(LDFLAGS) -c $< -o $@
+# $(OBJ_PATH)_mine/%.o: $(SRC_PATH)%.cpp 
+# 	@mkdir -p $(dir $@)
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
 	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} $(LDFLAGS) -c $< -o $@
+	${CXX} ${CPPFLAGS} -DSTL=true $(LDFLAGS) -c $< -o $@_mine.o
 
 # $(COMPILE): $(OBJS)
 # 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 
-$(NAME_MINE):  $(OBJS_MINE)
-	$(CXX) $(CPPFLAGS) -o $(NAME_MINE) $(OBJS)
+$(NAME_MINE):  $(OBJS)
+	$(CXX) $(CPPFLAGS) -o $(NAME_MINE) $(OBJS_MINE)
 $(NAME_STL):  $(OBJS)
 	$(CXX) $(CPPFLAGS) -DSTL=true -o $(NAME_STL) $(OBJS)
 $(NAME): $(NAME_MINE) $(NAME_STL) 
