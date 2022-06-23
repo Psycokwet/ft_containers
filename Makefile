@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/22 20:45:04 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/23 09:47:35 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -132,7 +132,7 @@ ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
 						$(CLEAN_LOGS) \
 						$(COMPILE)
 
-ALL_EXECS_NAMES =		$(NAME)
+ALL_EXECS_NAMES =		$(NAME_MINE) $(NAME_STL)
 
 #
 # -------------------------------- TEST SRCS definitions --------------------------------
@@ -218,15 +218,17 @@ all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
 $(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
 	@mkdir -p $(dir $@)
 	${CXX} ${CPPFLAGS} $(LDFLAGS) -c $< -o $@
-	${CXX} ${CPPFLAGS} -DSTL=true $(LDFLAGS) -c $< -o $@_mine.o
+	${CXX} ${CPPFLAGS} $(LDFLAGS) -DSTL=true -c $< -o $@_mine.o
 
 # $(COMPILE): $(OBJS)
 # 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 
 $(NAME_MINE):  $(OBJS)
-	$(CXX) $(CPPFLAGS) -o $(NAME_MINE) $(OBJS_MINE)
+	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $(NAME_MINE) $(OBJS_MINE)
+
 $(NAME_STL):  $(OBJS)
-	$(CXX) $(CPPFLAGS) -DSTL=true -o $(NAME_STL) $(OBJS)
+	$(CXX) $(CPPFLAGS) $(LDFLAGS) -DSTL=true -o $(NAME_STL) $(OBJS)
+
 $(NAME): $(NAME_MINE) $(NAME_STL) 
 
 
