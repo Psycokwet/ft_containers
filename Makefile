@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/06/23 09:47:35 by scarboni         ###   ########.fr        #
+#    Updated: 2022/06/29 21:55:58 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -161,7 +161,7 @@ SRCS_FILES += $(addprefix $(UTIL_PATH), $(UTIL_FILES))
 #
 
 CXX				= c++
-CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address -MD
+CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g  -MD  #-fsanitize=address
 CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
 
 RM				= rm -f
@@ -174,7 +174,7 @@ LDFLAGS			= -I$(INC_DIR)
 #
 
 ifndef LEAKS
-	LEAKS = 
+	# LEAKS = 
 	LEAKS = valgrind --leak-check=full 
 endif
 
@@ -234,8 +234,9 @@ $(NAME): $(NAME_MINE) $(NAME_STL)
 
 SEED =42
 test_main_42: re
-	./$(NAME_STL) $(SEED)
-	./$(NAME_MINE) $(SEED)
+	$(LEAKS) ./$(NAME_STL) $(SEED)
+	@printf "\n____.--.--.____.--.--.____.--.--.____.--.--.__Weeeeeeeeee__.--.--.____.--.--.____.--.--.____.--.--.____\n\n"
+	$(LEAKS) ./$(NAME_MINE) $(SEED)
 
 #
 ## -------------------------------- LOGS --------------------------------

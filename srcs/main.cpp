@@ -58,9 +58,10 @@ int main(int argc, char **argv)
 	srand(seed);
 
 	// ft::vector<std::string> vector_str;
-	// ft::vector<int> vector_int;
+	ft::vector<int> vector_int;
+	ft::vector<int> vector_int_filled(42);
 	// ft::stack<int> stack_int;
-	// ft::vector<Buffer> vector_buffer;
+	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	// ft::map<int, int> map_int;
 

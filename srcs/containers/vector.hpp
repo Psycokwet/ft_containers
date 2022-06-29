@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/29 21:27:15 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/29 22:03:07 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,22 @@ namespace ft
 		pointer _M_finish;
 		pointer _M_end_of_storage;
 
+		pointer _M_allocate(size_t __n)
+		{
+			return __n != 0 ? _Tp_alloc_type.allocate(__n) : pointer();
+		}
+		void _M_create_storage(size_t __n)
+		{
+			// this->_M_start = _Tp_alloc_type.allocate(__n);
+			this->_M_start = _M_allocate(__n);
+			this->_M_finish = this->_M_start;
+			this->_M_end_of_storage = this->_M_start + __n;
+		}
+
 	public:
+		/*
+		** --------------------------------- CONSTRUCTORS --------------------------
+		*/
 		/*
 		 *  @brief  Creates a vector with no elements.
 		 *  @param  __a  An allocator object.
@@ -66,8 +81,30 @@ namespace ft
 			  _M_finish(),
 			  _M_end_of_storage()
 		{
+			_M_create_storage(__n);
+			for (size_type i = 0; i < __n; i++)
+			{
+				_Tp_alloc_type.construct(_M_finish, __value);
+				_M_finish++;
+			}
 		}
+		/*
+		 *  @brief  iterator copy constructor
+		 *  @param  first  iterator begin to copy.
+		 *  @param  last  iterator last to copy.
+		 */
+		// template <class InputIterator>
+		// vector(InputIterator first, InputIterator last,
+		// 	   const allocator_type &alloc = allocator_type()) {}
+		/*
+		 *  @brief  Copy constructor
+		 *  @param  x  Another vector to copy.
+		 */
+		vector(const vector &x) {}
 
+		/*
+		** --------------------------------- DESTRUCTOR --------------------------
+		*/
 		/*
 		 *  The dtor only erases the elements, and note that if the
 		 *  elements themselves are pointers, the pointed-to memory is
@@ -76,6 +113,11 @@ namespace ft
 		 */
 		~vector()
 		{
+			for (size_type i = 0; i < size(); i++)
+			{
+				_Tp_alloc_type.destroy(_M_start + i);
+			}
+			_Tp_alloc_type.deallocate(_M_start, size());
 		}
 
 		/*
@@ -87,24 +129,7 @@ namespace ft
 		 *
 		 *  Whether the allocator is copied depends on the allocator traits.
 		 */
-		vector &
-		operator=(const vector &__x);
-
-		/*
-		 *  @brief  Assigns a given value to a vector.
-		 *  @param  __n  Number of elements to be assigned.
-		 *  @param  __val  Value to be assigned.
-		 *
-		 *  This function fills a vector with @a __n copies of the given
-		 *  value.  Note that the assignment completely changes the
-		 *  vector and that the resulting vector's size is the same as
-		 *  the number of elements assigned.
-		 */
-		void
-		assign(size_type __n, const value_type &__val)
-		{
-			_M_fill_assign(__n, __val);
-		}
+		vector &operator=(const vector &__x);
 
 		// [23.2.4.2] capacity
 		/*  Returns the number of elements in the vector.  */
@@ -126,71 +151,6 @@ namespace ft
 		size_type capacity() const
 		{
 			return size_type(this->_M_end_of_storage - this->_M_start);
-		}
-
-		/*
-		 *  @brief  Attempt to preallocate enough memory for specified number of
-		 *          elements.
-		 *  @param  __n  Number of elements required.
-		 *  @throw  std::length_error  If @a n exceeds @c max_size().
-		 *
-		 *  This function attempts to reserve enough memory for the
-		 *  vector to hold the specified number of elements.  If the
-		 *  number requested is more than max_size(), length_error is
-		 *  thrown.
-		 *
-		 *  The advantage of this function is that if optimal code is a
-		 *  necessity and the user can determine the number of elements
-		 *  that will be required, the user can reserve the memory in
-		 *  %advance, and thus prevent a possible reallocation of memory
-		 *  and copying of vector data.
-		 */
-		void reserve(size_type __n);
-
-		// element access
-		/*
-		 *  @brief  Subscript access to the data contained in the vector.
-		 *  @param __n The index of the element for which data should be
-		 *  accessed.
-		 *  @return  Read/write reference to data.
-		 *
-		 *  This operator allows for easy, array-style, data access.
-		 *  Note that data access with this operator is unchecked and
-		 *  out_of_range lookups are not defined. (For checked lookups
-		 *  see at().)
-		 */
-		reference operator[](size_type __n) _GLIBCXX_NOEXCEPT
-		{
-			__glibcxx_requires_subscript(__n);
-			return *(this->_M_start + __n);
-		}
-
-		/*
-		 *  @brief  Subscript access to the data contained in the vector.
-		 *  @param __n The index of the element for which data should be
-		 *  accessed.
-		 *  @return  Read-only (constant) reference to data.
-		 *
-		 *  This operator allows for easy, array-style, data access.
-		 *  Note that data access with this operator is unchecked and
-		 *  out_of_range lookups are not defined. (For checked lookups
-		 *  see at().)
-		 */
-		const_reference operator[](size_type __n) const _GLIBCXX_NOEXCEPT
-		{
-			__glibcxx_requires_subscript(__n);
-			return *(this->_M_start + __n);
-		}
-
-	protected:
-		/// Safety check used only from at().
-		void _M_range_check(size_type __n) const
-		{
-			if (__n >= this->size())
-				__throw_out_of_range_fmt(__N("vector::_M_range_check: __n "
-											 "(which is %zu) >= this->size() "
-											 "(which is %zu)"),
-										 __n, this->size());
 		}
 
 	public:
