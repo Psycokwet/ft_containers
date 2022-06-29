@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/29 22:03:07 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/29 22:04:16 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ namespace ft
 			{
 				_Tp_alloc_type.destroy(_M_start + i);
 			}
-			_Tp_alloc_type.deallocate(_M_start, size());
+			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
 		}
 
 		/*
