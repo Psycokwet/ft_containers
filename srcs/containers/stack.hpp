@@ -6,18 +6,18 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/23 10:28:56 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/23 10:52:32 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include <vector>
+#include <vector.hpp>
 namespace ft
 
 {
-	template <typename _Tp, typename _Sequence = std::vector<_Tp> >
+	template <typename _Tp, typename _Sequence = ft::vector<_Tp> >
 	class stack
 	{
 		template <typename _Tp1, typename _Seq1>
