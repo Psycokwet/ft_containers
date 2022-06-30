@@ -60,6 +60,10 @@ int main(int argc, char **argv)
 	// ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
 	ft::vector<int> vector_int_filled(42);
+	std::cout << "MAX_SIZE : " << vector_int.max_size() << std::endl;
+	std::cout << "MAX_SIZE : " << vector_int_filled.max_size() << std::endl;
+	std::cout << "SIZE : " << vector_int.size() << std::endl;
+	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
 	// ft::stack<int> stack_int;
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;

@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/29 22:04:16 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/30 09:53:25 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ namespace ft
 		/*  Returns the size() of the largest possible vector.  */
 		size_type max_size() const _GLIBCXX_NOEXCEPT
 		{
-			return allocator_type::max_size();
+			return _Tp_alloc_type.max_size();
 		}
 
 		/*
