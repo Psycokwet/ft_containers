@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/30 13:40:39 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/30 13:59:32 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <algorithm.hpp>
 #include <cstddef>
 #include <tgmath.h>
-
+#include "../util/util.hpp"
 namespace ft
 {
 	template <typename _Tp, typename _Alloc = std::allocator<_Tp> >
@@ -58,6 +58,14 @@ namespace ft
 			_M_start = _M_allocate(__n);
 			_M_finish = _M_start;
 			_M_end_of_storage = _M_start + __n;
+		}
+		void _M_range_check(size_type __n) const
+		{
+			if (__n >= this->size())
+				throw std::out_of_range(SSTR("vector::_M_range_check: __n (which is ") //
+										+ SSTR(__n)									   //
+										+ SSTR(" ) >= this->size() (which is ")		   //
+										+ SSTR(this->size()) + SSTR(")"));			   //
 		}
 
 	public:
@@ -250,18 +258,51 @@ namespace ft
 		** --------------------------------- ELEMENT ACCESS --------------------------
 		*/
 		/*
-		 * operator[]
+		 * operator[] //done
 		 * at
 		 * front
 		 * back
 		 */
+		/* const_reference operator[] (size_type n) const;
+		 * Access element
+		 * Returns a reference to the element at position n in the vector container.
+		 * A similar member function, vector::at, has the same behavior as this operator function, except that vector::at is bound-checked and signals if the requested position is out of range by throwing an out_of_range exception.
+		 * Portable programs should never call this function with an argument n that is out of range, since this causes undefined behavior.
+		 */
 
+		reference operator[](size_type __n)
+		{
+			return *(this->_M_start + __n);
+		}
+
+		const_reference operator[](size_type __n) const
+		{
+			return *(this->_M_start + __n);
+		}
+
+		/* Access element
+		 * Returns a reference to the element at position n in the vector.
+		 * The function automatically checks whether n is within the bounds
+		 * of valid elements in the vector, throwing an out_of_range exception
+		 * if it is not (i.e., if n is greater than, or equal to, its size).
+		 * This is in contrast with member operator[], that does not check against bounds.
+		 */
+		reference at(size_type __n)
+		{
+			_M_range_check(__n);
+			return (*this)[__n];
+		}
+		const_reference at(size_type __n) const
+		{
+			_M_range_check(__n);
+			return (*this)[__n];
+		}
 		/*
 		** --------------------------------- MODIFIERS --------------------------
 		*/
 		// assign
-		// push_back
-		// pop_back
+		// push_back //done
+		// pop_back //done
 		// insert
 		// erase
 		// swap
@@ -292,7 +333,7 @@ namespace ft
 			if (!size())
 				return;
 			_Tp_alloc_type.destroy(this->_M_finish);
-			--this->_M_finish;
+			this->_M_finish--;
 		}
 		/*
 		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
@@ -310,8 +351,12 @@ namespace ft
 		** --------------------------------- ALLOCATOR --------------------------
 		*/
 		/*
-		 * get_allocator
+		 * get_allocator done
 		 */
+		allocator_type get_allocator() const
+		{
+			return _Tp_alloc_type;
+		}
 
 	public:
 	};

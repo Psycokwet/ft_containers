@@ -76,6 +76,16 @@ int main(int argc, char **argv)
 	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
 	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
 	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
+	try
+	{
+		std::cout << "val.at(0) : " << vector_int.at(0) << std::endl;
+		/* code */
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << "exception : " << e.what() << '\n';
+	}
+	std::cout << "val[0] : " << vector_int_filled[0] << std::endl;
 
 	vector_int.resize(32);
 	vector_int_filled.resize(32); // ft::stack<int> stack_int;
