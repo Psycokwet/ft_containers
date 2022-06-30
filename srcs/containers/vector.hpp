@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/30 13:21:49 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/30 13:40:39 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,62 +146,12 @@ namespace ft
 		}
 
 		/*
-		** --------------------------------- MODIFIERS --------------------------
-		*/
-		// assign
-		// push_back
-		// pop_back
-		// insert
-		// erase
-		// swap
-		// clear //done
-
-		/*Add element at the end
-		 * Adds a new element at the end of the vector, after its current last element.
-		 * The content of val is copied (or moved) to the new element.
-		 * This effectively increases the container size by one, which causes an automatic
-		 * reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
-		 */
-		void push_back(const value_type &val)
-		{
-			if (this->_M_finish == this->_M_end_of_storage)
-			{
-				resize(capacity() * 1.5);
-			}
-			_Tp_alloc_type.construct(_M_finish, val);
-			this->_M_finish++;
-		}
-		/*
-		 * Delete last element
-		 * Removes the last element in the vector, effectively reducing the container size by one.
-		 * This destroys the removed element.
-		 */
-		void pop_back()
-		{
-			if (!size())
-				return;
-			_Tp_alloc_type.destroy(this->_M_finish);
-			--this->_M_finish;
-		}
-		/*
-		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
-		 */
-		void clear()
-		{
-			for (size_type i = 0; i < size(); i++)
-			{
-				_Tp_alloc_type.destroy(_M_start + i);
-			}
-			this->_M_finish = this->_M_start;
-		}
-
-		/*
 		** --------------------------------- CAPACITY --------------------------
 		*/
 		/*
 		 * size //done
 		 * max_size//done
-		 * resize //WIP
+		 * resize //done
 		 * capacity //done
 		 * empty //wip ITERATOR
 		 * reserve //wip ITERATOR
@@ -257,7 +207,7 @@ namespace ft
 		 */
 		bool empty() const
 		{
-			// return begin() == end();
+			// return begin() == end(); //iterator
 			return false;
 		}
 
@@ -285,7 +235,7 @@ namespace ft
 
 				for (size_type i = 0; i < size(); i++)
 				{
-					_Tp_alloc_type.construct(_M_finish_tmp, 42);
+					_Tp_alloc_type.construct(_M_finish_tmp, 42); // iterator copy
 					_M_finish_tmp++;
 				}
 				_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
@@ -295,6 +245,73 @@ namespace ft
 				this->_M_end_of_storage = _M_end_of_storage_tmp;
 			}
 		}
+
+		/*
+		** --------------------------------- ELEMENT ACCESS --------------------------
+		*/
+		/*
+		 * operator[]
+		 * at
+		 * front
+		 * back
+		 */
+
+		/*
+		** --------------------------------- MODIFIERS --------------------------
+		*/
+		// assign
+		// push_back
+		// pop_back
+		// insert
+		// erase
+		// swap
+		// clear //done
+
+		/*Add element at the end
+		 * Adds a new element at the end of the vector, after its current last element.
+		 * The content of val is copied (or moved) to the new element.
+		 * This effectively increases the container size by one, which causes an automatic
+		 * reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
+		 */
+		void push_back(const value_type &val)
+		{
+			if (this->_M_finish == this->_M_end_of_storage)
+			{
+				resize(capacity() * 1.5);
+			}
+			_Tp_alloc_type.construct(_M_finish, val);
+			this->_M_finish++;
+		}
+		/*
+		 * Delete last element
+		 * Removes the last element in the vector, effectively reducing the container size by one.
+		 * This destroys the removed element.
+		 */
+		void pop_back()
+		{
+			if (!size())
+				return;
+			_Tp_alloc_type.destroy(this->_M_finish);
+			--this->_M_finish;
+		}
+		/*
+		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+		 */
+		void clear()
+		{
+			for (size_type i = 0; i < size(); i++)
+			{
+				_Tp_alloc_type.destroy(_M_start + i);
+			}
+			this->_M_finish = this->_M_start;
+		}
+
+		/*
+		** --------------------------------- ALLOCATOR --------------------------
+		*/
+		/*
+		 * get_allocator
+		 */
 
 	public:
 	};
