@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/30 09:54:59 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/30 13:21:49 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,18 @@ namespace ft
 		}
 		void _M_create_storage(size_t __n)
 		{
-			// this->_M_start = _Tp_alloc_type.allocate(__n);
-			this->_M_start = _M_allocate(__n);
-			this->_M_finish = this->_M_start;
-			this->_M_end_of_storage = this->_M_start + __n;
+			_M_create_storage(this->_M_start,
+							  this->_M_finish,
+							  this->_M_end_of_storage, __n);
+		}
+
+		void _M_create_storage(pointer &_M_start,
+							   pointer &_M_finish,
+							   pointer &_M_end_of_storage, size_t __n)
+		{
+			_M_start = _M_allocate(__n);
+			_M_finish = _M_start;
+			_M_end_of_storage = _M_start + __n;
 		}
 
 	public:
@@ -113,9 +121,8 @@ namespace ft
 		 */
 		~vector()
 		{
-			int tmp = _M_end_of_storage - _M_start;
 			clear();
-			_Tp_alloc_type.deallocate(_M_start, tmp);
+			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
 		}
 
 		/*
@@ -141,7 +148,41 @@ namespace ft
 		/*
 		** --------------------------------- MODIFIERS --------------------------
 		*/
+		// assign
+		// push_back
+		// pop_back
+		// insert
+		// erase
+		// swap
+		// clear //done
 
+		/*Add element at the end
+		 * Adds a new element at the end of the vector, after its current last element.
+		 * The content of val is copied (or moved) to the new element.
+		 * This effectively increases the container size by one, which causes an automatic
+		 * reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
+		 */
+		void push_back(const value_type &val)
+		{
+			if (this->_M_finish == this->_M_end_of_storage)
+			{
+				resize(capacity() * 1.5);
+			}
+			_Tp_alloc_type.construct(_M_finish, val);
+			this->_M_finish++;
+		}
+		/*
+		 * Delete last element
+		 * Removes the last element in the vector, effectively reducing the container size by one.
+		 * This destroys the removed element.
+		 */
+		void pop_back()
+		{
+			if (!size())
+				return;
+			_Tp_alloc_type.destroy(this->_M_finish);
+			--this->_M_finish;
+		}
 		/*
 		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		 */
@@ -157,6 +198,15 @@ namespace ft
 		/*
 		** --------------------------------- CAPACITY --------------------------
 		*/
+		/*
+		 * size //done
+		 * max_size//done
+		 * resize //WIP
+		 * capacity //done
+		 * empty //wip ITERATOR
+		 * reserve //wip ITERATOR
+		 */
+
 		/*  Returns the number of elements in the vector.  */
 		size_type size() const _GLIBCXX_NOEXCEPT
 		{
@@ -168,6 +218,28 @@ namespace ft
 		{
 			return _Tp_alloc_type.max_size();
 		}
+		// Change size
+		// Resizes the container so that it contains n elements.
+		// If n is smaller than the current container size, the content is reduced to its first n elements, removing those beyond (and destroying them).
+		// If n is greater than the current container size, the content is expanded by inserting at the end as many elements as needed to reach a size of n. If val is specified, the new elements are initialized as copies of val, otherwise, they are value-initialized.
+		// If n is also greater than the current container capacity, an automatic reallocation of the allocated storage space takes place.
+		// Notice that this function changes the actual content of the container by inserting or erasing elements from it.
+
+		void resize(size_type __new_size, value_type __x = value_type())
+		{
+			if (__new_size > capacity())
+			{
+				reserve(__new_size);
+			}
+			while (__new_size > size())
+			{
+				push_back(__x);
+			}
+			while (__new_size < size())
+			{
+				pop_back();
+			}
+		}
 
 		/*
 		 *  Returns the total number of elements that the vector can
@@ -176,6 +248,52 @@ namespace ft
 		size_type capacity() const
 		{
 			return size_type(this->_M_end_of_storage - this->_M_start);
+		}
+
+		/*
+		 *  Test whether vector is empty
+		 *  Returns whether the vector is empty (i.e. whether its size is 0).
+		 * 	This function does not modify the container in any way. To clear the content of a vector, see vector::clear.
+		 */
+		bool empty() const
+		{
+			// return begin() == end();
+			return false;
+		}
+
+		/*
+		 *  Request a change in capacity
+		 *  Requests that the vector capacity be at least enough to contain n elements.
+		 *  If n is greater than the current vector capacity, the function causes the container to reallocate its storage increasing its capacity to n (or greater).
+		 *  In all other cases, the function call does not cause a reallocation and the vector capacity is not affected.
+		 *  This function has no effect on the vector size and cannot alter its elements.
+		 */
+		void reserve(size_type __n)
+
+		{
+			if (__n > max_size())
+				throw std::length_error("vector::reserve");
+			if (capacity() < __n)
+			{
+
+				pointer _M_start_tmp;
+				pointer _M_finish_tmp;
+				pointer _M_end_of_storage_tmp;
+				_M_create_storage(_M_start_tmp,
+								  _M_finish_tmp,
+								  _M_end_of_storage_tmp, __n);
+
+				for (size_type i = 0; i < size(); i++)
+				{
+					_Tp_alloc_type.construct(_M_finish_tmp, 42);
+					_M_finish_tmp++;
+				}
+				_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
+
+				this->_M_start = _M_start_tmp;
+				this->_M_finish = _M_finish_tmp;
+				this->_M_end_of_storage = _M_end_of_storage_tmp;
+			}
 		}
 
 	public:

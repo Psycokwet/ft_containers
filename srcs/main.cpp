@@ -60,11 +60,39 @@ int main(int argc, char **argv)
 	// ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
 	ft::vector<int> vector_int_filled(42);
+	try
+	{
+		vector_int.reserve(-1);
+		/* code */
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << "exception : " << e.what() << '\n';
+	}
+
 	std::cout << "MAX_SIZE : " << vector_int.max_size() << std::endl;
 	std::cout << "MAX_SIZE : " << vector_int_filled.max_size() << std::endl;
 	std::cout << "SIZE : " << vector_int.size() << std::endl;
 	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
-	// ft::stack<int> stack_int;
+	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
+	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
+
+	vector_int.resize(32);
+	vector_int_filled.resize(32); // ft::stack<int> stack_int;
+	std::cout << "MAX_SIZE : " << vector_int.max_size() << std::endl;
+	std::cout << "MAX_SIZE : " << vector_int_filled.max_size() << std::endl;
+	std::cout << "SIZE : " << vector_int.size() << std::endl;
+	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
+	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
+	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
+	vector_int.clear();
+	vector_int_filled.clear(); // ft::stack<int> stack_int;
+	std::cout << "MAX_SIZE : " << vector_int.max_size() << std::endl;
+	std::cout << "MAX_SIZE : " << vector_int_filled.max_size() << std::endl;
+	std::cout << "SIZE : " << vector_int.size() << std::endl;
+	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
+	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
+	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	// ft::map<int, int> map_int;
