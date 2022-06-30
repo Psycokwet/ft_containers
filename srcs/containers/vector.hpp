@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/30 13:59:32 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/30 14:04:16 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,9 +259,9 @@ namespace ft
 		*/
 		/*
 		 * operator[] //done
-		 * at
-		 * front
-		 * back
+		 * at //done
+		 * front // done but it
+		 * back //it
 		 */
 		/* const_reference operator[] (size_type n) const;
 		 * Access element
@@ -297,6 +297,44 @@ namespace ft
 			_M_range_check(__n);
 			return (*this)[__n];
 		}
+
+		/*
+		 * Access first element
+		 * Returns a reference to the first element in the vector.
+		 *
+		 * Unlike member vector::begin, which returns an iterator to this same element, this function returns a direct reference.
+		 *
+		 * Calling this function on an empty container causes undefined behavior.
+		 */
+		reference front()
+		{
+			// return *begin();//iterator
+			return (*this)[0];
+		}
+
+		const_reference front() const
+		{
+			// return *begin();//iterator
+			return (*this)[0];
+		}
+
+		/* Access last element
+		 * Returns a reference to the last element in the vector.
+		 *
+		 * Unlike member vector::end, which returns an iterator just past this element, this function returns a direct reference.
+		 *
+		 * Calling this function on an empty container causes undefined behavior.
+		 */
+		// reference back()
+		// {
+		// 	return *(end() - 1);
+		// }
+
+		// const_reference back() const
+		// {
+		// 	return *(end() - 1);
+		// }
+
 		/*
 		** --------------------------------- MODIFIERS --------------------------
 		*/
