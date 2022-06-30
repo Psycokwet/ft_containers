@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/30 09:53:25 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/06/30 09:54:59 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,25 +113,50 @@ namespace ft
 		 */
 		~vector()
 		{
-			for (size_type i = 0; i < size(); i++)
-			{
-				_Tp_alloc_type.destroy(_M_start + i);
-			}
-			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
+			int tmp = _M_end_of_storage - _M_start;
+			clear();
+			_Tp_alloc_type.deallocate(_M_start, tmp);
 		}
 
 		/*
-		 *  @brief  %Vector assignment operator.
+		** --------------------------------- ASSIGNATION --------------------------
+		*/
+		/*
+		 *  @brief  Vector assignment operator.
 		 *  @param  __x  A vector of identical element and allocator types.
 		 *
 		 *  All the elements of @a __x are copied, but any unused capacity in
 		 *  @a __x will not be copied.
 		 *
-		 *  Whether the allocator is copied depends on the allocator traits.
 		 */
-		vector &operator=(const vector &__x);
+		vector &operator=(const vector &__x)
+		{
+			this->clear();
+			if (this->m_capacity < __x.m_capacity)
+				this->reserve(__x.m_capacity);
+			// std::memcpy(static_cast<void *>(this->m_container), static_cast<void *>(__x.m_container), __x.m_size * sizeof(value_type));
+			return (*this);
+		}
 
-		// [23.2.4.2] capacity
+		/*
+		** --------------------------------- MODIFIERS --------------------------
+		*/
+
+		/*
+		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
+		 */
+		void clear()
+		{
+			for (size_type i = 0; i < size(); i++)
+			{
+				_Tp_alloc_type.destroy(_M_start + i);
+			}
+			this->_M_finish = this->_M_start;
+		}
+
+		/*
+		** --------------------------------- CAPACITY --------------------------
+		*/
 		/*  Returns the number of elements in the vector.  */
 		size_type size() const _GLIBCXX_NOEXCEPT
 		{
