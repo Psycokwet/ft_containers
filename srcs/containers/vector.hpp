@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/03 22:06:03 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/03 22:10:18 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ namespace ft
 		/*  Returns the number of elements in the vector.  */
 		size_type size() const _GLIBCXX_NOEXCEPT
 		{
-			return size_type(this->_M_finish - this->_M_start);
+			return this->_M_finish - this->_M_start;
 		}
 
 		/*  Returns the size() of the largest possible vector.  */
@@ -393,11 +393,8 @@ namespace ft
 		 */
 		void clear()
 		{
-			for (size_type i = 0; i < size(); i++)
-			{
-				_Tp_alloc_type.destroy(_M_start + i);
-			}
-			this->_M_finish = this->_M_start;
+			while (size())
+				pop_back();
 		}
 
 		/*
