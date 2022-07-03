@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 
 	// ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
-	ft::vector<int> vector_int_filled(42);
+	ft::vector<int> vector_int_filled(42, 42);
 	try
 	{
 		vector_int.reserve(-1);
@@ -95,6 +95,8 @@ int main(int argc, char **argv)
 	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
 	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
 	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
+	std::cout << "val[0] : " << vector_int[0] << std::endl;
+	std::cout << "val[0] : " << vector_int_filled[0] << std::endl;
 	vector_int.clear();
 	vector_int_filled.clear(); // ft::stack<int> stack_int;
 	std::cout << "MAX_SIZE : " << vector_int.max_size() << std::endl;
@@ -103,6 +105,16 @@ int main(int argc, char **argv)
 	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
 	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
 	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
+	vector_int.assign(50, 99);
+	vector_int_filled.assign(22, 64); // ft::stack<int> stack_int;
+	std::cout << "MAX_SIZE : " << vector_int.max_size() << std::endl;
+	std::cout << "MAX_SIZE : " << vector_int_filled.max_size() << std::endl;
+	std::cout << "SIZE : " << vector_int.size() << std::endl;
+	std::cout << "SIZE : " << vector_int_filled.size() << std::endl;
+	std::cout << "CAPACITY : " << vector_int.capacity() << std::endl;
+	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
+	std::cout << "val[0] : " << vector_int[0] << std::endl;
+	std::cout << "val[0] : " << vector_int_filled[0] << std::endl;
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	// ft::map<int, int> map_int;

@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/30 14:04:16 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/03 22:06:03 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,24 @@ namespace ft
 		pointer _M_start;
 		pointer _M_finish;
 		pointer _M_end_of_storage;
+
+		void _destroy()
+		{
+			clear();
+			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
+		}
+
+		void _build(size_type __n, const value_type &__value = value_type())
+		{
+			_M_create_storage(__n);
+			_fill(__n, __value);
+		}
+
+		void _fill(size_type __n, const value_type &__value = value_type())
+		{
+			for (size_type i = 0; i < __n; i++)
+				push_back(__value);
+		}
 
 		pointer _M_allocate(size_t __n)
 		{
@@ -97,12 +115,7 @@ namespace ft
 			  _M_finish(),
 			  _M_end_of_storage()
 		{
-			_M_create_storage(__n);
-			for (size_type i = 0; i < __n; i++)
-			{
-				_Tp_alloc_type.construct(_M_finish, __value);
-				_M_finish++;
-			}
+			_build(__n, __value);
 		}
 		/*
 		 *  @brief  iterator copy constructor
@@ -129,8 +142,7 @@ namespace ft
 		 */
 		~vector()
 		{
-			clear();
-			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
+			_destroy();
 		}
 
 		/*
@@ -189,10 +201,8 @@ namespace ft
 			{
 				reserve(__new_size);
 			}
-			while (__new_size > size())
-			{
-				push_back(__x);
-			}
+			if (__new_size > size())
+				_fill(__new_size - size(), __x);
 			while (__new_size < size())
 			{
 				pop_back();
@@ -227,31 +237,17 @@ namespace ft
 		 *  This function has no effect on the vector size and cannot alter its elements.
 		 */
 		void reserve(size_type __n)
-
 		{
 			if (__n > max_size())
 				throw std::length_error("vector::reserve");
-			if (capacity() < __n)
-			{
-
-				pointer _M_start_tmp;
-				pointer _M_finish_tmp;
-				pointer _M_end_of_storage_tmp;
-				_M_create_storage(_M_start_tmp,
-								  _M_finish_tmp,
-								  _M_end_of_storage_tmp, __n);
-
-				for (size_type i = 0; i < size(); i++)
-				{
-					_Tp_alloc_type.construct(_M_finish_tmp, 42); // iterator copy
-					_M_finish_tmp++;
-				}
-				_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
-
-				this->_M_start = _M_start_tmp;
-				this->_M_finish = _M_finish_tmp;
-				this->_M_end_of_storage = _M_end_of_storage_tmp;
-			}
+			if (capacity() >= __n)
+				return;
+			pointer _M_start_tmp = this->_M_start;
+			pointer _M_end_of_storage_tmp = this->_M_end_of_storage;
+			_M_create_storage(__n);
+			size_type current_size = size();
+			_fill(current_size, 42); // replace iterator
+			_Tp_alloc_type.deallocate(_M_start_tmp, _M_end_of_storage_tmp - _M_start_tmp);
 		}
 
 		/*
@@ -338,13 +334,32 @@ namespace ft
 		/*
 		** --------------------------------- MODIFIERS --------------------------
 		*/
-		// assign
+		// assign //done but iterator
 		// push_back //done
 		// pop_back //done
 		// insert
 		// erase
 		// swap
 		// clear //done
+
+		/* Assign vector content
+		 * Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
+		 */
+		// template <class InputIterator>
+		// void assign(InputIterator first, InputIterator last) // iterator
+		// {
+		// 	_destroy();
+		// }
+		void assign(size_type __n, const value_type &__value)
+		{
+			if (capacity() < __n)
+			{
+				_destroy();
+				_build(__n, __value);
+				return;
+			}
+			_fill(__n, __value);
+		}
 
 		/*Add element at the end
 		 * Adds a new element at the end of the vector, after its current last element.
