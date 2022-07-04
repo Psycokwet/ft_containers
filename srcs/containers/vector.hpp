@@ -6,18 +6,15 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/04 10:31:48 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/04 10:34:48 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include <memory>
-#include <algorithm.hpp>
-#include <cstddef>
-#include <tgmath.h>
-#include "../util/util.hpp"
+#include <algorithm.hpp>	//swap
+#include "../util/util.hpp" //SSTR
 namespace ft
 {
 	template <typename _Tp, typename _Alloc = std::allocator<_Tp> >
