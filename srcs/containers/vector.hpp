@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/03 22:10:18 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/04 10:31:48 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ namespace ft
 		typedef _Alloc allocator_type;
 
 		typedef _Tp value_type;
-		typedef typename allocator_type::pointer pointer;
-		typedef typename allocator_type::const_pointer const_pointer;
-		typedef typename allocator_type::reference reference;
-		typedef typename allocator_type::const_reference const_reference;
-		typedef size_t size_type;
+		typedef typename allocator_type::pointer pointer;				  //_Tp *
+		typedef typename allocator_type::const_pointer const_pointer;	  // const _Tp *
+		typedef typename allocator_type::reference reference;			  //_Tp &
+		typedef typename allocator_type::const_reference const_reference; // const _Tp &
+		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
 		// ok so far
 	private:
@@ -370,9 +370,7 @@ namespace ft
 		void push_back(const value_type &val)
 		{
 			if (this->_M_finish == this->_M_end_of_storage)
-			{
 				resize(capacity() * 1.5);
-			}
 			_Tp_alloc_type.construct(_M_finish, val);
 			this->_M_finish++;
 		}
@@ -388,6 +386,32 @@ namespace ft
 			_Tp_alloc_type.destroy(this->_M_finish);
 			this->_M_finish--;
 		}
+
+		/*
+		 * Insert elements
+		 * The vector is extended by inserting new elements before the element at the specified position,
+		 * effectively increasing the container size by the number of elements inserted.
+		 * This causes an automatic reallocation of the allocated storage space if -and only if-
+		 * the new vector size surpasses the current vector capacity.
+		 * Because vectors use an array as their underlying storage, inserting elements in positions
+		 * other than the vector end causes the container to relocate all the elements that were after
+		 * position to their new positions. This is generally an inefficient operation compared to the
+		 * one performed for the same operation by other kinds of sequence containers (such as list or forward_list).
+		 * The parameters determine how many elements are inserted and to which values they are initialized:
+		 */
+
+		// iterator insert(iterator __position, const value_type &__x);
+		// {
+		// }
+		// void insert(iterator __position, size_type __n, const value_type &__x)
+		// {
+		// }
+		// template <class InputIterator>
+		// void insert(iterator __position, _InputIterator __first,
+		// 			_InputIterator __last)
+		// {
+		// }
+
 		/*
 		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		 */
