@@ -13,17 +13,8 @@
 #ifndef MACROS_H
 #define MACROS_H
 
-#define IS_INTEGRAL(value)                                               \
-	template <>                                                          \
-	struct is_integral_type<value> : public is_integral_res<true, value> \
-	{                                                                    \
-	};
+#define FOR_EACH_MACRO(LIST, SUB_MACRO) \
+	LIST(SUB_MACRO)
 
-// expansion macro for enum value definition
-#define APPLY_SUB_MACRO(name) IS_INTEGRAL(name)
-
-/// declare the access function and define enum values
-#define FOR_EACH_MACRO(LIST) \
-	LIST(APPLY_SUB_MACRO)
-
+// https://godbolt.org/ to see expanded macros, g++ -E
 #endif
