@@ -6,18 +6,45 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/28 22:39:13 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/29 11:40:56 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPE_TRAITS_HPP
 #define TYPE_TRAITS_HPP
 
-#include "macros.hpp"
-#include <uchar.h>
+#include "../util/macros.hpp" // FOR_EACH_MACRO
 
 namespace ft
 {
+	/*
+	** ---------------------------------- enable if ----------------------------------
+	*/
+
+	/*
+	 * Enable type if condition is met
+
+	 * The type _Tp is enabled as member type enable_if::type if bool is true.
+	 * Otherwise, enable_if::type is not defined.
+	 * This is useful to hide signatures on compile time when a particular condition
+	 * is not met, since in this case, the member enable_if::type will not be
+	 * defined and attempting to compile using it should fail.
+	 * It is defined with a behavior equivalent to:
+	 */
+	template <bool, typename _Tp = void>
+	struct enable_if
+	{
+	};
+
+	/*
+	 * partial specialisation for true, enable type then
+	 */
+	template <typename _Tp>
+	struct enable_if<true, _Tp>
+	{
+		typedef _Tp type;
+	};
+
 	/*
 	** ---------------------------------- is integral ----------------------------------
 	*/
@@ -26,13 +53,13 @@ namespace ft
 	 * especially in their bool variant: see true_type and false_type.
 	 * Its definition in the Standard Library has the same behavior as:
 	 */
-	template <class T, T v>
+	template <typename _Tp, _Tp __v>
 	struct integral_constant
 	{
-		static const T value = v;
-		typedef T value_type;
-		typedef integral_constant<T, v> type;
-		operator T() { return v; }
+		static const _Tp value = __v;
+		typedef _Tp value_type;
+		typedef integral_constant<_Tp, __v> type;
+		operator _Tp() { return __v; }
 	};
 	/*
 	 * Instantiation of integral_constant to represent the bool value true.

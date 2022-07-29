@@ -13,6 +13,11 @@
 #ifndef MACROS_H
 #define MACROS_H
 
+// #include <sstream>			  add this include on files using SSTR
+#define SSTR(x) static_cast<std::ostringstream &>(            \
+					(std ::ostringstream() << std::dec << x)) \
+					.str()
+
 #define FOR_EACH_MACRO(LIST, SUB_MACRO) \
 	LIST(SUB_MACRO)
 

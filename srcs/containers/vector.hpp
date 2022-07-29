@@ -6,15 +6,20 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/04 10:34:48 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/29 11:34:19 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 
-#include <algorithm.hpp>	//swap
-#include "../util/util.hpp" //SSTR
+#include <algorithm.hpp> //swap
+
+#include "../util/macros.hpp" //SSTR
+#include <sstream>			  //SSTR
+#include "iterator.hpp"
+#include "reverse_iterator.hpp"
+
 namespace ft
 {
 	template <typename _Tp, typename _Alloc = std::allocator<_Tp> >
@@ -30,7 +35,12 @@ namespace ft
 		typedef typename allocator_type::const_reference const_reference; // const _Tp &
 		typedef std::size_t size_type;
 		typedef std::ptrdiff_t difference_type;
-		// ok so far
+		typedef ft::__normal_iterator<pointer, vector> iterator;
+		typedef ft::__normal_iterator<const_pointer, vector> const_iterator;
+
+		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator> reverse_iterator;
+
 	private:
 		allocator_type _Tp_alloc_type;
 		pointer _M_start;
@@ -163,8 +173,89 @@ namespace ft
 		}
 
 		/*
-		** --------------------------------- CAPACITY --------------------------
+		** --------------------------------- ITERATORS --------------------------
 		*/
+		/*
+		 * begin //done
+		 * end
+		 * rbegin
+		 * rend
+		 */
+
+		// Return iterator to beginning
+		// Returns an iterator pointing to the first element in the vector.
+		// Notice that, unlike member vector::front, which returns a reference to the first element,
+		// this function returns a random access iterator pointing to it.
+		// If the container is empty, the returned iterator value shall not be dereferenced.
+
+		iterator begin()
+		{
+			return iterator(this->_M_start);
+		}
+
+		// const_iterator begin() const
+		// {
+		// 	return const_iterator(this->_M_start);
+		// }
+
+		// Return iterator to end
+		// Returns an iterator referring to the past-the-end element in the vector container.
+		// The past-the-end element is the theoretical element that would follow the last element in the vector.
+		// It does not point to any element, and thus shall not be dereferenced.
+		// Because the ranges used by functions of the standard library do not include the element pointed by
+		// their closing iterator, this function is often used in combination with vector::begin to specify a
+		// range including all the elements in the container.
+		// If the container is empty, this function returns the same as vector::begin.
+
+		iterator end()
+		{
+			return iterator(this->_M_finish);
+		}
+
+		// const_iterator end() const
+		// {
+		// 	return const_iterator(this->_M_finish);
+		// }
+
+		// Return reverse iterator to reverse beginning
+		// Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
+
+		// Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
+
+		// rbegin points to the element right before the one that would be pointed to by member end.
+
+		// Notice that unlike member vector::back, which returns a reference to this same element,
+		// this function returns a reverse random access iterator.
+
+		// reverse_iterator rbegin()
+		// {
+		// 	return reverse_iterator(end());
+		// }
+
+		// const_reverse_iterator rbegin() const
+		// {
+		// 	return const_reverse_iterator(end());
+		// }
+
+		// // Return reverse iterator to reverse end
+		// // Returns a reverse iterator pointing to the theoretical element preceding the first element
+		// //  in the vector (which is considered its reverse end).
+
+		// // The range between vector::rbegin and vector::rend contains all the elements of the vector (in reverse order).
+
+		// reverse_iterator rend()
+		// {
+		// 	return reverse_iterator(begin());
+		// }
+
+		// const_reverse_iterator rend() const
+		// {
+		// 	return const_reverse_iterator(begin());
+		// }
+
+		/*
+		 ** --------------------------------- CAPACITY --------------------------
+		 */
 		/*
 		 * size //done
 		 * max_size//done
@@ -195,15 +286,11 @@ namespace ft
 		void resize(size_type __new_size, value_type __x = value_type())
 		{
 			if (__new_size > capacity())
-			{
 				reserve(__new_size);
-			}
 			if (__new_size > size())
 				_fill(__new_size - size(), __x);
 			while (__new_size < size())
-			{
 				pop_back();
-			}
 		}
 
 		/*
@@ -501,6 +588,5 @@ namespace ft
 	{
 		__x.swap(__y);
 	}
-} // namespace std
-
+}
 #endif
