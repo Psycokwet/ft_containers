@@ -8,6 +8,8 @@
 #include <vector>
 namespace ft = std;
 #else
+#include <type_traits.hpp>
+#include <pair.hpp>
 // #include <map.hpp>
 #include <stack.hpp>
 // #include <vector.hpp>
@@ -47,6 +49,13 @@ struct Buffer
 
 int main(int argc, char **argv)
 {
+
+#ifdef STL // c++ 11 so untestable for the real one
+	std::cout << std::boolalpha;
+	std::cout << ft::is_integral<float>::value << ":" << true << std::endl;
+	std::cout << ft::is_integral<int>::value << ":" << true << std::endl;
+	std::cout << ft::is_integral<bool>::value << ":" << true << std::endl;
+#endif
 	if (argc != 2)
 	{
 		std::cerr << "Usage: ./test seed" << std::endl;
@@ -117,6 +126,8 @@ int main(int argc, char **argv)
 	std::cout << "val[0] : " << vector_int_filled[0] << std::endl;
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
+	// 	std::cout << "val[it] : " << *it << std::endl;
 	// ft::map<int, int> map_int;
 
 	// for (int i = 0; i < COUNT; i++)
