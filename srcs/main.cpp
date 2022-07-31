@@ -75,9 +75,10 @@ int main(int argc, char **argv)
 	const int seed = atoi(argv[1]);
 	srand(seed);
 
-	// ft::vector<std::string> vector_str;
+	ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
 	ft::vector<int> vector_int_filled(42, 42);
+	(void)vector_int_filled;
 	try
 	{
 		vector_int.reserve(-1);
@@ -146,6 +147,15 @@ int main(int argc, char **argv)
 		std::cout << "val[" << i << "] : " << *it << std::endl;
 		i++;
 	}
+
+	// i = 0;
+	// std::cout << "full content int" << std::endl;
+	// for (ft::vector<int>::const_iterator it = vector_int.begin(); it != vector_int.end(); it++)
+	// {
+	// 	std::cout << "val[" << i << "] : " << vector_int[i] << std::endl;
+	// 	std::cout << "val[" << i << "] : " << *it << std::endl;
+	// 	i++;
+	// }
 
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;

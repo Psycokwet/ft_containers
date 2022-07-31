@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/31 10:59:42 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/31 16:02:34 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 namespace ft
 {
+
 	template <typename _Tp, typename _Alloc = std::allocator<_Tp> >
 	class vector
 	{
@@ -59,10 +60,33 @@ namespace ft
 			_fill(__n, __value);
 		}
 
+		void _copy(iterator __begin, iterator __end)
+		{
+			while (__begin != __end)
+			{
+				push_back(*__begin);
+				__begin++;
+			}
+		}
+
 		void _fill(size_type __n, const value_type &__value = value_type())
 		{
 			for (size_type i = 0; i < __n; i++)
 				push_back(__value);
+		}
+
+		template <typename _Integer>
+		void _M_initialize_dispatch(_Integer __n, _Integer __value, true_type)
+		{
+			_build(__n, __value);
+		}
+
+		template <typename _InputIterator>
+		void _M_initialize_dispatch(_InputIterator __first, _InputIterator __last,
+									false_type)
+		{
+			_M_create_storage(__last - __first);
+			_copy(__first, __last);
 		}
 
 		pointer _M_allocate(size_t __n)
@@ -98,22 +122,20 @@ namespace ft
 		** --------------------------------- CONSTRUCTORS --------------------------
 		*/
 		/*
-		 *  @brief  Creates a vector with no elements.
-		 *  @param  __a  An allocator object.
+		 * empty container constructor (default constructor)
+		 * Constructs an empty container, with no elements.
 		 */
 		explicit vector(const allocator_type &__a = allocator_type())
 			: _Tp_alloc_type(__a),
 			  _M_start(),
 			  _M_finish(),
-			  _M_end_of_storage() {}
+			  _M_end_of_storage()
+		{
+		}
 
 		/*
-		 *  @brief  Creates a vector with copies of an exemplar element.
-		 *  @param  __n  The number of elements to initially create.
-		 *  @param  __value  An element to copy.
-		 *  @param  __a  An allocator.
-		 *
-		 *  This constructor fills the vector with @a __n copies of @a __value.
+		 * fill constructor
+		 * Constructs a container with n elements. Each element is a copy of val.
 		 */
 		explicit vector(size_type __n, const value_type &__value = value_type(),
 						const allocator_type &__a = allocator_type())
@@ -122,23 +144,31 @@ namespace ft
 			  _M_finish(),
 			  _M_end_of_storage()
 		{
-			_build(__n, __value);
+			_M_initialize_dispatch(__n, __value, true_type());
 		}
 		/*
-		 *  @brief  iterator copy constructor
-		 *  @param  first  iterator begin to copy.
-		 *  @param  last  iterator last to copy.
+		 * range constructor
+		 * Constructs a container with as many elements as the range [first,last),
+		 * with each element constructed from its corresponding element in that
+		 * range, in the same order.
 		 */
-		// template <class InputIterator>
-		// vector(InputIterator first, InputIterator last,
-		// 	   const allocator_type &alloc = allocator_type()) {}
-		/*
-		 *  @brief  Copy constructor
-		 *  @param  x  Another vector to copy.
-		 */
-		vector(const vector &x)
+
+		template <typename _InputIterator>
+		vector(_InputIterator __first, _InputIterator __last,
+			   const allocator_type &__a = allocator_type())
+			: _Tp_alloc_type(__a)
 		{
-			// TODO
+			typedef typename ft::is_integral<_InputIterator>::type _Integral;
+			_M_initialize_dispatch(__first, __last, _Integral());
+		}
+		/*
+		 * copy constructor
+		 * Constructs a container with a copy of each of the elements in x, in the same order.
+		 */
+		vector(const vector &__x)
+		{
+			_M_create_storage(__x.size());
+			_copy(__x.begin(), __x.end());
 		}
 
 		/*
@@ -159,19 +189,14 @@ namespace ft
 		** --------------------------------- ASSIGNATION --------------------------
 		*/
 		/*
-		 *  @brief  Vector assignment operator.
-		 *  @param  __x  A vector of identical element and allocator types.
-		 *
-		 *  All the elements of @a __x are copied, but any unused capacity in
-		 *  @a __x will not be copied.
-		 *
+		 * Assigns new contents to the container, replacing its current contents, and modifying its size accordingly.
 		 */
 		vector &operator=(const vector &__x)
 		{
 			this->clear();
 			if (this->m_capacity < __x.m_capacity)
 				this->reserve(__x.m_capacity);
-			// std::memcpy(static_cast<void *>(this->m_container), static_cast<void *>(__x.m_container), __x.m_size * sizeof(value_type));
+			_copy(__x.begin(), __x.end());
 			return (*this);
 		}
 
@@ -264,7 +289,7 @@ namespace ft
 		 * max_size//done
 		 * resize //done
 		 * capacity //done
-		 * empty //wip ITERATOR
+		 * empty //done
 		 * reserve //wip ITERATOR
 		 */
 
@@ -312,8 +337,7 @@ namespace ft
 		 */
 		bool empty() const
 		{
-			// return begin() == end(); //iterator
-			return false;
+			return begin() == end();
 		}
 
 		/*
@@ -329,12 +353,16 @@ namespace ft
 				throw std::length_error("vector::reserve");
 			if (capacity() >= __n)
 				return;
+			iterator it_begin = this->begin();
+			iterator it_end = this->end();
 			pointer _M_start_tmp = this->_M_start;
 			pointer _M_end_of_storage_tmp = this->_M_end_of_storage;
 			_M_create_storage(__n);
-			size_type current_size = size();
-			_fill(current_size, 42); // replace iterator
+			// size_type current_size = size();
+			// _fill(current_size, 42); // replace iterator
+			_copy(it_begin, it_end);
 			_Tp_alloc_type.deallocate(_M_start_tmp, _M_end_of_storage_tmp - _M_start_tmp);
+			// _Tp_alloc_type.deallocate(_M_start_tmp, _M_end_of_storage_tmp - _M_start_tmp);
 		}
 
 		/*
