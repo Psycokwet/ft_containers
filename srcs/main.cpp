@@ -28,27 +28,36 @@ struct Buffer
 
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-// template <typename T>
-// class MutantStack : public ft::stack<T>
-// {
-// public:
-// 	MutantStack() {}
-// 	MutantStack(const MutantStack<T> &src) { *this = src; }
-// 	MutantStack<T> &operator=(const MutantStack<T> &rhs)
-// 	{
-// 		this->c = rhs.c;
-// 		return *this;
-// 	}
-// 	~MutantStack() {}
+template <typename T>
+class MutantStack : public ft::stack<T>
+{
+public:
+	// MutantStack() {}
+	MutantStack(const MutantStack<T> &src) { *this = src; }
+	MutantStack<T> &operator=(const MutantStack<T> &rhs)
+	{
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
 
-// 	typedef typename ft::stack<T>::container_type::iterator iterator;
+	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-// 	iterator begin() { return this->c.begin(); }
-// 	iterator end() { return this->c.end(); }
-// };
+	void print()
+	{
+		std::cout << this->c << std::endl;
+	}
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
 
 int main(int argc, char **argv)
 {
+	// a tester plus tard quand vector fini
+	//  ft::vector<int> vectorTest;
+	//  ft::stack<int, ft::vector<int> > test(vectorTest);
+	//  test.print();
+	//  std::cout << &vectorTest << std::endl;
 
 #ifdef STL // c++ 11 so untestable for the real one
 	std::cout << std::boolalpha;
@@ -124,6 +133,20 @@ int main(int argc, char **argv)
 	std::cout << "CAPACITY : " << vector_int_filled.capacity() << std::endl;
 	std::cout << "val[0] : " << vector_int[0] << std::endl;
 	std::cout << "val[0] : " << vector_int_filled[0] << std::endl;
+	vector_int[0] = 56;
+	vector_int_filled[0] = 56;
+	std::cout << "val[0] : " << vector_int[0] << std::endl;
+	std::cout << "val[0] : " << vector_int_filled[0] << std::endl;
+
+	int i = 0;
+	std::cout << "full content int" << std::endl;
+	for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
+	{
+		std::cout << "val[" << i << "] : " << vector_int[i] << std::endl;
+		std::cout << "val[" << i << "] : " << *it << std::endl;
+		i++;
+	}
+
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)

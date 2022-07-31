@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/29 11:34:19 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/31 10:59:42 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,10 @@ namespace ft
 		 *  @brief  Copy constructor
 		 *  @param  x  Another vector to copy.
 		 */
-		vector(const vector &x) {}
+		vector(const vector &x)
+		{
+			// TODO
+		}
 
 		/*
 		** --------------------------------- DESTRUCTOR --------------------------
