@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/31 16:02:34 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:40:44 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ namespace ft
 		typedef ft::__normal_iterator<pointer, vector> iterator;
 		typedef ft::__normal_iterator<const_pointer, vector> const_iterator;
 
-		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
-		typedef ft::reverse_iterator<iterator> reverse_iterator;
+		// typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		// typedef ft::reverse_iterator<iterator> reverse_iterator;
 
 	private:
 		allocator_type _Tp_alloc_type;
@@ -221,10 +221,10 @@ namespace ft
 			return iterator(this->_M_start);
 		}
 
-		// const_iterator begin() const
-		// {
-		// 	return const_iterator(this->_M_start);
-		// }
+		const_iterator begin() const
+		{
+			return const_iterator(this->_M_start);
+		}
 
 		// Return iterator to end
 		// Returns an iterator referring to the past-the-end element in the vector container.
@@ -240,10 +240,10 @@ namespace ft
 			return iterator(this->_M_finish);
 		}
 
-		// const_iterator end() const
-		// {
-		// 	return const_iterator(this->_M_finish);
-		// }
+		const_iterator end() const
+		{
+			return const_iterator(this->_M_finish);
+		}
 
 		// Return reverse iterator to reverse beginning
 		// Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).

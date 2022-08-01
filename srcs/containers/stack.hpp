@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/23 10:52:32 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/07/29 11:59:20 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ namespace ft
 		_Sequence c;
 
 	public:
+		/* Constructs a stack container adaptor object.
+		 * A container adaptor keeps internally a container object as data.
+		 * This container object is a copy of the ctnr argument passed to the constructor,
+		 * if any, otherwise it is an empty container.
+		 */
 		explicit stack(const _Sequence &__c = _Sequence())
 			: c(__c)
 		{
@@ -144,34 +149,29 @@ namespace ft
 		return __x.c < __y.c;
 	}
 
-	/// Based on operator==
 	template <typename _Tp, typename _Seq>
 	inline bool operator!=(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
 	{
 		return !(__x == __y);
 	}
 
-	/// Based on operator<
 	template <typename _Tp, typename _Seq>
 	inline bool operator>(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
 	{
 		return __y < __x;
 	}
 
-	/// Based on operator<
 	template <typename _Tp, typename _Seq>
 	inline bool operator<=(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
 	{
 		return !(__y < __x);
 	}
 
-	/// Based on operator<
 	template <typename _Tp, typename _Seq>
 	inline bool operator>=(const stack<_Tp, _Seq> &__x, const stack<_Tp, _Seq> &__y)
 	{
 		return !(__x < __y);
 	}
-
-} // namespace
+}
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/31 11:28:27 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/01 15:29:47 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 
 #include "iterator_traits.hpp"
 #include "iterator_base.hpp"
+#include "type_traits.hpp"
 
 namespace ft
 {
-	using ft::iterator;
+	// using ft::iterator;
 	using ft::iterator_traits;
 	template <typename _Iterator, typename _Container>
 	class __normal_iterator
@@ -43,12 +44,14 @@ namespace ft
 			: _M_current(__i) {}
 
 		template <typename _Iter>
+		// Allow iterator to const_iterator conversion
 		__normal_iterator(const __normal_iterator<_Iter,
 												  typename ft::enable_if<
 													  (std::__are_same<_Iter, typename _Container::pointer>::__value),
-													  _Container>::__type>
-							  &__i)
-			: _M_current(__i.base()) {}
+													  _Container>::type> &__i)
+			: _M_current(__i.base())
+		{
+		}
 
 		reference operator*() const
 		{
