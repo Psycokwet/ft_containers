@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/31 17:40:44 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/02 10:27:00 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,8 +371,8 @@ namespace ft
 		/*
 		 * operator[] //done
 		 * at //done
-		 * front // done but it
-		 * back //it
+		 * front // done
+		 * back //done
 		 */
 		/* const_reference operator[] (size_type n) const;
 		 * Access element
@@ -419,14 +419,14 @@ namespace ft
 		 */
 		reference front()
 		{
-			// return *begin();//iterator
-			return (*this)[0];
+			return *begin(); // iterator
+							 // return (*this)[0];
 		}
 
 		const_reference front() const
 		{
-			// return *begin();//iterator
-			return (*this)[0];
+			return *begin(); // iterator
+							 // return (*this)[0];
 		}
 
 		/* Access last element
@@ -436,15 +436,15 @@ namespace ft
 		 *
 		 * Calling this function on an empty container causes undefined behavior.
 		 */
-		// reference back()
-		// {
-		// 	return *(end() - 1);
-		// }
+		reference back()
+		{
+			return *(end() - 1);
+		}
 
-		// const_reference back() const
-		// {
-		// 	return *(end() - 1);
-		// }
+		const_reference back() const
+		{
+			return *(end() - 1);
+		}
 
 		/*
 		** --------------------------------- MODIFIERS --------------------------
@@ -551,68 +551,62 @@ namespace ft
 	};
 
 	/*
-	 *  @brief  Vector equality comparison.
-	 *  @param  __x  A vector.
-	 *  @param  __y  A vector of the same type as @a __x.
-	 *  @return  True iff the size and elements of the vectors are equal.
+	** --------------------------------- COMPARISONS  ---------------------------
+	*/
+	/*
+	 * Performs the appropriate comparison operation between the vector
+	 * containers __x and __y.
 	 *
-	 *  This is an equivalence relation.  It is linear in the size of the
-	 *  vectors.  Vectors are considered equivalent if their sizes are equal,
-	 *  and if corresponding elements compare equal.
+	 * The equality comparison (operator==) is performed by first comparing
+	 * sizes, and if they match, the elements are compared sequentially using
+	 * operator==, stopping at the first mismatch (as if using algorithm equal).
+	 *
+	 * The less-than comparison (operator<) behaves as if using algorithm
+	 * lexicographical_compare, which compares the elements sequentially
+	 * using operator< in a reciprocal manner (i.e., checking both a<b and b<a)
+	 * and stopping at the first occurrence.
+	 *
+	 * The other operations also use the operators == and < internally to compare
+	 * the elements, behaving as if the following equivalent operations were
+	 * performed:
 	 */
 	template <typename _Tp, typename _Alloc>
-	inline bool operator==(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
+	bool operator==(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
 	{
 		return (__x.size() == __y.size() && ft::equal(__x.begin(), __x.end(),
 													  __y.begin(), __y.end()));
 	}
 
-	/*
-	 *  @brief  Vector ordering relation.
-	 *  @param  __x  A vector.
-	 *  @param  __y  A vector of the same type as @a __x.
-	 *  @return  True iff @a __x is lexicographically less than @a __y.
-	 *
-	 *  This is a total ordering relation.  It is linear in the size of the
-	 *  vectors.  The elements must be comparable with @c <.
-	 *
-	 */
 	template <typename _Tp, typename _Alloc>
-	inline bool operator<(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
+	bool operator<(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
 	{
 		return ft::lexicographical_compare(__x.begin(), __x.end(),
 										   __y.begin(), __y.end());
 	}
 
-	/// Based on operator==
 	template <typename _Tp, typename _Alloc>
-	inline bool operator!=(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
+	bool operator!=(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
 	{
 		return !(__x == __y);
 	}
 
-	/// Based on operator<
 	template <typename _Tp, typename _Alloc>
-	inline bool operator>(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
+	bool operator>(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
 	{
 		return __y < __x;
 	}
 
-	/// Based on operator<
 	template <typename _Tp, typename _Alloc>
-	inline bool operator<=(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
+	bool operator<=(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
 	{
 		return !(__y < __x);
 	}
 
-	/// Based on operator<
 	template <typename _Tp, typename _Alloc>
-	inline bool operator>=(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
+	bool operator>=(const vector<_Tp, _Alloc> &__x, const vector<_Tp, _Alloc> &__y)
 	{
 		return !(__x < __y);
 	}
-
-	/// See std::vector::swap().
 
 	template <typename _Tp, typename _Alloc>
 	void swap(vector<_Tp, _Alloc> &__x, vector<_Tp, _Alloc> &__y)
