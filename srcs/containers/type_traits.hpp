@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/07/31 11:04:55 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/18 10:32:44 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ namespace ft
 
 	/*
 	 * Enable type if condition is met
-
 	 * The type _Tp is enabled as member type enable_if::type if bool is true.
 	 * Otherwise, enable_if::type is not defined.
 	 * This is useful to hide signatures on compile time when a particular condition

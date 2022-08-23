@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/03 11:53:43 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/23 17:01:11 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define MAP_HPP
 
 #include "pair.hpp"
-// #include "rb_tree.hpp"
+#include "rb_tree.hpp"
 
 namespace ft
 {
@@ -46,7 +46,7 @@ namespace ft
 
 	private:
 	public:
-		class value_compare
+		class value_compare // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 			: public std::binary_function<value_type, value_type, bool>
 		{
 			friend class map<_Key, _Tp, _Compare, _Alloc>;
@@ -55,9 +55,25 @@ namespace ft
 			_Compare comp;
 
 			value_compare(_Compare __c)
-				: comp(__c) {}
+				: comp(__c) {} // constructed with map's comparison object
 
 		public:
+			typedef bool result_type;
+			typedef value_type first_argument_type;
+			typedef value_type second_argument_type;
+
+			/*
+			 * The public member of this comparison class returns
+			 * true if the key of the first argument is considered
+			 * to go before that of the second (according to the
+			 * strict weak ordering specified by the container's
+			 * comparison object, key_comp), and false otherwise.
+			 *
+			 * Notice that value_compare has no public constructor,
+			 * therefore no objects can be directly created from
+			 * this nested class outside map members.
+			 *
+			 */
 			bool operator()(const value_type &__x, const value_type &__y) const
 			{
 				return comp(__x.first, __y.first);
@@ -67,11 +83,11 @@ namespace ft
 	private:
 		/// This turns a red-black tree into a [multi]map.
 
-		// typedef _Rb_tree<key_type, value_type, key_compare, allocator_type>
-		// 	_Rep_type;
+		typedef _Rb_tree<key_type, value_type, key_compare, allocator_type>
+			_Rep_type;
 
 		/// The actual tree structure.
-		// _Rep_type _M_t;
+		_Rep_type _M_t;
 
 	public:
 		// many of these are specified differently in ISO, but the following are

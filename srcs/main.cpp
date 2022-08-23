@@ -10,9 +10,9 @@ namespace ft = std;
 #else
 #include <type_traits.hpp>
 #include <pair.hpp>
-// #include <map.hpp>
+#include <map.hpp>
 #include <stack.hpp>
-// #include <vector.hpp>
+#include <vector.hpp>
 #endif
 
 #include <stdlib.h>
@@ -59,12 +59,12 @@ int main(int argc, char **argv)
 	//  test.print();
 	//  std::cout << &vectorTest << std::endl;
 
-#ifdef STL // c++ 11 so untestable for the real one
-	std::cout << std::boolalpha;
-	std::cout << ft::is_integral<float>::value << ":" << true << std::endl;
-	std::cout << ft::is_integral<int>::value << ":" << true << std::endl;
-	std::cout << ft::is_integral<bool>::value << ":" << true << std::endl;
-#endif
+	// #ifdef STL // c++ 11 so untestable for the real one
+	// 	std::cout << std::boolalpha;
+	// 	std::cout << ft::is_integral<float>::value << ":" << true << std::endl;
+	// 	std::cout << ft::is_integral<int>::value << ":" << true << std::endl;
+	// 	std::cout << ft::is_integral<bool>::value << ":" << true << std::endl;
+	// #endif
 	if (argc != 2)
 	{
 		std::cerr << "Usage: ./test seed" << std::endl;
@@ -148,14 +148,14 @@ int main(int argc, char **argv)
 		i++;
 	}
 
-	// i = 0;
-	// std::cout << "full content int" << std::endl;
-	// for (ft::vector<int>::const_iterator it = vector_int.begin(); it != vector_int.end(); it++)
-	// {
-	// 	std::cout << "val[" << i << "] : " << vector_int[i] << std::endl;
-	// 	std::cout << "val[" << i << "] : " << *it << std::endl;
-	// 	i++;
-	// }
+	i = 0;
+	std::cout << "full content int" << std::endl;
+	for (ft::vector<int>::const_iterator it = vector_int.begin(); it != vector_int.end(); it++)
+	{
+		std::cout << "val[" << i << "] : " << vector_int[i] << std::endl;
+		std::cout << "val[" << i << "] : " << *it << std::endl;
+		i++;
+	}
 
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
