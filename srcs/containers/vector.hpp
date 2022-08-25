@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/18 09:08:22 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/25 13:24:06 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace ft
 
 		void _destroy()
 		{
-			clear();
+			// clear();
 			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
 		}
 
@@ -482,11 +482,14 @@ namespace ft
 		 * This effectively increases the container size by one, which causes an automatic
 		 * reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity.
 		 */
-		void push_back(const value_type &val)
+		void push_back(const value_type &__val)
 		{
 			if (this->_M_finish == this->_M_end_of_storage)
-				resize(capacity() * 1.5);
-			_Tp_alloc_type.construct(_M_finish, val);
+			{
+				resize((capacity() | 1) * 1.5, __val);
+				return;
+			}
+			_Tp_alloc_type.construct(_M_finish, __val);
 			this->_M_finish++;
 		}
 		/*

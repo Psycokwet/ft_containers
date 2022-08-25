@@ -3,6 +3,7 @@
 #include <deque>
 
 #ifndef STL // CREATE A REAL STL EXAMPLE
+#include <set>
 #include <map>
 #include <stack>
 #include <vector>
@@ -53,6 +54,18 @@ public:
 
 int main(int argc, char **argv)
 {
+	 ft::vector<std::string > vectorTeststr;
+	 std::cout << "pushback str :" << "\n";
+	 vectorTeststr.push_back("cc");
+	 std::cout << "end pushback str :" << "\n";
+	 std::cout << "test str :" << vectorTeststr.size()<< "\n";
+	 std::cout << "test str :" << vectorTeststr[0] << "\n";
+	 std::cout << "all good \n";
+	//  return 0;
+	//  ft::vector<ft::pair<int, int> > vectorTest;
+	//  vectorTest.push_back(ft::make_pair(1337,42));
+	//  std::cout << vectorTest.size()<< "\n";
+	//  std::cout << vectorTest[0].first << "\n"<< ":" << vectorTest[0].second<<"\n";
 	// a tester plus tard quand vector fini
 	//  ft::vector<int> vectorTest;
 	//  ft::stack<int, ft::vector<int> > test(vectorTest);
@@ -161,7 +174,7 @@ int main(int argc, char **argv)
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
 	// 	std::cout << "val[it] : " << *it << std::endl;
-	// ft::map<int, int> map_int;
+	ft::map<int, int> map_int;
 
 	// for (int i = 0; i < COUNT; i++)
 	// {
