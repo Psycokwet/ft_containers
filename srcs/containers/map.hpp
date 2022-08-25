@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/23 17:01:11 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/25 13:50:15 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ namespace ft
 	template <typename _Key,											   // map::key_type
 			  typename _Tp,												   // map::mapped_type
 			  typename _Compare = std::less<_Key>,						   // map::key_compare
-			  typename _Alloc = std::allocator<ft::pair<const _Key, _Tp> > // map::allocator_type
+			  typename _Alloc = std::allocator<ft::pair< _Key, _Tp> > // map::allocator_type
 			  >
 	class map
 	{
 	public:
 		typedef _Key key_type;
 		typedef _Tp mapped_type;
-		typedef ft::pair<const _Key, _Tp> value_type;
+		typedef ft::pair< _Key, _Tp> value_type;
 		typedef _Compare key_compare;
 		typedef _Alloc allocator_type;
 
@@ -107,7 +107,7 @@ namespace ft
 		// typedef typename _Rep_type::difference_type difference_type;
 		// typedef typename _Rep_type::size_type size_type;
 
-		map() //: _M_t()
+		map() : _M_t()
 		{
 		}
 

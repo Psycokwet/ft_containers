@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/07/26 14:17:03 by scarboni         ###   ########.fr        #
+#    Updated: 2022/08/25 13:57:11 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -175,7 +175,7 @@ LDFLAGS			= -I$(INC_DIR)
 
 ifndef LEAKS
 	# LEAKS = 
-	LEAKS = valgrind --leak-check=full 
+	LEAKS = valgrind --leak-check=full --show-leak-kinds=all
 endif
 
 ifndef TESTS
