@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/25 15:03:06 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/25 15:26:16 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace ft
 	};
 
 	template <typename _Key,
-			  typename _Val = ft::pair< _Key, void> ,
+			  typename _Val = ft::pair<_Key, void>,
 			  typename _Compare = std::less<_Key>,
 			  typename _Alloc = std::allocator<_Val> // bug indent
 			  >
@@ -88,17 +88,16 @@ namespace ft
 		typedef size_t size_type;
 		typedef ptrdiff_t difference_type;
 
-
 		// typedef typename allocator_type::pointer pointer;				  //_Tp *
 		// typedef typename allocator_type::const_pointer const_pointer;	  // const _Tp *
 		// typedef typename allocator_type::reference reference;			  //_Tp &
 		// typedef typename allocator_type::const_reference const_reference; // const _Tp &
 		// allocation/deallocation
-		_Rb_tree() 
+		_Rb_tree()
 		{
 			_root = NULL;
 			_Key key = key_type();
-			_Val val=value_type();
+			_Val val = value_type();
 
 			insert(key, val);
 			// _Base_ptr cc = _create_node();
@@ -147,35 +146,33 @@ namespace ft
 		}
 
 	private:
-		void printInt(_Base_ptr __node, std::string __indent = "", bool __last = true)
+		void _printInt(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
-			if (__node != NULL)
-			{
-				std::cout << __indent;
-				if (__last)
-				{
-					std::cout << "R----";
-					__indent += "   ";
-				}
-				else
-				{
-					std::cout << "L----";
-					__indent += "|  ";
-				}
-
-				std::string sColor = __node->_color == _S_red ? "RED" : "BLACK";
-				std::cout << __node->_key << ":" << __node->_val.first <<":" << __node->_val.second << "(" << sColor << ")" << std::endl;
-				printInt(__node->_left, __indent, false);
-				printInt(__node->_right, __indent);
-			}
+			if (__node == NULL)
+				return;
+			std::cout << __indent;
+			__indent += __src == 'r' ? "|" : __src == 'l' ? " "
+														  : "";
+			__indent += "  ";
+			std::cout << __src
+					  << "----"
+					  << __node->_key
+					  << "=="
+					  << __node->_val.first
+					  << ":"
+					  << __node->_val.second
+					  << "["
+					  << (__node->_color == _S_red ? "RED" : "BLACK")
+					  << "]"
+					  << std::endl;
+			_printInt(__node->_left, __indent, 'r');
+			_printInt(__node->_right, __indent, 'l');
 		}
 		void _print()
 		{
 			std::cout << "_______Start print tree______\n";
 			if (_root)
-			{
-				printInt(_root);
-			}
+				_printInt(_root);
 			std::cout << "_______End print tree______\n";
 		}
 		void _addNode(_Base_ptr node)
