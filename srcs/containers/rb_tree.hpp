@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/25 15:26:16 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/26 11:08:13 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,6 @@ namespace ft
 			// _construct_node(__tmp, __args);
 			return node;
 		}
-		void _delete_node(_Base_ptr __x)
-		{
-			_Tp_alloc_type.deallocate(__x, 1);
-		}
 
 	public:
 		typedef _Key key_type;
@@ -88,22 +84,17 @@ namespace ft
 		typedef size_t size_type;
 		typedef ptrdiff_t difference_type;
 
-		// typedef typename allocator_type::pointer pointer;				  //_Tp *
-		// typedef typename allocator_type::const_pointer const_pointer;	  // const _Tp *
-		// typedef typename allocator_type::reference reference;			  //_Tp &
-		// typedef typename allocator_type::const_reference const_reference; // const _Tp &
-		// allocation/deallocation
 		_Rb_tree()
 		{
 			_root = NULL;
 			_Key key = key_type();
 			_Val val = value_type();
 
-			insert(key, val);
+			_insert(key, val);
 			// _Base_ptr cc = _create_node();
-			// insert(key_type(), value_type());
+			// _insert(key_type(), value_type());
 			_print();
-			_delete_node(_root);
+			// _delete_node(_root);
 		}
 
 		_Rb_tree(const _Compare &__comp,
@@ -121,16 +112,252 @@ namespace ft
 
 		~_Rb_tree()
 		{
-			// _erase(_begin());
+			std::cout << "deleting tree :" << std::endl;
+			_print();
+
+			_delete_tree();
+			std::cout << "deleted" << std::endl;
 		}
 
 	public:
-		void insert(_Key __key, _Val __val)
+		_Val *insertNode(_Key __key, _Val __val = _Val())
+		{
+			// return _insert(__key, __val);
+			_Val *v = &(_insert(__key, __val)->_val);
+			_print();
+			return v;
+		}
+		void findNode(_Key __key)
+		{
+			return _findNode(__key);
+		}
+		void deleteNode(_Key __key)
+		{
+			_findAndDeleteNodeFromTree(_root, __key);
+		}
+
+	private:
+		/*
+		** --------------------------------- ORGANIZE TREE  ---------------------------
+		*/
+	
+		void deleteFix(_Base_ptr x)
+		{
+			_Base_ptr s;
+			while (x != _root && x->_color == _S_black)
+			{
+				if (x == x->_parent->_left)
+				{
+					s = x->_parent->_right;
+					if (s->_color == _S_red)
+					{
+						s->_color = _S_black;
+						x->_parent->_color = _S_red;
+						_leftRotate(x->_parent);
+						s = x->_parent->_right;
+					}
+
+					if (s->_left->_color == _S_black && s->_right->_color == _S_black)
+					{
+						s->_color = _S_red;
+						x = x->_parent;
+					}
+					else
+					{
+						if (s->_right->_color == _S_black)
+						{
+							s->_left->_color = _S_black;
+							s->_color = _S_red;
+							_rightRotate(s);
+							s = x->_parent->_right;
+						}
+
+						s->_color = x->_parent->_color;
+						x->_parent->_color = _S_black;
+						s->_right->_color = _S_black;
+						_leftRotate(x->_parent);
+						x = _root;
+					}
+				}
+				else
+				{
+					s = x->_parent->_left;
+					if (s->_color == _S_red)
+					{
+						s->_color = _S_black;
+						x->_parent->_color = _S_red;
+						_rightRotate(x->_parent);
+						s = x->_parent->_left;
+					}
+
+					if (s->_right->_color == _S_black && s->_right->_color == _S_black)
+					{
+						s->_color = _S_red;
+						x = x->_parent;
+					}
+					else
+					{
+						if (s->_left->_color == _S_black)
+						{
+							s->_right->_color = _S_black;
+							s->_color = _S_red;
+							_leftRotate(s);
+							s = x->_parent->_left;
+						}
+
+						s->_color = x->_parent->_color;
+						x->_parent->_color = _S_black;
+						s->_left->_color = _S_black;
+						_rightRotate(x->_parent);
+						x = _root;
+					}
+				}
+			}
+			x->_color = _S_black;
+		}
+		void _rbTransplant(_Base_ptr u, _Base_ptr v)
+		{
+			if (u->_parent == NULL)
+				_root = v;
+			else if (u == u->_parent->_left)
+				u->_parent->_left = v;
+			else
+				u->_parent->_right = v;
+			v->_parent = u->_parent;
+		}
+
+		void _leftRotate(_Base_ptr x)
+		{
+			_Base_ptr y = x->_right;
+			x->_right = y->_left;
+			if (y->_left != NULL)
+				y->_left->_parent = x;
+			y->_parent = x->_parent;
+			if (x->_parent == NULL)
+				_root = y;
+			else if (x == x->_parent->_left)
+				x->_parent->_left = y;
+			else
+				x->_parent->_right = y;
+			y->_left = x;
+			x->_parent = y;
+		}
+
+		void _rightRotate(_Base_ptr x)
+		{
+			_Base_ptr y = x->_left;
+			x->_left = y->_right;
+			if (y->_right != NULL)
+				y->_right->_parent = x;
+			y->_parent = x->_parent;
+			if (x->_parent == NULL)
+				_root = y;
+			else if (x == x->_parent->_right)
+				x->_parent->_right = y;
+			else
+				x->_parent->_left = y;
+			y->_right = x;
+			x->_parent = y;
+		}
+
+		void _balanceTree(_Base_ptr __k)
+		{
+			_Base_ptr u = NULL;
+			while (__k->_parent->_color == _S_red)
+			{
+				if (__k->_parent == __k->_parent->_parent->_right)
+				{
+					u = __k->_parent->_parent->_left;
+					if (u->_color == _S_red)
+					{
+						u->_color = _S_black;
+						__k->_parent->_color = _S_black;
+						__k->_parent->_parent->_color = _S_red;
+						__k = __k->_parent->_parent;
+					}
+					else
+					{
+						if (__k == __k->_parent->_left)
+						{
+							__k = __k->_parent;
+							_rightRotate(__k);
+						}
+						__k->_parent->_color = _S_black;
+						__k->_parent->_parent->_color = _S_red;
+						_leftRotate(__k->_parent->_parent);
+					}
+				}
+				else
+				{
+					u = __k->_parent->_parent->_right;
+
+					if (u->_color == _S_red)
+					{
+						u->_color = _S_black;
+						__k->_parent->_color = _S_black;
+						__k->_parent->_parent->_color = _S_red;
+						__k = __k->_parent->_parent;
+					}
+					else
+					{
+						if (__k == __k->_parent->_right)
+						{
+							__k = __k->_parent;
+							_leftRotate(__k);
+						}
+						__k->_parent->_color = _S_black;
+						__k->_parent->_parent->_color = _S_red;
+						_rightRotate(__k->_parent->_parent);
+					}
+				}
+				if (__k == _root)
+					break;
+			}
+			_root->_color = _S_black;
+		}
+
+		/*
+		** --------------------------------- FIND  ---------------------------
+		*/
+
+		_Base_ptr _minimum(_Base_ptr __root)
+		{
+			while (__root->_left)
+				__root = __root->_left;
+			return __root;
+		}
+
+		_Base_ptr _maximum(_Base_ptr __root)
+		{
+			while (__root->_right)
+				__root = __root->_right;
+			return __root;
+		}
+
+		_Base_ptr _findNodeInt(_Base_ptr __node, _Key __key)
+		{
+			if (!__node || __key == __node->_key)
+				return __node;
+			if (__key < __node->_key)
+				return _findNodeInt(__node->_left, __key);
+			return _findNodeInt(__node->_right, __key);
+		}
+		
+		_Base_ptr _findNode(_Key __key)
+		{
+			return _findNodeInt(_root, __key);
+		}
+
+		/*
+		** --------------------------------- INSERT  ---------------------------
+		*/
+
+		_Base_ptr _insert(_Key __key, _Val __val)
 		{
 			_Base_ptr node = _create_node();
 			node->_key = __key;
 			node->_val = __val;
-			_addNode(node);
+			return _addNode(node);
 		}
 		_Base_ptr _init_node(_Base_ptr __node)
 		{
@@ -145,88 +372,171 @@ namespace ft
 			return __node;
 		}
 
-	private:
-		void _printInt(_Base_ptr __node, std::string __indent = "", char __src = 'R')
+		_Base_ptr _addNode(_Base_ptr node)
+		{
+			node->_color = _S_red;
+
+			_Base_ptr parent = NULL;
+			_Base_ptr current = _root;
+			// std::cout << "test 270\n";
+			// _printNode(current);
+			// std::cout << "test 271\n";
+
+			while (current != NULL)
+			{
+				parent = current;
+				if (node->_key == current->_key)
+				{
+					current->_val = node->_val;
+					_delete_node_clean(&node);
+					// Node exist with same key, abort and replace content
+					return current;
+				}
+				if (node->_key < current->_key)
+					current = current->_left;
+				else
+					current = current->_right;
+			}
+
+			node->_parent = parent;
+			if (parent == NULL)
+				_root = node;
+			else if (node->_key < parent->_key)
+				parent->_left = node;
+			else
+				parent->_right = node;
+
+			if (node->_parent == NULL)
+			{
+				node->_color = _S_black;
+				return node;
+			}
+
+			if (node->_parent->_parent == NULL)
+				return node;
+
+			_balanceTree(node);
+			return node;
+		}
+
+		/*
+		** --------------------------------- DELETE  ---------------------------
+		*/
+	
+		void _delete_sub_tree(_Base_ptr __root)
+		{
+			if (__root != NULL)
+			{
+				_delete_sub_tree(__root->_left);
+				_delete_sub_tree(__root->_right);
+				_delete_node_clean(&__root);
+			}
+		}
+
+		void _delete_tree()
+		{
+			_delete_sub_tree(_root);
+		}
+
+		void _delete_node(_Base_ptr __node)
+		{
+			_Tp_alloc_type.deallocate(__node, 1);
+		}
+
+		void _delete_node_clean(_Base_ptr *__node)
+		{
+			_delete_node(* __node);
+			*__node = NULL;
+		}
+
+		void _findAndDeleteNodeFromTree(_Base_ptr __root, _Key __key)
+		{
+			_Base_ptr node = _findNode(__key);
+			if(!node)
+				return;
+			_deleteNodeFromTree(node);
+		}
+		void _deleteNodeFromTree(_Base_ptr __node) //_node must be in the tree, test beforehand
+		{
+			_Base_ptr x, y;
+
+			y = __node;
+			_Rb_tree_color y_original_color = y->_color;
+			if (__node->_left == NULL)
+			{
+				x = __node->_right;
+				_rbTransplant(__node, __node->_right);
+			}
+			else if (__node->_right == NULL)
+			{
+				x = __node->_left;
+				_rbTransplant(__node, __node->_left);
+			}
+			else
+			{
+				y = minimum(__node->_right);
+				y_original_color = y->_color;
+				x = y->_right;
+				if (y->_parent == __node)
+				{
+					x->_parent = y;
+				}
+				else
+				{
+					_rbTransplant(y, y->_right);
+					y->_right = __node->_right;
+					y->_right->_parent = y;
+				}
+
+				_rbTransplant(__node, y);
+				y->_left = __node->_left;
+				y->_left->_parent = y;
+				y->_color = __node->_color;
+			}
+			_delete_node_clean(&__node);
+			if (y_original_color == _S_black)
+				deleteFix(x);
+		}
+
+		/*
+		** --------------------------------- DEBUG  ---------------------------
+		*/
+
+		std::string _printNode(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
 			if (__node == NULL)
-				return;
+				return __indent;
 			std::cout << __indent;
 			__indent += __src == 'r' ? "|" : __src == 'l' ? " "
 														  : "";
 			__indent += "  ";
 			std::cout << __src
-					  << "----"
+					  << "----["
 					  << __node->_key
-					  << "=="
+					  << "]==["
 					  << __node->_val.first
-					  << ":"
+					  << "]:["
 					  << __node->_val.second
-					  << "["
+					  << "]["
 					  << (__node->_color == _S_red ? "RED" : "BLACK")
 					  << "]"
 					  << std::endl;
-			_printInt(__node->_left, __indent, 'r');
-			_printInt(__node->_right, __indent, 'l');
+			return __indent;
+		}
+		void _printNodeRec(_Base_ptr __node, std::string __indent = "", char __src = 'R')
+		{
+			if (__node == NULL)
+				return;
+			__indent = _printNode(__node, __indent, __src);
+			_printNodeRec(__node->_left, __indent, 'r');
+			_printNodeRec(__node->_right, __indent, 'l');
 		}
 		void _print()
 		{
 			std::cout << "_______Start print tree______\n";
 			if (_root)
-				_printInt(_root);
+				_printNodeRec(_root);
 			std::cout << "_______End print tree______\n";
-		}
-		void _addNode(_Base_ptr node)
-		{
-			node->_color = _S_red;
-
-			_Base_ptr y = NULL;
-			_Base_ptr x = _root;
-
-			while (x != NULL)
-			{
-				y = x;
-				if (node->_key == x->_key)
-				{
-					x->_val = node->_val;
-					_delete_node(node);
-					return;
-				}
-				if (node->_key < x->_key)
-				{
-					x = x->_left;
-				}
-				else
-				{
-					x = x->_right;
-				}
-			}
-
-			node->_parent = y;
-			if (y == NULL)
-			{
-				_root = node;
-			}
-			else if (node->_key < y->_key)
-			{
-				y->_left = node;
-			}
-			else
-			{
-				y->_right = node;
-			}
-
-			if (node->_parent == NULL)
-			{
-				node->_color = _S_black;
-				return;
-			}
-
-			if (node->_parent->_parent == NULL)
-			{
-				return;
-			}
-
-			// insertFix(node);
 		}
 	};
 
