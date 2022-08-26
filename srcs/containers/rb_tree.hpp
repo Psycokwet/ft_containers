@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/26 11:22:57 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/26 11:42:37 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,25 @@ namespace ft
 			typedef const _Rb_tree_node_base *_Const_Base_ptr;
 
 			_Val _val;
-			_Key _key;
 			_Rb_tree_color _color;
 			_Base_ptr _parent;
 			_Base_ptr _left;
 			_Base_ptr _right;
+
+			public:
+			_Key *key_ptr(){
+				return &(_val.first);
+			}
+			_Key key(){
+				return _val.first;
+			}
 		};
 
 		// https://alp.developpez.com/tutoriels/templaterebinding/
 		typedef typename _Alloc::template rebind<_Rb_tree_node_base>::other allocator_type;
 
 		allocator_type _Tp_alloc_type;
+
 
 	private:
 		typedef _Rb_tree_node_base _Base;
@@ -102,7 +110,6 @@ namespace ft
 		{
 			// return _insert(__key, __val);
 			_Val *v = &(_insert(__key, __val)->_val);
-			_print();
 			return v;
 		}
 		void findNode(_Key __key)
@@ -314,9 +321,9 @@ namespace ft
 
 		_Base_ptr _findNodeInt(_Base_ptr __node, _Key __key)
 		{
-			if (!__node || __key == __node->_key)
+			if (!__node || __key == __node->key())
 				return __node;
-			if (__key < __node->_key)
+			if (__key < __node->key())
 				return _findNodeInt(__node->_left, __key);
 			return _findNodeInt(__node->_right, __key);
 		}
@@ -346,15 +353,15 @@ namespace ft
 		_Base_ptr _insert(_Key __key, _Val __val)
 		{
 			_Base_ptr node = _create_node();
-			node->_key = __key;
 			node->_val = __val;
+			*(node->key_ptr()) = __key;//never set key value before val, since val encompass it
 			return _addNode(node);
 		}
 		_Base_ptr _init_node(_Base_ptr __node)
 		{
 			_Base tmp;
-			tmp._key = key_type();
 			tmp._val = value_type();
+			*(tmp.key_ptr()) = key_type();
 			tmp._parent = NULL;
 			tmp._left = NULL;
 			tmp._right = NULL;
@@ -376,14 +383,14 @@ namespace ft
 			while (current != NULL)
 			{
 				parent = current;
-				if (node->_key == current->_key)
+				if (node->key() == current->key())
 				{
 					current->_val = node->_val;
 					_delete_node_clean(&node);
 					// Node exist with same key, abort and replace content
 					return current;
 				}
-				if (node->_key < current->_key)
+				if (node->key() < current->key())
 					current = current->_left;
 				else
 					current = current->_right;
@@ -392,7 +399,7 @@ namespace ft
 			node->_parent = parent;
 			if (parent == NULL)
 				_root = node;
-			else if (node->_key < parent->_key)
+			else if (node->key() < parent->key())
 				parent->_left = node;
 			else
 				parent->_right = node;
@@ -503,7 +510,7 @@ namespace ft
 			__indent += "  ";
 			std::cout << __src
 					  << "----["
-					  << __node->_key
+					  << __node->key()
 					  << "]==["
 					  << __node->_val.first
 					  << "]:["
