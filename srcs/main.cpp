@@ -57,6 +57,7 @@ int main(int argc, char **argv)
 	ft::map<int, int> map_int;
 	ft::map<std::string, int> map_str_int;
 	ft::map<std::string, std::string> map_str;
+	map_int[1] = 2;
 return 0;
 	 ft::vector<std::string > vectorTeststr;
 	 std::cout << "pushback str :" << "\n";
