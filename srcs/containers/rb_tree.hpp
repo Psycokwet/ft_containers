@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/26 11:08:13 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/26 11:22:57 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,6 @@ namespace ft
 		_Base_ptr _root;	// m_header
 		size_t _node_count; // Keeps track of size of tree.
 
-		_Base_ptr _get_node()
-		{
-			return _Tp_alloc_type.allocate(1);
-		}
-
-		_Base_ptr _create_node()
-		{
-			_Base_ptr node = _get_node();
-			node = _init_node(node);
-			// __tmp->
-			// _construct_node(__tmp, __args);
-			return node;
-		}
-
 	public:
 		typedef _Key key_type;
 		typedef _Val value_type;
@@ -87,14 +73,6 @@ namespace ft
 		_Rb_tree()
 		{
 			_root = NULL;
-			_Key key = key_type();
-			_Val val = value_type();
-
-			_insert(key, val);
-			// _Base_ptr cc = _create_node();
-			// _insert(key_type(), value_type());
-			_print();
-			// _delete_node(_root);
 		}
 
 		_Rb_tree(const _Compare &__comp,
@@ -352,6 +330,19 @@ namespace ft
 		** --------------------------------- INSERT  ---------------------------
 		*/
 
+		_Base_ptr _get_node()
+		{
+			return _Tp_alloc_type.allocate(1);
+		}
+
+		_Base_ptr _create_node()
+		{
+			_Base_ptr node = _get_node();
+			node = _init_node(node);
+			// __tmp->
+			// _construct_node(__tmp, __args);
+			return node;
+		}
 		_Base_ptr _insert(_Key __key, _Val __val)
 		{
 			_Base_ptr node = _create_node();
