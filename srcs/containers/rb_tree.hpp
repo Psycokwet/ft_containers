@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/26 11:42:37 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:13:42 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,13 @@ namespace ft
 			_Base_ptr _left;
 			_Base_ptr _right;
 
-			public:
-			_Key *key_ptr(){
+		public:
+			_Key *key_ptr()
+			{
 				return &(_val.first);
 			}
-			_Key key(){
+			_Key key()
+			{
 				return _val.first;
 			}
 		};
@@ -56,7 +58,6 @@ namespace ft
 		typedef typename _Alloc::template rebind<_Rb_tree_node_base>::other allocator_type;
 
 		allocator_type _Tp_alloc_type;
-
 
 	private:
 		typedef _Rb_tree_node_base _Base;
@@ -81,16 +82,16 @@ namespace ft
 		_Rb_tree()
 		{
 			_root = NULL;
+			_node_count = 0;
 		}
 
-		_Rb_tree(const _Compare &__comp,
-				 const allocator_type &__a = allocator_type())
-			: _base_key_compare(__comp), allocator_type(__a), _root(NULL)
+		_Rb_tree(const _Compare &__comp, const allocator_type &__a = allocator_type())
+			: _base_key_compare(__comp), allocator_type(__a), _root(NULL), _node_count(0)
 		{
 		}
 
 		_Rb_tree(const _Rb_tree &__x)
-			: _base_key_compare(__x.__comp), allocator_type(__x.__a), _root(NULL)
+			: _base_key_compare(__x.__comp), allocator_type(__x.__a), _root(NULL), _node_count(0)
 		{
 			// if (__x._root != NULL)
 			// 	_root = _copy(__x);
@@ -102,14 +103,16 @@ namespace ft
 			_print();
 
 			_delete_tree();
+			_node_count = 0;
 			std::cout << "deleted" << std::endl;
 		}
 
 	public:
 		_Val *insertNode(_Key __key, _Val __val = _Val())
 		{
-			// return _insert(__key, __val);
 			_Val *v = &(_insert(__key, __val)->_val);
+			std::cout << "Added node in tree :" << std::endl;
+			_print();
 			return v;
 		}
 		void findNode(_Key __key)
@@ -125,7 +128,7 @@ namespace ft
 		/*
 		** --------------------------------- ORGANIZE TREE  ---------------------------
 		*/
-	
+
 		void deleteFix(_Base_ptr x)
 		{
 			_Base_ptr s;
@@ -327,7 +330,7 @@ namespace ft
 				return _findNodeInt(__node->_left, __key);
 			return _findNodeInt(__node->_right, __key);
 		}
-		
+
 		_Base_ptr _findNode(_Key __key)
 		{
 			return _findNodeInt(_root, __key);
@@ -354,7 +357,7 @@ namespace ft
 		{
 			_Base_ptr node = _create_node();
 			node->_val = __val;
-			*(node->key_ptr()) = __key;//never set key value before val, since val encompass it
+			*(node->key_ptr()) = __key; // never set key value before val, since val encompass it
 			return _addNode(node);
 		}
 		_Base_ptr _init_node(_Base_ptr __node)
@@ -376,9 +379,6 @@ namespace ft
 
 			_Base_ptr parent = NULL;
 			_Base_ptr current = _root;
-			// std::cout << "test 270\n";
-			// _printNode(current);
-			// std::cout << "test 271\n";
 
 			while (current != NULL)
 			{
@@ -396,6 +396,7 @@ namespace ft
 					current = current->_right;
 			}
 
+			_node_count++;
 			node->_parent = parent;
 			if (parent == NULL)
 				_root = node;
@@ -420,7 +421,7 @@ namespace ft
 		/*
 		** --------------------------------- DELETE  ---------------------------
 		*/
-	
+
 		void _delete_sub_tree(_Base_ptr __root)
 		{
 			if (__root != NULL)
@@ -438,24 +439,27 @@ namespace ft
 
 		void _delete_node(_Base_ptr __node)
 		{
+			std::cout << "deleting node :" << std::endl;
+			_printNode(__node);
 			_Tp_alloc_type.deallocate(__node, 1);
 		}
 
 		void _delete_node_clean(_Base_ptr *__node)
 		{
-			_delete_node(* __node);
+			_delete_node(*__node);
 			*__node = NULL;
 		}
 
 		void _findAndDeleteNodeFromTree(_Base_ptr __root, _Key __key)
 		{
 			_Base_ptr node = _findNode(__key);
-			if(!node)
+			if (!node)
 				return;
 			_deleteNodeFromTree(node);
 		}
 		void _deleteNodeFromTree(_Base_ptr __node) //_node must be in the tree, test beforehand
 		{
+			_node_count--;
 			_Base_ptr x, y;
 
 			y = __node;
@@ -511,9 +515,7 @@ namespace ft
 			std::cout << __src
 					  << "----["
 					  << __node->key()
-					  << "]==["
-					  << __node->_val.first
-					  << "]:["
+					  << "]->["
 					  << __node->_val.second
 					  << "]["
 					  << (__node->_color == _S_red ? "RED" : "BLACK")
@@ -531,7 +533,7 @@ namespace ft
 		}
 		void _print()
 		{
-			std::cout << "_______Start print tree______\n";
+			std::cout << "_______Start print tree______" << _node_count << "\n";
 			if (_root)
 				_printNodeRec(_root);
 			std::cout << "_______End print tree______\n";

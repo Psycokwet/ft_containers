@@ -58,6 +58,12 @@ int main(int argc, char **argv)
 	ft::map<std::string, int> map_str_int;
 	ft::map<std::string, std::string> map_str;
 	map_int[1] = 2;
+	// map_int[1] = 5;
+	map_int[0] = 5;
+	map_int[2] = 25;
+	map_int[3] = 42;
+	map_int[4] = 2;
+	// map_int[5] = 6;
 return 0;
 	 ft::vector<std::string > vectorTeststr;
 	 std::cout << "pushback str :" << "\n";
