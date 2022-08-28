@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 14:36:08 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 14:40:34 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,21 +326,10 @@ namespace ft
 			return __root;
 		}
 
-		_Base_ptr _findNodeInt(_Base_ptr __node, _Key __key)
-		{
-			while (__node != _leaf)
-			{
-				if (__node->key() == __key)
-					return __node;
-				__node = __node->key() <= __key ? __node->_right : __node->_left;
-			}
-			return NULL;
-		}
-
-		_Base_ptr _findClosest(_Key __key)
+		_Base_ptr _findClosest(_Base_ptr __root,_Key __key)
 		{
 			_Base_ptr closestParent = NO_PARENT;
-			_Base_ptr current = _root;
+			_Base_ptr current = __root;
 			while (current != _leaf)
 			{
 				closestParent = current;
@@ -349,6 +338,14 @@ namespace ft
 				current = current->key() <= __key ? current->_right : current->_left;
 			}
 			return closestParent;
+		}
+
+		_Base_ptr _findNodeInt(_Base_ptr __root, _Key __key)
+		{
+			_Base_ptr result = _findClosest( __root, __key);
+			if (result &&  result->key() != __key)
+				return NULL;
+			return result;
 		}
 
 		_Base_ptr _findNode(_Key __key)
@@ -393,7 +390,7 @@ namespace ft
 
 		_Base_ptr _addNode(_Base_ptr node)
 		{
-			_Base_ptr parent = _findClosest(node->key()); // step 4 (works to find if root == null for step 3 later)
+			_Base_ptr parent = _findClosest(_root, node->key()); // step 4 (works to find if root == null for step 3 later)
 			if (parent != NO_PARENT && parent->key() == node->key())
 			{
 				// Node exist with same key, abort and replace content
