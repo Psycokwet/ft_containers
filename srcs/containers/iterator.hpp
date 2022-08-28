@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 16:02:13 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 20:30:57 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #define ITERATOR_HPP
 
 #include "iterator_traits.hpp"
-#include "iterator_base.hpp"
+// #include "iterator_base.hpp"
 
 namespace ft
 {
 	// using ft::iterator;
-	using ft::iterator_traits;
+	// using ft::iterator_traits;
 	template <typename _Iterator, typename _Container>
 	class __normal_iterator
 	{
