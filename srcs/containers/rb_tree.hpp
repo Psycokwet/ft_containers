@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 13:24:44 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 13:34:59 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,25 +263,26 @@ namespace ft
 							   void (_Rb_tree::*__secondRotate)(_Base_ptr),
 							   _Base_ptr _Base::*__side)
 		{
-			_Base_ptr u = __newNode->_parent->_parent->*__side;
-			if (u->_color == _S_red)
+			_Base_ptr gp = __newNode->_parent->_parent;
+
+			if ((gp->*__side)->_color == _S_red)
 			{
-				u->_color = _S_black;
-				__newNode->_parent->_color = _S_black;
-				__newNode->_parent->_parent->_color = _S_red;
-				return __newNode->_parent->_parent;
+				gp->_right->_color = _S_black; // step a
+				gp->_left->_color = _S_black;  // step a
+				gp->_color = _S_red;		   // step a
+				return gp;					   // step b. gp is the new newNode
 			}
 			else
 			{
 				if (__newNode == __newNode->_parent->*__side)
 				{
-					__newNode = __newNode->_parent;
-					(this->*__firstRotate)(__newNode);
+					__newNode = __newNode->_parent;	   // step c
+					(this->*__firstRotate)(__newNode); // step d
 					return __newNode;
 				}
-				__newNode->_parent->_color = _S_black;
-				__newNode->_parent->_parent->_color = _S_red;
-				(this->*__secondRotate)(__newNode->_parent->_parent);
+				__newNode->_parent->_color = _S_black;				  // step e
+				__newNode->_parent->_parent->_color = _S_red;		  // step e
+				(this->*__secondRotate)(__newNode->_parent->_parent); // step f
 				return __newNode;
 			}
 		}
@@ -398,7 +399,7 @@ namespace ft
 				// Node exist with same key, abort and replace content
 				parent->_val = node->_val; // should I use construct ?
 				_delete_node_clean(&node);
-				return parent;// obv not parent in this case
+				return parent; // obv not parent in this case
 			}
 
 			_node_count++;			 // here I know I will add a node for sure
