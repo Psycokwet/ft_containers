@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 10:10:09 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 13:24:44 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,58 +258,49 @@ namespace ft
 		{
 			_rotate(x, &_Base::_left, &_Base::_right);
 		}
-
-		void _balanceTree(_Base_ptr __k)
+		_Base_ptr _balance_int(_Base_ptr __newNode,
+							   void (_Rb_tree::*__firstRotate)(_Base_ptr),
+							   void (_Rb_tree::*__secondRotate)(_Base_ptr),
+							   _Base_ptr _Base::*__side)
 		{
-			_Base_ptr u = NULL;
-			while (__k->_parent->_color == _S_red)
+			_Base_ptr u = __newNode->_parent->_parent->*__side;
+			if (u->_color == _S_red)
 			{
-				if (__k->_parent == __k->_parent->_parent->_right)
+				u->_color = _S_black;
+				__newNode->_parent->_color = _S_black;
+				__newNode->_parent->_parent->_color = _S_red;
+				return __newNode->_parent->_parent;
+			}
+			else
+			{
+				if (__newNode == __newNode->_parent->*__side)
 				{
-					u = __k->_parent->_parent->_left;
-					if (u->_color == _S_red)
-					{
-						u->_color = _S_black;
-						__k->_parent->_color = _S_black;
-						__k->_parent->_parent->_color = _S_red;
-						__k = __k->_parent->_parent;
-					}
-					else
-					{
-						if (__k == __k->_parent->_left)
-						{
-							__k = __k->_parent;
-							_rightRotate(__k);
-						}
-						__k->_parent->_color = _S_black;
-						__k->_parent->_parent->_color = _S_red;
-						_leftRotate(__k->_parent->_parent);
-					}
+					__newNode = __newNode->_parent;
+					(this->*__firstRotate)(__newNode);
+					return __newNode;
 				}
+				__newNode->_parent->_color = _S_black;
+				__newNode->_parent->_parent->_color = _S_red;
+				(this->*__secondRotate)(__newNode->_parent->_parent);
+				return __newNode;
+			}
+		}
+		void _balanceTree(_Base_ptr __newNode)
+		{
+			while (__newNode->_parent->_color == _S_red) // step 1
+			{
+				if (__newNode->_parent == __newNode->_parent->_parent->_left) // step 2
+					__newNode = _balance_int(__newNode,						  // case 1
+											 &_Rb_tree::_leftRotate,
+											 &_Rb_tree::_rightRotate,
+											 &_Base::_right);
 				else
-				{
-					u = __k->_parent->_parent->_right;
+					__newNode = _balance_int(__newNode, // case 2
+											 &_Rb_tree::_rightRotate,
+											 &_Rb_tree::_leftRotate,
+											 &_Base::_left);
 
-					if (u->_color == _S_red)
-					{
-						u->_color = _S_black;
-						__k->_parent->_color = _S_black;
-						__k->_parent->_parent->_color = _S_red;
-						__k = __k->_parent->_parent;
-					}
-					else
-					{
-						if (__k == __k->_parent->_right)
-						{
-							__k = __k->_parent;
-							_leftRotate(__k);
-						}
-						__k->_parent->_color = _S_black;
-						__k->_parent->_parent->_color = _S_red;
-						_rightRotate(__k->_parent->_parent);
-					}
-				}
-				if (__k == _root)
+				if (__newNode == _root)
 					break;
 			}
 			_root->_color = _S_black;
@@ -339,9 +330,24 @@ namespace ft
 			{
 				if (__node->key() == __key)
 					return __node;
-				__node = __node->key() <= __key ? __node->_M_right : __node->_M_left;
+				__node = __node->key() <= __key ? __node->_right : __node->_left;
 			}
 			return NULL;
+		}
+
+		_Base_ptr _findClosest(_Key __key)
+		{
+			_Base_ptr closestParent = _root;
+			_Base_ptr current = _root;
+
+			while (current != _leaf)
+			{
+				closestParent = current;
+				if (__key == current->key())
+					return current;
+				current = current->key() <= __key ? current->_right : current->_left;
+			}
+			return closestParent;
 		}
 
 		_Base_ptr _findNode(_Key __key)
@@ -386,43 +392,28 @@ namespace ft
 
 		_Base_ptr _addNode(_Base_ptr node)
 		{
-			node->_color = _S_red;
-
-			_Base_ptr parent = NO_PARENT;
-			_Base_ptr current = _root;
-
-			while (current != _leaf)
+			_Base_ptr parent = _findClosest(node->key()); // step 4 (works to find if root == null for step 3 later)
+			if (parent != NO_PARENT && parent->key() == node->key())
 			{
-				parent = current;
-				if (node->key() == current->key())
-				{
-					current->_val = node->_val;
-					_delete_node_clean(&node);
-					// Node exist with same key, abort and replace content
-					return current;
-				}
-				if (node->key() < current->key())
-					current = current->_left;
-				else
-					current = current->_right;
+				// Node exist with same key, abort and replace content
+				parent->_val = node->_val; // should I use construct ?
+				_delete_node_clean(&node);
+				return parent;// obv not parent in this case
 			}
 
-			_node_count++;
-			node->_parent = parent;
-			if (parent == NO_PARENT)
-				_root = node;
-			else if (node->key() < parent->key())
-				parent->_left = node;
-			else
-				parent->_right = node;
-
-			if (node->_parent == NO_PARENT)
+			_node_count++;			 // here I know I will add a node for sure
+			if (parent == NO_PARENT) // step 3, color already black
 			{
-				node->_color = _S_black;
+				_root = node;
 				return node;
 			}
-
-			if (node->_parent->_parent == NO_PARENT)
+			node->_parent = parent;			 // step 5
+			if (node->key() > parent->key()) // step 6
+				parent->_right = node;
+			else
+				parent->_left = node;				 // step 7
+			node->_color = _S_red;					 // step 9 (no need for step 8, done at init)
+			if (node->_parent->_parent == NO_PARENT) // parent is black since root, so work finished here
 				return node;
 
 			_balanceTree(node);
