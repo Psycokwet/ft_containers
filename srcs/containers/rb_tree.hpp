@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 13:34:59 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 14:36:08 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ namespace ft
 
 		_Rb_tree()
 		{
-			_root = _leaf;
 			_leaf = _initLeaf();
+			_root = _leaf;
 			_node_count = 0;
 		}
 
@@ -258,6 +258,7 @@ namespace ft
 		{
 			_rotate(x, &_Base::_left, &_Base::_right);
 		}
+		
 		_Base_ptr _balance_int(_Base_ptr __newNode,
 							   void (_Rb_tree::*__firstRotate)(_Base_ptr),
 							   void (_Rb_tree::*__secondRotate)(_Base_ptr),
@@ -338,9 +339,8 @@ namespace ft
 
 		_Base_ptr _findClosest(_Key __key)
 		{
-			_Base_ptr closestParent = _root;
+			_Base_ptr closestParent = NO_PARENT;
 			_Base_ptr current = _root;
-
 			while (current != _leaf)
 			{
 				closestParent = current;
@@ -442,7 +442,7 @@ namespace ft
 
 		void _delete_node(_Base_ptr __node)
 		{
-			std::cout << "deleting node :" << std::endl;
+			std::cout << "deleting node :"<< __node<< std::endl;
 			_printNode(__node);
 			_Tp_alloc_type.deallocate(__node, 1);
 		}
