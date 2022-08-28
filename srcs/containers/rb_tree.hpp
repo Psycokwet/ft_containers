@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 17:16:52 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 20:35:24 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define RB_TREE_HPP
 
 #include "iterator_traits.hpp"
+#include "pair.hpp"
 // #include "rb_iterators.hpp"
 
 namespace ft
@@ -598,6 +599,8 @@ namespace ft
 			std::cout << "_______End print tree______\n";
 		}
 	};
+
+
 
 }
 

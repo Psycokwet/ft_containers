@@ -9,6 +9,7 @@
 #include <vector>
 namespace ft = std;
 #else
+#include <rb_iterators.hpp>
 #include <type_traits.hpp>
 #include <pair.hpp>
 #include <map.hpp>
@@ -65,7 +66,7 @@ int main(int argc, char **argv)
 	map_int[3] = 42;
 	map_int[4] = 2;
 	map_int[5] = 6;
-return 0;
+// return 0;
 	 ft::vector<std::string > vectorTeststr;
 	 std::cout << "pushback str :" << "\n";
 	 vectorTeststr.push_back("cc");
