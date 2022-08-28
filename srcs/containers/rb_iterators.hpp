@@ -6,61 +6,64 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 17:16:18 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 20:35:39 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ITERATOR_HPP
-#define ITERATOR_HPP
+#ifndef RB_ITERATOR_HPP
+#define RB_ITERATOR_HPP
 
-#include "iterator_traits.hpp"
-#include "iterator_base.hpp"
-#include "pair.hpp"
 #include "rb_tree.hpp"
 
 namespace ft
 {
-	template <typename _Tp, bool _isConst,
-			  // for nodes
-			  typename _Key,
-			  typename _Val = ft::pair<_Key, void>,
-			  typename _Compare = std::less<_Key>,
-			  typename _Alloc = std::allocator<_Val> // bug indent
-			  >
+	template <typename _Tree,
+			  typename _Tp,
+			  bool _isConst>
 	struct _possible_const_members
 	{
+	public:
 		typedef _Tp value_type;
-		typedef typename ft::_Rb_tree::_Rb_tree_node_base<_Tp> *_Link_type;
+		typedef typename _Tree::_Rb_tree_node_base _Base;
+		typedef _Base *_Link_type;
 		typedef _Tp &reference;
 		typedef _Tp *pointer;
-		typedef _Rb_tree_node_base::_Base_ptr _Base_ptr;
+		typedef typename _Base::_Base_ptr _Base_ptr;
 	};
 
-	template <typename _Tp>
-	struct _possible_const_members<_Tp, true>
+	template <typename _Tree,
+			  typename _Tp>
+	struct _possible_const_members<_Tree, _Tp, true>
 	{
+	public:
 		typedef const _Tp value_type;
-		typedef typename const ft::_Rb_tree::_Rb_tree_node_base<_Tp> *_Link_type;
+		typedef typename _Tree::_Rb_tree_node_base _Base;
+		typedef _Base *_Link_type;
 		typedef const _Tp &reference;
 		typedef const _Tp *pointer;
-		typedef _Rb_tree_node_base::_Const_Base_ptr _Base_ptr;
+		typedef typename _Base::_Const_Base_ptr _Base_ptr;
 	};
 
-	template <typename _Tp, bool _isConst>
-	struct _Rb_tree_iterator : public _possible_const_members<_Tp, _isConst>
+	template <typename _Tree,
+			  typename _Tp,
+			  bool _isConst,
+			  typename _Traits = _possible_const_members<_Tree, _Tp, _isConst> // bug indent
+			  >
+	struct _Rb_tree_iterator
 	{
-		// typedef _Tp value_type;
-		// typedef typename enable_if<_isConst, const _Tp>::type value_type;
-		// typedef typename enable_if<!_isConst, _Tp>::type value_type;
-		// typedef _Tp value_type;
-
+		typedef typename _Traits::value_type value_type;
+		typedef typename _Traits::_Base _Base;
+		typedef typename _Traits::_Link_type _Link_type;
+		typedef typename _Traits::reference reference;
+		typedef typename _Traits::pointer pointer;
+		typedef typename _Traits::_Base_ptr _Base_ptr;
+		_Base_ptr _node;
 		typedef bidirectional_iterator_tag iterator_category;
 		typedef ptrdiff_t difference_type;
-
-		typedef _Rb_tree_iterator<_Tp, _isConst> _Self;
-		typedef _Rb_tree_node_base::_Base_ptr _Base_ptr;
+		typedef _Rb_tree_iterator<_Tree, _Tp, _isConst> _Self;
 
 		_Rb_tree_iterator() : _node() {}
+
 		explicit _Rb_tree_iterator(_Base_ptr __x) : _node(__x) {}
 
 		reference operator*() const { return _node->val(); }
@@ -96,8 +99,6 @@ namespace ft
 		bool operator==(const _Self &__x) const { return _node == __x._node; }
 
 		bool operator!=(const _Self &__x) const { return _node != __x._node; }
-
-		_Base_ptr _node;
 	};
 
 }
