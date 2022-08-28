@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/26 14:13:42 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 10:10:09 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ namespace ft
 		allocator_type _Tp_alloc_type;
 
 	private:
+#define NO_PARENT NULL
+
 		typedef _Rb_tree_node_base _Base;
 		typedef const _Rb_tree_node_base _Const_Base;
 		typedef _Rb_tree_node_base *_Base_ptr;
@@ -67,6 +69,7 @@ namespace ft
 
 		typedef _Compare _base_key_compare;
 		_Base_ptr _root;	// m_header
+		_Base_ptr _leaf;	// end leafs
 		size_t _node_count; // Keeps track of size of tree.
 
 	public:
@@ -81,18 +84,21 @@ namespace ft
 
 		_Rb_tree()
 		{
-			_root = NULL;
+			_root = _leaf;
+			_leaf = _initLeaf();
 			_node_count = 0;
 		}
 
 		_Rb_tree(const _Compare &__comp, const allocator_type &__a = allocator_type())
-			: _base_key_compare(__comp), allocator_type(__a), _root(NULL), _node_count(0)
+			: _base_key_compare(__comp), allocator_type(__a), _root(NULL), _leaf(_initLeaf()), _node_count(0)
 		{
+			_root = _leaf;
 		}
 
 		_Rb_tree(const _Rb_tree &__x)
-			: _base_key_compare(__x.__comp), allocator_type(__x.__a), _root(NULL), _node_count(0)
+			: _base_key_compare(__x.__comp), allocator_type(__x.__a), _root(NULL), _leaf(_initLeaf()), _node_count(0)
 		{
+			_root = _leaf;
 			// if (__x._root != NULL)
 			// 	_root = _copy(__x);
 		}
@@ -105,6 +111,7 @@ namespace ft
 			_delete_tree();
 			_node_count = 0;
 			std::cout << "deleted" << std::endl;
+			_delete_node_clean(&_leaf);
 		}
 
 	public:
@@ -125,6 +132,16 @@ namespace ft
 		}
 
 	private:
+		/*
+		** --------------------------------- CONSTRUCTION  ---------------------------
+		*/
+		_Base_ptr _initLeaf()
+		{
+			_Base_ptr leaf = _create_node();
+			leaf->_left = leaf;
+			leaf->_right = leaf;
+			return leaf;
+		}
 		/*
 		** --------------------------------- ORGANIZE TREE  ---------------------------
 		*/
@@ -205,7 +222,7 @@ namespace ft
 		}
 		void _rbTransplant(_Base_ptr u, _Base_ptr v)
 		{
-			if (u->_parent == NULL)
+			if (u->_parent == NO_PARENT)
 				_root = v;
 			else if (u == u->_parent->_left)
 				u->_parent->_left = v;
@@ -214,38 +231,32 @@ namespace ft
 			v->_parent = u->_parent;
 		}
 
+		void _rotate(_Base_ptr __x, _Base_ptr _Base::*__otherSide, _Base_ptr _Base::*__sideRotate)
+		{
+			// step 1 is condition initials
+			_Base_ptr y = __x->*__otherSide;
+			__x->*__otherSide = y->*__sideRotate; // step 2 :No issue if otherSide gets a leaf
+			if (y->*__sideRotate != _leaf)		  // fix y->sideRotate parent
+				(y->*__sideRotate)->_parent = __x;
+			y->_parent = __x->_parent;	   // No issue if y->_parent gets NO_PARENT
+			if (__x->_parent == NO_PARENT) // step 3
+				_root = y;
+			// step 4-5 replace original x parent's parent by y
+			else if (__x == __x->_parent->*__sideRotate)
+				__x->_parent->*__sideRotate = y;
+			else
+				__x->_parent->*__otherSide = y;
+			// step 6 assign y as x parent's
+			__x->_parent = y;
+			y->*__sideRotate = __x;
+		}
 		void _leftRotate(_Base_ptr x)
 		{
-			_Base_ptr y = x->_right;
-			x->_right = y->_left;
-			if (y->_left != NULL)
-				y->_left->_parent = x;
-			y->_parent = x->_parent;
-			if (x->_parent == NULL)
-				_root = y;
-			else if (x == x->_parent->_left)
-				x->_parent->_left = y;
-			else
-				x->_parent->_right = y;
-			y->_left = x;
-			x->_parent = y;
+			_rotate(x, &_Base::_right, &_Base::_left);
 		}
-
 		void _rightRotate(_Base_ptr x)
 		{
-			_Base_ptr y = x->_left;
-			x->_left = y->_right;
-			if (y->_right != NULL)
-				y->_right->_parent = x;
-			y->_parent = x->_parent;
-			if (x->_parent == NULL)
-				_root = y;
-			else if (x == x->_parent->_right)
-				x->_parent->_right = y;
-			else
-				x->_parent->_left = y;
-			y->_right = x;
-			x->_parent = y;
+			_rotate(x, &_Base::_left, &_Base::_right);
 		}
 
 		void _balanceTree(_Base_ptr __k)
@@ -310,25 +321,27 @@ namespace ft
 
 		_Base_ptr _minimum(_Base_ptr __root)
 		{
-			while (__root->_left)
+			while (__root->_left == _leaf)
 				__root = __root->_left;
 			return __root;
 		}
 
 		_Base_ptr _maximum(_Base_ptr __root)
 		{
-			while (__root->_right)
+			while (__root->_right == _leaf)
 				__root = __root->_right;
 			return __root;
 		}
 
 		_Base_ptr _findNodeInt(_Base_ptr __node, _Key __key)
 		{
-			if (!__node || __key == __node->key())
-				return __node;
-			if (__key < __node->key())
-				return _findNodeInt(__node->_left, __key);
-			return _findNodeInt(__node->_right, __key);
+			while (__node != _leaf)
+			{
+				if (__node->key() == __key)
+					return __node;
+				__node = __node->key() <= __key ? __node->_M_right : __node->_M_left;
+			}
+			return NULL;
 		}
 
 		_Base_ptr _findNode(_Key __key)
@@ -349,8 +362,6 @@ namespace ft
 		{
 			_Base_ptr node = _get_node();
 			node = _init_node(node);
-			// __tmp->
-			// _construct_node(__tmp, __args);
 			return node;
 		}
 		_Base_ptr _insert(_Key __key, _Val __val)
@@ -365,9 +376,9 @@ namespace ft
 			_Base tmp;
 			tmp._val = value_type();
 			*(tmp.key_ptr()) = key_type();
-			tmp._parent = NULL;
-			tmp._left = NULL;
-			tmp._right = NULL;
+			tmp._parent = NO_PARENT;
+			tmp._left = _leaf;
+			tmp._right = _leaf;
 			tmp._color = _S_black;
 			_Tp_alloc_type.construct(__node, tmp);
 			return __node;
@@ -377,10 +388,10 @@ namespace ft
 		{
 			node->_color = _S_red;
 
-			_Base_ptr parent = NULL;
+			_Base_ptr parent = NO_PARENT;
 			_Base_ptr current = _root;
 
-			while (current != NULL)
+			while (current != _leaf)
 			{
 				parent = current;
 				if (node->key() == current->key())
@@ -398,20 +409,20 @@ namespace ft
 
 			_node_count++;
 			node->_parent = parent;
-			if (parent == NULL)
+			if (parent == NO_PARENT)
 				_root = node;
 			else if (node->key() < parent->key())
 				parent->_left = node;
 			else
 				parent->_right = node;
 
-			if (node->_parent == NULL)
+			if (node->_parent == NO_PARENT)
 			{
 				node->_color = _S_black;
 				return node;
 			}
 
-			if (node->_parent->_parent == NULL)
+			if (node->_parent->_parent == NO_PARENT)
 				return node;
 
 			_balanceTree(node);
@@ -424,7 +435,7 @@ namespace ft
 
 		void _delete_sub_tree(_Base_ptr __root)
 		{
-			if (__root != NULL)
+			if (__root != _leaf)
 			{
 				_delete_sub_tree(__root->_left);
 				_delete_sub_tree(__root->_right);
@@ -464,19 +475,19 @@ namespace ft
 
 			y = __node;
 			_Rb_tree_color y_original_color = y->_color;
-			if (__node->_left == NULL)
+			if (__node->_left == _leaf)
 			{
 				x = __node->_right;
 				_rbTransplant(__node, __node->_right);
 			}
-			else if (__node->_right == NULL)
+			else if (__node->_right == _leaf)
 			{
 				x = __node->_left;
 				_rbTransplant(__node, __node->_left);
 			}
 			else
 			{
-				y = minimum(__node->_right);
+				y = _minimum(__node->_right);
 				y_original_color = y->_color;
 				x = y->_right;
 				if (y->_parent == __node)
@@ -506,7 +517,7 @@ namespace ft
 
 		std::string _printNode(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
-			if (__node == NULL)
+			if (__node == _leaf)
 				return __indent;
 			std::cout << __indent;
 			__indent += __src == 'r' ? "|" : __src == 'l' ? " "
@@ -525,7 +536,7 @@ namespace ft
 		}
 		void _printNodeRec(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
-			if (__node == NULL)
+			if (__node == _leaf)
 				return;
 			__indent = _printNode(__node, __indent, __src);
 			_printNodeRec(__node->_left, __indent, 'r');
