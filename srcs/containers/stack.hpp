@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/01 15:35:04 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 16:29:37 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,15 @@
 namespace ft
 
 {
-	template <typename _Tp, typename _Sequence = ft::vector<_Tp> >
+	template <typename _Tp, typename _Sequence = ft::vector<_Tp> // bug indent
+			  >
 	class stack
 	{
 		template <typename _Tp1, typename _Seq1>
-		friend bool
-		operator==(const stack<_Tp1, _Seq1> &, const stack<_Tp1, _Seq1> &);
+		friend bool operator==(const stack<_Tp1, _Seq1> &, const stack<_Tp1, _Seq1> &);
 
 		template <typename _Tp1, typename _Seq1>
-		friend bool
-		operator<(const stack<_Tp1, _Seq1> &, const stack<_Tp1, _Seq1> &);
+		friend bool operator<(const stack<_Tp1, _Seq1> &, const stack<_Tp1, _Seq1> &);
 
 	public:
 		typedef typename _Sequence::value_type value_type;

@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 14:40:34 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:16:52 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define RB_TREE_HPP
 
 #include "iterator_traits.hpp"
+// #include "rb_iterators.hpp"
 
 namespace ft
 {
@@ -51,6 +52,14 @@ namespace ft
 			_Key key()
 			{
 				return _val.first;
+			}
+			_Val val()
+			{
+				return _val;
+			}
+			_Val *val_ptr()
+			{
+				return _val;
 			}
 		};
 
@@ -129,6 +138,39 @@ namespace ft
 		void deleteNode(_Key __key)
 		{
 			_findAndDeleteNodeFromTree(_root, __key);
+		}
+
+		// _Base_ptr getNextNode(_Base_ptr __x)
+		// {
+		// 	if (__x->_right != NULL)
+		// 	{
+		// 		__x = __x->_right;
+		// 		while (__x->_left != NULL)
+		// 			__x = __x->_left;
+		// 	}
+		// 	else
+		// 	{
+		// 		_Base_ptr __y = __x->_parent;
+		// 		while (__x == __y->_right)
+		// 		{
+		// 			__x = __y;
+		// 			__y = __y->_parent;
+		// 		}
+		// 		if (__x->_right != __y)
+		// 			__x = __y;
+		// 	}
+		// 	return __x;
+		// }
+
+		/*
+		** --------------------------------- ALLOCATOR --------------------------
+		*/
+		/*
+		 * get_allocator done
+		 */
+		allocator_type get_allocator() const
+		{
+			return _Tp_alloc_type;
 		}
 
 	private:
@@ -220,15 +262,15 @@ namespace ft
 			}
 			x->_color = _S_black;
 		}
-		void _rbTransplant(_Base_ptr u, _Base_ptr v)
+		void _place_y_instead_of_x(_Base_ptr __x, _Base_ptr __y) // don't care for childs of x and y
 		{
-			if (u->_parent == NO_PARENT)
-				_root = v;
-			else if (u == u->_parent->_left)
-				u->_parent->_left = v;
+			if (__x->_parent == NO_PARENT)
+				_root = __y;
+			else if (__x == __x->_parent->_left)
+				__x->_parent->_left = __y;
 			else
-				u->_parent->_right = v;
-			v->_parent = u->_parent;
+				__x->_parent->_right = __y;
+			__y->_parent = __x->_parent;
 		}
 
 		void _rotate(_Base_ptr __x, _Base_ptr _Base::*__otherSide, _Base_ptr _Base::*__sideRotate)
@@ -258,7 +300,7 @@ namespace ft
 		{
 			_rotate(x, &_Base::_left, &_Base::_right);
 		}
-		
+
 		_Base_ptr _balance_int(_Base_ptr __newNode,
 							   void (_Rb_tree::*__firstRotate)(_Base_ptr),
 							   void (_Rb_tree::*__secondRotate)(_Base_ptr),
@@ -326,7 +368,7 @@ namespace ft
 			return __root;
 		}
 
-		_Base_ptr _findClosest(_Base_ptr __root,_Key __key)
+		_Base_ptr _findClosest(_Base_ptr __root, _Key __key)
 		{
 			_Base_ptr closestParent = NO_PARENT;
 			_Base_ptr current = __root;
@@ -342,8 +384,8 @@ namespace ft
 
 		_Base_ptr _findNodeInt(_Base_ptr __root, _Key __key)
 		{
-			_Base_ptr result = _findClosest( __root, __key);
-			if (result &&  result->key() != __key)
+			_Base_ptr result = _findClosest(__root, __key);
+			if (result && result->key() != __key)
 				return NULL;
 			return result;
 		}
@@ -439,7 +481,7 @@ namespace ft
 
 		void _delete_node(_Base_ptr __node)
 		{
-			std::cout << "deleting node :"<< __node<< std::endl;
+			std::cout << "deleting node :" << __node << std::endl;
 			_printNode(__node);
 			_Tp_alloc_type.deallocate(__node, 1);
 		}
@@ -457,23 +499,40 @@ namespace ft
 				return;
 			_deleteNodeFromTree(node);
 		}
-		void _deleteNodeFromTree(_Base_ptr __node) //_node must be in the tree, test beforehand
+
+		_Base_ptr _replace_other_side_if_one_side_is_leaf(_Base_ptr __node, _Base_ptr _Base::*__side, _Base_ptr _Base::*__other_side)
+		{
+			_Base_ptr result = NULL;
+			if (__node->*__side != _leaf)
+				return NULL;
+
+			result = __node->*__other_side;
+			_place_y_instead_of_x(__node, __node->*__other_side);
+			return result;
+		}
+
+		void _deleteNodeFromTree(_Base_ptr __node)
 		{
 			_node_count--;
 			_Base_ptr x, y;
 
 			y = __node;
 			_Rb_tree_color y_original_color = y->_color;
+			// one or both are leaves
+			// x = _replace_other_side_if_one_side_is_leaf(__node, &_Base::_left, &_Base::_right) ||
+			// 	_replace_other_side_if_one_side_is_leaf(__node, &_Base::_right, &_Base::_left);
+			// if (!x)
 			if (__node->_left == _leaf)
 			{
 				x = __node->_right;
-				_rbTransplant(__node, __node->_right);
+				_place_y_instead_of_x(__node, __node->_right);
 			}
 			else if (__node->_right == _leaf)
 			{
 				x = __node->_left;
-				_rbTransplant(__node, __node->_left);
+				_place_y_instead_of_x(__node, __node->_left);
 			}
+			// none are leaves
 			else
 			{
 				y = _minimum(__node->_right);
@@ -485,12 +544,12 @@ namespace ft
 				}
 				else
 				{
-					_rbTransplant(y, y->_right);
+					_place_y_instead_of_x(y, y->_right);
 					y->_right = __node->_right;
 					y->_right->_parent = y;
 				}
 
-				_rbTransplant(__node, y);
+				_place_y_instead_of_x(__node, y);
 				y->_left = __node->_left;
 				y->_left->_parent = y;
 				y->_color = __node->_color;

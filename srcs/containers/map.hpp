@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/26 10:27:00 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:17:08 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ namespace ft
 		class value_compare // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 			: public std::binary_function<value_type, value_type, bool>
 		{
-			friend class map<_Key, _Tp, _Compare, _Alloc>;
 
 		protected:
 			_Compare comp;
@@ -113,12 +112,12 @@ namespace ft
 
 		explicit map(const _Compare &__comp,
 					 const allocator_type &__a = allocator_type())
-		//: _t(__comp, _Pair_alloc_type(__a))
+		: _t(__comp, _Pair_alloc_type(__a))
 		{
 		}
 
 		map(const map &__x)
-		//:  _t(__x._t)
+		:  _t(__x._t)
 		{
 		}
 
@@ -140,13 +139,13 @@ namespace ft
 
 		map &operator=(const map &__x)
 		{
-			// _t = __x._t;
+			_t = __x._t;
 			return *this;
 		}
 
 		allocator_type get_allocator() const
 		{
-			return allocator_type(); //_t.get_allocator());
+			return _t.get_allocator();
 		}
 
 		// iterator begin()
