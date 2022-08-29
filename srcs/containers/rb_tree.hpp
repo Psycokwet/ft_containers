@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 17:35:08 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/29 19:41:17 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ namespace ft
 	{
 		_S_red = false,
 		_S_black = true,
-		_S_leaf = -1
+		_S_leaf = 2,
 	};
 
 	template <typename _Key,
@@ -148,8 +148,8 @@ namespace ft
 
 		static _Base_ptr getNextNode(_Base_ptr __x)
 		{
-			
-			;
+			if (!__x)
+				return NULL;
 			if (__x->_right->_color != _S_leaf)
 			{
 				__x = __x->_right;
@@ -159,7 +159,7 @@ namespace ft
 			else
 			{
 				_Base_ptr __y = __x->_parent;
-				while (__x == __y->_right)
+				while (__y != NO_PARENT && __x == __y->_right)
 				{
 					__x = __y;
 					__y = __y->_parent;
@@ -197,7 +197,7 @@ namespace ft
 
 		iterator end()
 		{
-			return iterator(_maximum(_root));
+			return iterator(_end());
 		}
 
 		// const_iterator end() const
@@ -385,6 +385,11 @@ namespace ft
 		/*
 		** --------------------------------- FIND  ---------------------------
 		*/
+
+		_Base_ptr _end()
+		{
+			return NULL;
+		}
 
 		_Base_ptr _minimum(_Base_ptr __root)
 		{
@@ -611,7 +616,7 @@ namespace ft
 					  << "]["
 					  << (__node->_color == _S_red ? "RED" : "BLACK")
 					  << "]["
-					  << (__node->_parent ? __node->_parent->key(): _Key()) << (__node->_parent ? "P": "NOP")
+					  << (__node->_parent ? __node->_parent->key() : _Key()) << (__node->_parent ? "P" : "NOP")
 					  << "]"
 					  << std::endl;
 			return __indent;
