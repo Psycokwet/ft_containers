@@ -54,27 +54,70 @@ public:
 
 int main(int argc, char **argv)
 {
-	ft::map<int, int> map_int;
-	ft::map<std::string, int> map_str_int;
+	// ft::map<int, int> map_int;
+	ft::map<std::string, int> map_int;
+	// ft::map<std::string, int> map_str_int;
 	ft::map<std::string, std::string> map_str;
 
-	map_int[1] = 2;
-	map_int[1] = 7;
-	map_int[0] = 5;
-	map_int[2] = 25;
-	map_int[3] = 42;
-	map_int[4] = 2;
-	map_int[5] = 6;
-	map_int[6] = 66;
-	map_int[7] = 166;
-	map_int[8] = 1166;
-	map_int[9] = 11166;
+	map_int["1"] = 2;
+	map_int["1"] = 7;
+	map_int["0"] = 5;
+	map_int["2"] = 25;
+	map_int["3"] = 42;
+	map_int["4"] = 2;
+	map_int["5"] = 6;
+	map_int["6"] = 66;
+	map_int["7"] = 166;
+	map_int["8"] = 1166;
+	map_int["9"] = 11166;
+	// map_int[1] = 2;
+	// map_int[1] = 7;
+	// map_int[0] = 5;
+	// map_int[2] = 25;
+	// map_int[3] = 42;
+	// map_int[4] = 2;
+	// map_int[5] = 6;
+	// map_int[6] = 66;
+	// map_int[7] = 166;
+	// map_int[8] = 1166;
+	// map_int[9] = 11166;
 
-	for (ft::map<int, int>::iterator it = map_int.begin(); it != map_int.end(); it++)
+	ft::map<std::string, int>::iterator it = map_int.begin();
+	while (true)
 	{
+		if(it == map_int.end())
+			break;
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
+		it++;
 	}
+	// 	it--;
+	// while (true)
+	// {
+	// 	std::cout << "key[" << it->first << "] : "
+	// 			  << "val[" << it->second << "] : " << std::endl;
+	// 	if(it == map_int.begin())
+	// 		break;
+	// 	it--;
+	// }
+
+	// while (true)
+	// {
+	// 	if(it == map_int.end())
+	// 		break;
+	// 	std::cout << "key[" << it->first << "] : "
+	// 			  << "val[" << it->second << "] : " << std::endl;
+	// 	it++;
+	// }
+	// it--;
+	// while (true)
+	// {
+	// 	std::cout << "key[" << it->first << "] : "
+	// 			  << "val[" << it->second << "] : " << std::endl;
+	// 	if(it == map_int.begin())
+	// 		break;
+	// 	it--;
+	// }
 
 	return 0;
 	ft::vector<std::string> vectorTeststr;

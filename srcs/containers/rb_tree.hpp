@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 19:41:17 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/29 20:47:21 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ namespace ft
 			_findAndDeleteNodeFromTree(_root, __key);
 		}
 
-		static _Base_ptr getNextNode(_Base_ptr __x)
+		static _Base_ptr get___Node(_Base_ptr __x)
 		{
 			if (!__x)
 				return NULL;
@@ -165,6 +165,61 @@ namespace ft
 					__y = __y->_parent;
 				}
 				if (__x->_right != __y)
+					__x = __y;
+			}
+			return __x;
+		}
+		static _Base_ptr getNextNode(_Base_ptr __x)
+		{
+			_Base_ptr src = __x;
+			if (__x->_color == _S_leaf)
+				return __x;
+			if (__x->_right->_color != _S_leaf)
+			{
+				__x = __x->_right;
+				while (__x->_left->_color != _S_leaf)
+					__x = __x->_left;
+			}
+			else
+			{
+				_Base_ptr __y = __x->_parent;
+				while (__y != NO_PARENT && __x == __y->_right)
+				{
+					__x = __y;
+					__y = __y->_parent;
+				}
+				if (__x->_right != __y)
+					__x = __y;
+			}
+			if (__x == NULL)
+			{
+				__x = getPrevNode(src);
+				if (__x->_color != _S_leaf)
+					__x = __x->_right;
+				__x = __x->_right;
+			}
+			return __x;
+		}
+
+		static _Base_ptr getPrevNode(_Base_ptr __x)
+		{
+			if (!__x)
+				return NULL;
+			if (__x->_left->_color != _S_leaf)
+			{
+				__x = __x->_left;
+				while (__x->_right->_color != _S_leaf)
+					__x = __x->_right;
+			}
+			else
+			{
+				_Base_ptr __y = __x->_parent;
+				while (__y != NO_PARENT && __x == __y->_left)
+				{
+					__x = __y;
+					__y = __y->_parent;
+				}
+				if (__x->_left != __y)
 					__x = __y;
 			}
 			return __x;
@@ -388,7 +443,7 @@ namespace ft
 
 		_Base_ptr _end()
 		{
-			return NULL;
+			return _leaf;
 		}
 
 		_Base_ptr _minimum(_Base_ptr __root)
