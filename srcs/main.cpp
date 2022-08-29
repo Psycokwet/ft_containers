@@ -9,7 +9,6 @@
 #include <vector>
 namespace ft = std;
 #else
-#include <rb_iterators.hpp>
 #include <type_traits.hpp>
 #include <pair.hpp>
 #include <map.hpp>
@@ -58,28 +57,42 @@ int main(int argc, char **argv)
 	ft::map<int, int> map_int;
 	ft::map<std::string, int> map_str_int;
 	ft::map<std::string, std::string> map_str;
-	
+
 	map_int[1] = 2;
-	map_int[1] = 5;
+	map_int[1] = 7;
 	map_int[0] = 5;
 	map_int[2] = 25;
 	map_int[3] = 42;
 	map_int[4] = 2;
 	map_int[5] = 6;
-// return 0;
-	 ft::vector<std::string > vectorTeststr;
-	 std::cout << "pushback str :" << "\n";
-	 vectorTeststr.push_back("cc");
-	 std::cout << "end pushback str :" << "\n";
-	 std::cout << "test str :" << vectorTeststr.size()<< "\n";
-	 std::cout << "test str :" << vectorTeststr[0] << "\n";
-	 vectorTeststr[0] += "pwett";
-	 std::cout << "test str :" << vectorTeststr[0] << "\n";
-	 std::cout << "all good \n";
-	 ft::vector<ft::pair<int, int> > vectorTest;
-	 vectorTest.push_back(ft::make_pair(1337,42));
-	 std::cout << vectorTest.size()<< "\n";
-	 std::cout << vectorTest[0].first << "\n"<< ":" << vectorTest[0].second<<"\n";
+	map_int[6] = 66;
+	map_int[7] = 166;
+	map_int[8] = 1166;
+	map_int[9] = 11166;
+
+	for (ft::map<int, int>::iterator it = map_int.begin(); it != map_int.end(); it++)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+	}
+
+	return 0;
+	ft::vector<std::string> vectorTeststr;
+	std::cout << "pushback str :"
+			  << "\n";
+	vectorTeststr.push_back("cc");
+	std::cout << "end pushback str :"
+			  << "\n";
+	std::cout << "test str :" << vectorTeststr.size() << "\n";
+	std::cout << "test str :" << vectorTeststr[0] << "\n";
+	vectorTeststr[0] += "pwett";
+	std::cout << "test str :" << vectorTeststr[0] << "\n";
+	std::cout << "all good \n";
+	ft::vector<ft::pair<int, int> > vectorTest;
+	vectorTest.push_back(ft::make_pair(1337, 42));
+	std::cout << vectorTest.size() << "\n";
+	std::cout << vectorTest[0].first << "\n"
+			  << ":" << vectorTest[0].second << "\n";
 	// a tester plus tard quand vector fini
 	//  ft::vector<int> vectorTest;
 	//  ft::stack<int, ft::vector<int> > test(vectorTest);
