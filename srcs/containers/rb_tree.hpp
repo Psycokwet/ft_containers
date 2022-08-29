@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 20:35:24 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/29 16:53:59 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "iterator_traits.hpp"
 #include "pair.hpp"
-// #include "rb_iterators.hpp"
+#include "rb_iterators.hpp"
 
 namespace ft
 {
@@ -60,7 +60,7 @@ namespace ft
 			}
 			_Val *val_ptr()
 			{
-				return _val;
+				return &_val;
 			}
 		};
 
@@ -72,6 +72,7 @@ namespace ft
 	private:
 #define NO_PARENT NULL
 
+		typedef _Rb_tree<_Key, _Val, _Compare, _Alloc> _Self;
 		typedef _Rb_tree_node_base _Base;
 		typedef const _Rb_tree_node_base _Const_Base;
 		typedef _Rb_tree_node_base *_Base_ptr;
@@ -83,6 +84,9 @@ namespace ft
 		size_t _node_count; // Keeps track of size of tree.
 
 	public:
+		typedef _Rb_tree_iterator<_Self, _Val, false> iterator;
+		typedef _Rb_tree_iterator<_Self, _Val, true> const_iterator;
+
 		typedef _Key key_type;
 		typedef _Val value_type;
 		typedef value_type *pointer;
@@ -141,27 +145,28 @@ namespace ft
 			_findAndDeleteNodeFromTree(_root, __key);
 		}
 
-		// _Base_ptr getNextNode(_Base_ptr __x)
-		// {
-		// 	if (__x->_right != NULL)
-		// 	{
-		// 		__x = __x->_right;
-		// 		while (__x->_left != NULL)
-		// 			__x = __x->_left;
-		// 	}
-		// 	else
-		// 	{
-		// 		_Base_ptr __y = __x->_parent;
-		// 		while (__x == __y->_right)
-		// 		{
-		// 			__x = __y;
-		// 			__y = __y->_parent;
-		// 		}
-		// 		if (__x->_right != __y)
-		// 			__x = __y;
-		// 	}
-		// 	return __x;
-		// }
+		static _Base_ptr getNextNode(_Base_ptr __x)
+		{
+			
+			if (__x->_right != NULL)
+			{
+				__x = __x->_right;
+				while (__x->_left != NULL)
+					__x = __x->_left;
+			}
+			else
+			{
+				_Base_ptr __y = __x->_parent;
+				while (__x == __y->_right)
+				{
+					__x = __y;
+					__y = __y->_parent;
+				}
+				if (__x->_right != __y)
+					__x = __y;
+			}
+			return __x;
+		}
 
 		/*
 		** --------------------------------- ALLOCATOR --------------------------
@@ -174,6 +179,29 @@ namespace ft
 			return _Tp_alloc_type;
 		}
 
+		/*
+		** --------------------------------- ITERATORS --------------------------
+		*/
+
+		iterator begin()
+		{
+			return iterator(_minimum(_root));
+		}
+
+		// const_iterator begin() const
+		// {
+		// 	return _t.begin();
+		// }
+
+		iterator end()
+		{
+			return iterator(_maximum(_root));
+		}
+
+		// const_iterator end() const
+		// {
+		// 	return _t.end();
+		// }
 	private:
 		/*
 		** --------------------------------- CONSTRUCTION  ---------------------------
@@ -357,15 +385,19 @@ namespace ft
 
 		_Base_ptr _minimum(_Base_ptr __root)
 		{
-			while (__root->_left == _leaf)
+			while (__root->_left != _leaf)
 				__root = __root->_left;
+			std::cout<<"_minimum"<<std::endl;
+			_printNode(__root);
 			return __root;
 		}
 
 		_Base_ptr _maximum(_Base_ptr __root)
 		{
-			while (__root->_right == _leaf)
+			while (__root->_right != _leaf)
 				__root = __root->_right;
+			std::cout<<"_maximum"<<std::endl;
+			_printNode(__root);
 			return __root;
 		}
 
@@ -579,6 +611,8 @@ namespace ft
 					  << __node->_val.second
 					  << "]["
 					  << (__node->_color == _S_red ? "RED" : "BLACK")
+					  << "]["
+					  << (__node->_parent ? __node->_parent->key(): _Key()) << (__node->_parent ? "P": "NOP")
 					  << "]"
 					  << std::endl;
 			return __indent;
@@ -588,8 +622,8 @@ namespace ft
 			if (__node == _leaf)
 				return;
 			__indent = _printNode(__node, __indent, __src);
-			_printNodeRec(__node->_left, __indent, 'r');
-			_printNodeRec(__node->_right, __indent, 'l');
+			_printNodeRec(__node->_right, __indent, 'r');
+			_printNodeRec(__node->_left, __indent, 'l');
 		}
 		void _print()
 		{
@@ -599,8 +633,6 @@ namespace ft
 			std::cout << "_______End print tree______\n";
 		}
 	};
-
-
 
 }
 

@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 17:17:08 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/29 14:16:51 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ namespace ft
 		typedef typename allocator_type::pointer pointer;
 		typedef typename allocator_type::const_pointer const_pointer;
 
-		// typedef typename _Tree_type::iterator iterator;
+		typedef typename _Tree_type::iterator iterator;
 		// typedef typename _Tree_type::const_iterator const_iterator;
 
 		// typedef typename ft::reverse_iterator<iterator> reverse_iterator;
@@ -148,20 +148,20 @@ namespace ft
 			return _t.get_allocator();
 		}
 
-		// iterator begin()
-		// {
-		// 	return _t.begin();
-		// }
+		iterator begin()
+		{
+			return _t.begin();
+		}
 
 		// const_iterator begin() const
 		// {
 		// 	return _t.begin();
 		// }
 
-		// iterator end()
-		// {
-		// 	return _t.end();
-		// }
+		iterator end()
+		{
+			return _t.end();
+		}
 
 		// const_iterator end() const
 		// {
