@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 16:53:59 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/29 17:35:08 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ namespace ft
 	enum _Rb_tree_color
 	{
 		_S_red = false,
-		_S_black = true
+		_S_black = true,
+		_S_leaf = -1
 	};
 
 	template <typename _Key,
@@ -148,10 +149,11 @@ namespace ft
 		static _Base_ptr getNextNode(_Base_ptr __x)
 		{
 			
-			if (__x->_right != NULL)
+			;
+			if (__x->_right->_color != _S_leaf)
 			{
 				__x = __x->_right;
-				while (__x->_left != NULL)
+				while (__x->_left->_color != _S_leaf)
 					__x = __x->_left;
 			}
 			else
@@ -211,6 +213,7 @@ namespace ft
 			_Base_ptr leaf = _create_node();
 			leaf->_left = leaf;
 			leaf->_right = leaf;
+			leaf->_color = _S_leaf;
 			return leaf;
 		}
 		/*
@@ -387,8 +390,6 @@ namespace ft
 		{
 			while (__root->_left != _leaf)
 				__root = __root->_left;
-			std::cout<<"_minimum"<<std::endl;
-			_printNode(__root);
 			return __root;
 		}
 
@@ -396,8 +397,6 @@ namespace ft
 		{
 			while (__root->_right != _leaf)
 				__root = __root->_right;
-			std::cout<<"_maximum"<<std::endl;
-			_printNode(__root);
 			return __root;
 		}
 
