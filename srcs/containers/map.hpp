@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 14:16:51 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 12:56:31 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ namespace ft
 		// typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		// typedef typename _Tree_type::difference_type difference_type;
-		// typedef typename _Tree_type::size_type size_type;
+		typedef typename _Tree_type::size_type size_type;
 
 		map() : _t()
 		{
@@ -188,20 +188,20 @@ namespace ft
 		// 	return _t.rend();
 		// }
 
-		// bool empty() const
-		// {
-		// 	return _t.empty();
-		// }
+		bool empty() const
+		{
+			return _t.empty();
+		}
 
-		// size_type size() const
-		// {
-		// 	return _t.size();
-		// }
+		size_type size() const
+		{
+			return _t.size();
+		}
 
-		// size_type max_size() const
-		// {
-		// 	return _t.max_size();
-		// }
+		size_type max_size() const
+		{
+			return _t.max_size();
+		}
 
 		mapped_type &operator[](const key_type &__k)
 		{

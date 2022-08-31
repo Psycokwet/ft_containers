@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/31 12:49:46 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 12:55:46 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,6 +254,21 @@ namespace ft
 		// {
 		// 	return _t.end();
 		// }
+
+		bool empty() const
+		{
+			return !size();
+		}
+
+		size_type size() const
+		{
+			return _node_count;
+		}
+
+		size_type max_size() const
+		{
+			return _Tp_alloc_type.max_size();
+		}
 	private:
 		/*
 		** --------------------------------- CONSTRUCTION  ---------------------------
