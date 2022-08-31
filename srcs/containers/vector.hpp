@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/25 13:24:06 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 13:46:20 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,19 @@ namespace ft
 
 	private:
 		allocator_type _Tp_alloc_type;
-		pointer _M_start;
-		pointer _M_finish;
-		pointer _M_end_of_storage;
+		pointer _start;
+		pointer _finish;
+		pointer _end_of_storage;
 
 		void _destroy()
 		{
 			// clear();
-			_Tp_alloc_type.deallocate(_M_start, _M_end_of_storage - _M_start);
+			_Tp_alloc_type.deallocate(_start, _end_of_storage - _start);
 		}
 
 		void _build(size_type __n, const value_type &__value = value_type())
 		{
-			_M_create_storage(__n);
+			_create_storage(__n);
 			_fill(__n, __value);
 		}
 
@@ -76,42 +76,42 @@ namespace ft
 		}
 
 		template <typename _Integer>
-		void _M_initialize_dispatch(_Integer __n, _Integer __value, true_type)
+		void _initialize_dispatch(_Integer __n, _Integer __value, true_type)
 		{
 			_build(__n, __value);
 		}
 
 		template <typename _InputIterator>
-		void _M_initialize_dispatch(_InputIterator __first, _InputIterator __last,
+		void _initialize_dispatch(_InputIterator __first, _InputIterator __last,
 									false_type)
 		{
-			_M_create_storage(__last - __first);
+			_create_storage(__last - __first);
 			_copy(__first, __last);
 		}
 
-		pointer _M_allocate(size_t __n)
+		pointer _allocate(size_t __n)
 		{
 			return __n != 0 ? _Tp_alloc_type.allocate(__n) : pointer();
 		}
-		void _M_create_storage(size_t __n)
+		void _create_storage(size_t __n)
 		{
-			_M_create_storage(this->_M_start,
-							  this->_M_finish,
-							  this->_M_end_of_storage, __n);
+			_create_storage(this->_start,
+							  this->_finish,
+							  this->_end_of_storage, __n);
 		}
 
-		void _M_create_storage(pointer &_M_start,
-							   pointer &_M_finish,
-							   pointer &_M_end_of_storage, size_t __n)
+		void _create_storage(pointer &_start,
+							   pointer &_finish,
+							   pointer &_end_of_storage, size_t __n)
 		{
-			_M_start = _M_allocate(__n);
-			_M_finish = _M_start;
-			_M_end_of_storage = _M_start + __n;
+			_start = _allocate(__n);
+			_finish = _start;
+			_end_of_storage = _start + __n;
 		}
-		void _M_range_check(size_type __n) const
+		void _range_check(size_type __n) const
 		{
 			if (__n >= this->size())
-				throw std::out_of_range(SSTR("vector::_M_range_check: __n (which is ") //
+				throw std::out_of_range(SSTR("vector::_range_check: __n (which is ") //
 										+ SSTR(__n)									   //
 										+ SSTR(" ) >= this->size() (which is ")		   //
 										+ SSTR(this->size()) + SSTR(")"));			   //
@@ -127,9 +127,9 @@ namespace ft
 		 */
 		explicit vector(const allocator_type &__a = allocator_type())
 			: _Tp_alloc_type(__a),
-			  _M_start(),
-			  _M_finish(),
-			  _M_end_of_storage()
+			  _start(),
+			  _finish(),
+			  _end_of_storage()
 		{
 		}
 
@@ -140,11 +140,11 @@ namespace ft
 		explicit vector(size_type __n, const value_type &__value = value_type(),
 						const allocator_type &__a = allocator_type())
 			: _Tp_alloc_type(__a),
-			  _M_start(),
-			  _M_finish(),
-			  _M_end_of_storage()
+			  _start(),
+			  _finish(),
+			  _end_of_storage()
 		{
-			_M_initialize_dispatch(__n, __value, true_type());
+			_initialize_dispatch(__n, __value, true_type());
 		}
 		/*
 		 * range constructor
@@ -159,7 +159,7 @@ namespace ft
 			: _Tp_alloc_type(__a)
 		{
 			typedef typename ft::is_integral<_InputIterator>::type _Integral;
-			_M_initialize_dispatch(__first, __last, _Integral());
+			_initialize_dispatch(__first, __last, _Integral());
 		}
 		/*
 		 * copy constructor
@@ -167,7 +167,7 @@ namespace ft
 		 */
 		vector(const vector &__x)
 		{
-			_M_create_storage(__x.size());
+			_create_storage(__x.size());
 			_copy(__x.begin(), __x.end());
 		}
 
@@ -218,12 +218,12 @@ namespace ft
 
 		iterator begin()
 		{
-			return iterator(this->_M_start);
+			return iterator(this->_start);
 		}
 
 		const_iterator begin() const
 		{
-			return const_iterator(this->_M_start);
+			return const_iterator(this->_start);
 		}
 
 		// Return iterator to end
@@ -237,12 +237,12 @@ namespace ft
 
 		iterator end()
 		{
-			return iterator(this->_M_finish);
+			return iterator(this->_finish);
 		}
 
 		const_iterator end() const
 		{
-			return const_iterator(this->_M_finish);
+			return const_iterator(this->_finish);
 		}
 
 		// Return reverse iterator to reverse beginning
@@ -296,7 +296,7 @@ namespace ft
 		/*  Returns the number of elements in the vector.  */
 		size_type size() const _GLIBCXX_NOEXCEPT
 		{
-			return this->_M_finish - this->_M_start;
+			return this->_finish - this->_start;
 		}
 
 		/*  Returns the size() of the largest possible vector.  */
@@ -327,7 +327,7 @@ namespace ft
 		 */
 		size_type capacity() const
 		{
-			return size_type(this->_M_end_of_storage - this->_M_start);
+			return size_type(this->_end_of_storage - this->_start);
 		}
 
 		/*
@@ -355,14 +355,14 @@ namespace ft
 				return;
 			iterator it_begin = this->begin();
 			iterator it_end = this->end();
-			pointer _M_start_tmp = this->_M_start;
-			pointer _M_end_of_storage_tmp = this->_M_end_of_storage;
-			_M_create_storage(__n);
+			pointer _start_tmp = this->_start;
+			pointer _end_of_storage_tmp = this->_end_of_storage;
+			_create_storage(__n);
 			// size_type current_size = size();
 			// _fill(current_size, 42); // replace iterator
 			_copy(it_begin, it_end);
-			_Tp_alloc_type.deallocate(_M_start_tmp, _M_end_of_storage_tmp - _M_start_tmp);
-			// _Tp_alloc_type.deallocate(_M_start_tmp, _M_end_of_storage_tmp - _M_start_tmp);
+			_Tp_alloc_type.deallocate(_start_tmp, _end_of_storage_tmp - _start_tmp);
+			// _Tp_alloc_type.deallocate(_start_tmp, _end_of_storage_tmp - _start_tmp);
 		}
 
 		/*
@@ -383,12 +383,12 @@ namespace ft
 
 		reference operator[](size_type __n)
 		{
-			return *(this->_M_start + __n);
+			return *(this->_start + __n);
 		}
 
 		const_reference operator[](size_type __n) const
 		{
-			return *(this->_M_start + __n);
+			return *(this->_start + __n);
 		}
 
 		/* Access element
@@ -400,12 +400,12 @@ namespace ft
 		 */
 		reference at(size_type __n)
 		{
-			_M_range_check(__n);
+			_range_check(__n);
 			return (*this)[__n];
 		}
 		const_reference at(size_type __n) const
 		{
-			_M_range_check(__n);
+			_range_check(__n);
 			return (*this)[__n];
 		}
 
@@ -484,13 +484,13 @@ namespace ft
 		 */
 		void push_back(const value_type &__val)
 		{
-			if (this->_M_finish == this->_M_end_of_storage)
+			if (this->_finish == this->_end_of_storage)
 			{
 				resize((capacity() | 1) * 1.5, __val);
 				return;
 			}
-			_Tp_alloc_type.construct(_M_finish, __val);
-			this->_M_finish++;
+			_Tp_alloc_type.construct(_finish, __val);
+			this->_finish++;
 		}
 		/*
 		 * Delete last element
@@ -501,8 +501,8 @@ namespace ft
 		{
 			if (!size())
 				return;
-			_Tp_alloc_type.destroy(this->_M_finish);
-			this->_M_finish--;
+			_Tp_alloc_type.destroy(this->_finish);
+			this->_finish--;
 		}
 
 		/*
