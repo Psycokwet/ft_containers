@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 20:47:21 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 12:44:25 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ namespace ft
 			_Base_ptr _parent;
 			_Base_ptr _left;
 			_Base_ptr _right;
+			_Base_ptr *_beginLeaf;
+			_Base_ptr *_endLeaf;
 
 		public:
 			_Key *key_ptr()
@@ -80,9 +82,11 @@ namespace ft
 		typedef const _Rb_tree_node_base *_Const_Base_ptr;
 
 		typedef _Compare _base_key_compare;
-		_Base_ptr _root;	// m_header
-		_Base_ptr _leaf;	// end leafs
-		size_t _node_count; // Keeps track of size of tree.
+		_Base_ptr _root;	  // m_header
+		_Base_ptr _leaf;	  // end leafs
+		_Base_ptr _beginLeaf; // past to begin leaf
+		_Base_ptr _endLeaf;	  // past to end leaf
+		size_t _node_count;	  // Keeps track of size of tree.
 
 	public:
 		typedef _Rb_tree_iterator<_Self, _Val, false> iterator;
@@ -100,18 +104,32 @@ namespace ft
 		_Rb_tree()
 		{
 			_leaf = _initLeaf();
+			_beginLeaf = _initLeaf();
+			_endLeaf = _initLeaf();
 			_root = _leaf;
 			_node_count = 0;
 		}
 
 		_Rb_tree(const _Compare &__comp, const allocator_type &__a = allocator_type())
-			: _base_key_compare(__comp), allocator_type(__a), _root(NULL), _leaf(_initLeaf()), _node_count(0)
+			: _base_key_compare(__comp),
+			  allocator_type(__a),
+			  _root(NULL),
+			  _leaf(_initLeaf()),
+			  _beginLeaf(_initLeaf()),
+			  _endLeaf(_initLeaf()),
+			  _node_count(0)
 		{
 			_root = _leaf;
 		}
 
 		_Rb_tree(const _Rb_tree &__x)
-			: _base_key_compare(__x.__comp), allocator_type(__x.__a), _root(NULL), _leaf(_initLeaf()), _node_count(0)
+			: _base_key_compare(__x.__comp),
+			  allocator_type(__x.__a),
+			  _root(NULL),
+			  _leaf(_initLeaf()),
+			  _beginLeaf(_initLeaf()),
+			  _endLeaf(_initLeaf()),
+			  _node_count(0)
 		{
 			_root = _leaf;
 			// if (__x._root != NULL)
@@ -125,8 +143,11 @@ namespace ft
 
 			_delete_tree();
 			_node_count = 0;
-			std::cout << "deleted" << std::endl;
+			std::cout << "deleting leafs" << std::endl;
 			_delete_node_clean(&_leaf);
+			_delete_node_clean(&_endLeaf);
+			_delete_node_clean(&_beginLeaf);
+			std::cout << "deleted" << std::endl;
 		}
 
 	public:
@@ -169,12 +190,56 @@ namespace ft
 			}
 			return __x;
 		}
+		// static _Base_ptr getNextNode(_Base_ptr __x)
+		// {
+		// 	if (__x->_color == _S_leaf) // end or begin node
+		// 	{
+		// 		if (__x->_parent != __x->_parent)
+		// 			return __x->_parent;
+		// 		else
+		// 			return __x;
+		// 	}
+		// 	if (__x->_right->_color != _S_leaf)
+		// 	{
+		// 		__x = __x->_right;
+		// 		while (__x->_left->_color != _S_leaf)
+		// 			__x = __x->_left;
+		// 	}
+		// 	else
+		// 	{
+		// 		_Base_ptr __y = __x->_parent;
+		// 		while (__y != NO_PARENT && __x == __y->_right)
+		// 		{
+		// 			__x = __y;
+		// 			__y = __y->_parent;
+		// 		}
+		// 		if (__x->_right != __y)
+		// 		{
+		// 			if (__x->_right->_color == _S_leaf)
+		// 			{
+		// 				std::cout << "leaf :o KEY " << __x->key() << std::endl;
+		// 				__x = *(__x->_endLeaf);
+		// 			}
+		// 			else
+		// 			{
+		// 				std::cout << "KEY " << __x->key() << std::endl;
+		// 				__x = __y;
+		// 			}
+		// 		}
+		// 	}
+		// 	return __x;
+		// }
+
 		static _Base_ptr getNextNode(_Base_ptr __x)
 		{
-			_Base_ptr src = __x;
-			if (__x->_color == _S_leaf)
-				return __x;
-			if (__x->_right->_color != _S_leaf)
+			if (!__x) // should  not happen
+				return NULL;
+			if (__x->_color == _S_leaf &&
+				__x->_parent != NO_PARENT &&
+				__x != *(__x->_endLeaf))
+				__x = __x->_parent;
+
+			else if (__x->_right->_color != _S_leaf)
 			{
 				__x = __x->_right;
 				while (__x->_left->_color != _S_leaf)
@@ -189,18 +254,16 @@ namespace ft
 					__y = __y->_parent;
 				}
 				if (__x->_right != __y)
-					__x = __y;
+				{
+					if (__y == NO_PARENT)
+						__x = *(__x->_endLeaf);
+					else
+						__x = __y;
+				}
 			}
-			if (__x == NULL)
-			{
-				__x = getPrevNode(src);
-				if (__x->_color != _S_leaf)
-					__x = __x->_right;
-				__x = __x->_right;
-			}
+
 			return __x;
 		}
-
 		static _Base_ptr getPrevNode(_Base_ptr __x)
 		{
 			if (!__x)
@@ -443,13 +506,14 @@ namespace ft
 
 		_Base_ptr _end()
 		{
-			return _leaf;
+			return _endLeaf;
 		}
 
 		_Base_ptr _minimum(_Base_ptr __root)
 		{
 			while (__root->_left != _leaf)
 				__root = __root->_left;
+			_beginLeaf->_parent = __root;
 			return __root;
 		}
 
@@ -457,6 +521,7 @@ namespace ft
 		{
 			while (__root->_right != _leaf)
 				__root = __root->_right;
+			_endLeaf->_parent = __root;
 			return __root;
 		}
 
@@ -491,6 +556,12 @@ namespace ft
 		** --------------------------------- INSERT  ---------------------------
 		*/
 
+		void _update_max_min()
+		{
+			_minimum(_root);
+			_maximum(_root);
+		}
+
 		_Base_ptr _get_node()
 		{
 			return _Tp_alloc_type.allocate(1);
@@ -515,6 +586,8 @@ namespace ft
 			tmp._val = value_type();
 			*(tmp.key_ptr()) = key_type();
 			tmp._parent = NO_PARENT;
+			tmp._beginLeaf = &_beginLeaf;
+			tmp._endLeaf = &_endLeaf;
 			tmp._left = _leaf;
 			tmp._right = _leaf;
 			tmp._color = _S_black;
@@ -549,6 +622,8 @@ namespace ft
 				return node;
 
 			_balanceTree(node);
+
+			_update_max_min();
 			return node;
 		}
 
@@ -590,6 +665,8 @@ namespace ft
 			if (!node)
 				return;
 			_deleteNodeFromTree(node);
+
+			_update_max_min();
 		}
 
 		_Base_ptr _replace_other_side_if_one_side_is_leaf(_Base_ptr __node, _Base_ptr _Base::*__side, _Base_ptr _Base::*__other_side)
@@ -657,7 +734,7 @@ namespace ft
 
 		std::string _printNode(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
-			if (__node == _leaf)
+			if (__node->_color == _S_leaf)
 				return __indent;
 			std::cout << __indent;
 			__indent += __src == 'r' ? "|" : __src == 'l' ? " "
