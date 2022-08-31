@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/31 12:44:25 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 12:49:46 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,125 +167,57 @@ namespace ft
 			_findAndDeleteNodeFromTree(_root, __key);
 		}
 
-		static _Base_ptr get___Node(_Base_ptr __x)
-		{
-			if (!__x)
-				return NULL;
-			if (__x->_right->_color != _S_leaf)
-			{
-				__x = __x->_right;
-				while (__x->_left->_color != _S_leaf)
-					__x = __x->_left;
-			}
-			else
-			{
-				_Base_ptr __y = __x->_parent;
-				while (__y != NO_PARENT && __x == __y->_right)
-				{
-					__x = __y;
-					__y = __y->_parent;
-				}
-				if (__x->_right != __y)
-					__x = __y;
-			}
-			return __x;
-		}
-		// static _Base_ptr getNextNode(_Base_ptr __x)
-		// {
-		// 	if (__x->_color == _S_leaf) // end or begin node
-		// 	{
-		// 		if (__x->_parent != __x->_parent)
-		// 			return __x->_parent;
-		// 		else
-		// 			return __x;
-		// 	}
-		// 	if (__x->_right->_color != _S_leaf)
-		// 	{
-		// 		__x = __x->_right;
-		// 		while (__x->_left->_color != _S_leaf)
-		// 			__x = __x->_left;
-		// 	}
-		// 	else
-		// 	{
-		// 		_Base_ptr __y = __x->_parent;
-		// 		while (__y != NO_PARENT && __x == __y->_right)
-		// 		{
-		// 			__x = __y;
-		// 			__y = __y->_parent;
-		// 		}
-		// 		if (__x->_right != __y)
-		// 		{
-		// 			if (__x->_right->_color == _S_leaf)
-		// 			{
-		// 				std::cout << "leaf :o KEY " << __x->key() << std::endl;
-		// 				__x = *(__x->_endLeaf);
-		// 			}
-		// 			else
-		// 			{
-		// 				std::cout << "KEY " << __x->key() << std::endl;
-		// 				__x = __y;
-		// 			}
-		// 		}
-		// 	}
-		// 	return __x;
-		// }
-
-		static _Base_ptr getNextNode(_Base_ptr __x)
+		static _Base_ptr get___Node(_Base_ptr __x,
+									_Base_ptr *_Base::*__sideLeaf,
+									_Base_ptr _Base::*__sideAdvance,
+									_Base_ptr _Base::*__otherSide)
 		{
 			if (!__x) // should  not happen
 				return NULL;
 			if (__x->_color == _S_leaf &&
 				__x->_parent != NO_PARENT &&
-				__x != *(__x->_endLeaf))
+				__x != *(__x->*__sideLeaf))
 				__x = __x->_parent;
 
-			else if (__x->_right->_color != _S_leaf)
+			else if ((__x->*__sideAdvance)->_color != _S_leaf)
 			{
-				__x = __x->_right;
-				while (__x->_left->_color != _S_leaf)
-					__x = __x->_left;
+				__x = __x->*__sideAdvance;
+				while ((__x->*__otherSide)->_color != _S_leaf)
+					__x = __x->*__otherSide;
 			}
 			else
 			{
 				_Base_ptr __y = __x->_parent;
-				while (__y != NO_PARENT && __x == __y->_right)
+				while (__y != NO_PARENT && __x == __y->*__sideAdvance)
 				{
 					__x = __y;
 					__y = __y->_parent;
 				}
-				if (__x->_right != __y)
+				if (__x->*__sideAdvance != __y)
 				{
 					if (__y == NO_PARENT)
-						__x = *(__x->_endLeaf);
+						__x = *(__x->*__sideLeaf);
 					else
 						__x = __y;
 				}
 			}
-
 			return __x;
 		}
+
+		static _Base_ptr getNextNode(_Base_ptr __x)
+		{
+			return get___Node(__x,
+							  &_Base::_endLeaf,
+							  &_Base::_right,
+							  &_Base::_left);
+		}
+
 		static _Base_ptr getPrevNode(_Base_ptr __x)
 		{
-			if (!__x)
-				return NULL;
-			if (__x->_left->_color != _S_leaf)
-			{
-				__x = __x->_left;
-				while (__x->_right->_color != _S_leaf)
-					__x = __x->_right;
-			}
-			else
-			{
-				_Base_ptr __y = __x->_parent;
-				while (__y != NO_PARENT && __x == __y->_left)
-				{
-					__x = __y;
-					__y = __y->_parent;
-				}
-				if (__x->_left != __y)
-					__x = __y;
-			}
-			return __x;
+			return get___Node(__x,
+							  &_Base::_beginLeaf,
+							  &_Base::_left,
+							  &_Base::_right);
 		}
 
 		/*

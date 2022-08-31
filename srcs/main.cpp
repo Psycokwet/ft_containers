@@ -82,7 +82,28 @@ int main(int argc, char **argv)
 	// map_int[8] = 1166;
 	// map_int[9] = 11166;
 
+	std::cout << "first\n";
 	ft::map<std::string, int>::iterator it = map_int.begin();
+	while (true)
+	{
+		if (it == map_int.end())
+			break;
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+		it++;
+	}
+	std::cout << "second\n";
+	it--;
+	while (true)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+		if (it == map_int.begin())
+			break;
+		it--;
+	}
+
+	std::cout << "third\n";
 	while (true)
 	{
 		if(it == map_int.end())
@@ -91,33 +112,16 @@ int main(int argc, char **argv)
 				  << "val[" << it->second << "] : " << std::endl;
 		it++;
 	}
-	// 	it--;
-	// while (true)
-	// {
-	// 	std::cout << "key[" << it->first << "] : "
-	// 			  << "val[" << it->second << "] : " << std::endl;
-	// 	if(it == map_int.begin())
-	// 		break;
-	// 	it--;
-	// }
-
-	// while (true)
-	// {
-	// 	if(it == map_int.end())
-	// 		break;
-	// 	std::cout << "key[" << it->first << "] : "
-	// 			  << "val[" << it->second << "] : " << std::endl;
-	// 	it++;
-	// }
-	// it--;
-	// while (true)
-	// {
-	// 	std::cout << "key[" << it->first << "] : "
-	// 			  << "val[" << it->second << "] : " << std::endl;
-	// 	if(it == map_int.begin())
-	// 		break;
-	// 	it--;
-	// }
+	it--;
+	std::cout << "last\n";
+	while (true)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+		if(it == map_int.begin())
+			break;
+		it--;
+	}
 
 	return 0;
 	ft::vector<std::string> vectorTeststr;
