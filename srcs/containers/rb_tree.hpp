@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/31 12:55:46 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 14:41:12 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,20 +151,35 @@ namespace ft
 		}
 
 	public:
+		iterator insertNodeGetIterator(_Val __val)
+		{
+			return insertNodeGetIterator(__val.first, __val);
+		}
+		iterator insertNodeGetIterator(_Key __key, _Val __val = _Val())
+		{
+			return iterator(_insert(__key, __val));
+		}
+		_Val *insertNode(_Val __val)
+		{
+			return insertNode(__val.first, __val);
+		}
 		_Val *insertNode(_Key __key, _Val __val = _Val())
 		{
-			_Val *v = &(_insert(__key, __val)->_val);
+			_Val *v = _insert(__key, __val)->val_ptr();
 			std::cout << "Added node in tree :" << std::endl;
 			_print();
 			return v;
 		}
-		void findNode(_Key __key)
+		_Val *findNode(_Key __key)
 		{
-			return _findNode(__key);
+			_Base_ptr find = _findNode(__key);
+			if (!find)
+				return NULL;
+			return find->val_ptr();
 		}
-		void deleteNode(_Key __key)
+		bool deleteNode(_Key __key)
 		{
-			_findAndDeleteNodeFromTree(_root, __key);
+			return _findAndDeleteNodeFromTree(__key);
 		}
 
 		static _Base_ptr get___Node(_Base_ptr __x,
@@ -269,6 +284,7 @@ namespace ft
 		{
 			return _Tp_alloc_type.max_size();
 		}
+
 	private:
 		/*
 		** --------------------------------- CONSTRUCTION  ---------------------------
@@ -606,14 +622,15 @@ namespace ft
 			*__node = NULL;
 		}
 
-		void _findAndDeleteNodeFromTree(_Base_ptr __root, _Key __key)
+		bool _findAndDeleteNodeFromTree( _Key __key)
 		{
 			_Base_ptr node = _findNode(__key);
 			if (!node)
-				return;
+				return false;
 			_deleteNodeFromTree(node);
 
 			_update_max_min();
+			return true;
 		}
 
 		_Base_ptr _replace_other_side_if_one_side_is_leaf(_Base_ptr __node, _Base_ptr _Base::*__side, _Base_ptr _Base::*__other_side)
