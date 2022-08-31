@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 14:51:57 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/29 19:56:39 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,14 @@ namespace ft
 
 		_Self &operator--()
 		{
-			// _node = _node->getPrevNode();
+			_node = _Tree::getPrevNode(_node);
 			return *this;
 		}
 
 		_Self operator--(int)
 		{
 			_Self __tmp = *this;
-			// _node = _node->getPrevNode();
+			_node = _Tree::getPrevNode(_node);
 			return __tmp;
 		}
 
