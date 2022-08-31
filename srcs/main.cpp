@@ -70,17 +70,16 @@ int main(int argc, char **argv)
 	map_int["7"] = 166;
 	map_int["8"] = 1166;
 	map_int["9"] = 11166;
-	// map_int[1] = 2;
-	// map_int[1] = 7;
-	// map_int[0] = 5;
-	// map_int[2] = 25;
-	// map_int[3] = 42;
-	// map_int[4] = 2;
-	// map_int[5] = 6;
-	// map_int[6] = 66;
-	// map_int[7] = 166;
-	// map_int[8] = 1166;
-	// map_int[9] = 11166;
+
+	try
+	{
+		map_int.at("42");
+		/* code */
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << "exception : " << e.what() << '\n';
+	}
 
 	std::cout << "first\n";
 	ft::map<std::string, int>::iterator it = map_int.begin();
@@ -122,6 +121,29 @@ int main(int argc, char **argv)
 			break;
 		it--;
 	}
+
+	map_int.erase("5");
+	std::cout << "Erase key 5"
+			  << "\n";
+	for (it = map_int.begin() ; it != map_int.end(); it++)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+	}
+
+	map_int.erase(map_int.begin());
+	std::cout << "Erase begin"
+			  << "\n";
+	for (it = map_int.begin() ; it != map_int.end(); it++)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+	}
+
+	map_int.erase(map_int.begin());
+	std::cout << "Erased all"
+			  << "\n";
+	map_int.erase(map_int.begin(), map_int.end());
 
 	return 0;
 	ft::vector<std::string> vectorTeststr;
