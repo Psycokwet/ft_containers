@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/31 14:41:12 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/08/31 15:58:16 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "iterator_traits.hpp"
 #include "pair.hpp"
 #include "rb_iterators.hpp"
+#include <cstdlib>
 
 namespace ft
 {
@@ -182,6 +183,15 @@ namespace ft
 			return _findAndDeleteNodeFromTree(__key);
 		}
 
+		bool static isLeaf(_Base_ptr __x)
+		{
+			return __x->_color == _S_leaf;
+		}
+		bool static isNotLeaf(_Base_ptr __x)
+		{
+			return !isLeaf(__x);
+		}
+
 		static _Base_ptr get___Node(_Base_ptr __x,
 									_Base_ptr *_Base::*__sideLeaf,
 									_Base_ptr _Base::*__sideAdvance,
@@ -189,22 +199,33 @@ namespace ft
 		{
 			if (!__x) // should  not happen
 				return NULL;
-			if (__x->_color == _S_leaf &&
+			if (isLeaf(__x) &&
 				__x->_parent != NO_PARENT &&
 				__x != *(__x->*__sideLeaf))
 				__x = __x->_parent;
 
-			else if ((__x->*__sideAdvance)->_color != _S_leaf)
+			else if (isNotLeaf(__x->*__sideAdvance))
 			{
 				__x = __x->*__sideAdvance;
-				while ((__x->*__otherSide)->_color != _S_leaf)
+				int i = 0;
+				while (isNotLeaf(__x->*__otherSide))
+				{
+					std::cout << "HERE " << (__x->*__otherSide)->key() << "\n";
+					std::cout << "Leaf ? " << (__x->*__otherSide)->_color << "\n";
+					std::cout << __x << ":" << (__x->*__otherSide) << "\n";
+					std::cout << __x->_endLeaf << ":" << __x->_beginLeaf << "\n";
 					__x = __x->*__otherSide;
+					i++;
+					if (i == 10)
+						exit(0);
+				}
 			}
 			else
 			{
 				_Base_ptr __y = __x->_parent;
 				while (__y != NO_PARENT && __x == __y->*__sideAdvance)
 				{
+					std::cout << "THERE \n";
 					__x = __y;
 					__y = __y->_parent;
 				}
@@ -306,6 +327,7 @@ namespace ft
 			_Base_ptr s;
 			while (x != _root && x->_color == _S_black)
 			{
+				std::cout << "HERE!\n";
 				if (x == x->_parent->_left)
 				{
 					s = x->_parent->_right;
@@ -390,8 +412,8 @@ namespace ft
 		{
 			// step 1 is condition initials
 			_Base_ptr y = __x->*__otherSide;
-			__x->*__otherSide = y->*__sideRotate; // step 2 :No issue if otherSide gets a leaf
-			if (y->*__sideRotate != _leaf)		  // fix y->sideRotate parent
+			__x->*__otherSide = y->*__sideRotate;	   // step 2 :No issue if otherSide gets a leaf
+			if (isNotLeaf(y->*__sideRotate)) // fix y->sideRotate parent
 				(y->*__sideRotate)->_parent = __x;
 			y->_parent = __x->_parent;	   // No issue if y->_parent gets NO_PARENT
 			if (__x->_parent == NO_PARENT) // step 3
@@ -492,7 +514,7 @@ namespace ft
 		{
 			_Base_ptr closestParent = NO_PARENT;
 			_Base_ptr current = __root;
-			while (current != _leaf)
+			while (isNotLeaf(current))
 			{
 				closestParent = current;
 				if (__key == current->key())
@@ -596,7 +618,7 @@ namespace ft
 
 		void _delete_sub_tree(_Base_ptr __root)
 		{
-			if (__root != _leaf)
+			if (isNotLeaf(__root))
 			{
 				_delete_sub_tree(__root->_left);
 				_delete_sub_tree(__root->_right);
@@ -622,7 +644,7 @@ namespace ft
 			*__node = NULL;
 		}
 
-		bool _findAndDeleteNodeFromTree( _Key __key)
+		bool _findAndDeleteNodeFromTree(_Key __key)
 		{
 			_Base_ptr node = _findNode(__key);
 			if (!node)
@@ -636,7 +658,7 @@ namespace ft
 		_Base_ptr _replace_other_side_if_one_side_is_leaf(_Base_ptr __node, _Base_ptr _Base::*__side, _Base_ptr _Base::*__other_side)
 		{
 			_Base_ptr result = NULL;
-			if (__node->*__side != _leaf)
+			if (isNotLeaf(__node->*__side))
 				return NULL;
 
 			result = __node->*__other_side;
@@ -698,7 +720,7 @@ namespace ft
 
 		std::string _printNode(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
-			if (__node->_color == _S_leaf)
+			if (isLeaf(__node))
 				return __indent;
 			std::cout << __indent;
 			__indent += __src == 'r' ? "|" : __src == 'l' ? " "
@@ -728,6 +750,10 @@ namespace ft
 		void _print()
 		{
 			std::cout << "_______Start print tree______" << _node_count << "\n";
+			if (_endLeaf->_parent)
+				std::cout << "max key:" << _endLeaf->_parent->key() << "\n";
+			if (_beginLeaf->_parent)
+				std::cout << "min key:" << _beginLeaf->_parent->key() << "\n";
 			if (_root)
 				_printNodeRec(_root);
 			std::cout << "_______End print tree______\n";
