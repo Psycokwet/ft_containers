@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/29 19:56:39 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/01 20:16:33 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace ft
 		typedef _Base *_Link_type;
 		typedef const _Tp &reference;
 		typedef const _Tp *pointer;
-		typedef typename _Base::_Const_Base_ptr _Base_ptr;
+		typedef typename _Base::_Base_ptr _Base_ptr;
 	};
 
 	template <typename _Tree,
@@ -66,33 +66,43 @@ namespace ft
 
 		explicit _Rb_tree_iterator(_Base_ptr __x) : _node(__x) {}
 
+		template <typename  _Tree1,
+			  typename _Tp1,
+			  bool _isConst1,
+			  typename _Traits1>
+		// Allow iterator to const_iterator conversion
+		_Rb_tree_iterator(const _Rb_tree_iterator<_Tree1, _Tp1, _isConst1, _Traits1> &__i)
+			: _node(__i._node)
+		{
+		}
+		
 		reference operator*() const { return _node->val(); }
 
 		pointer operator->() const { return _node->val_ptr(); }
 
 		_Self &operator++()
 		{
-			_node = _Tree::getNextNode(_node);
+			_node = _node->getNextNode();
 			return *this;
 		}
 
 		_Self operator++(int)
 		{
 			_Self __tmp = *this;
-			_node = _Tree::getNextNode(_node);
+			_node = _node->getNextNode();
 			return __tmp;
 		}
 
 		_Self &operator--()
 		{
-			_node = _Tree::getPrevNode(_node);
+			_node = _node->getPrevNode();
 			return *this;
 		}
 
 		_Self operator--(int)
 		{
 			_Self __tmp = *this;
-			_node = _Tree::getPrevNode(_node);
+			_node = _node->getPrevNode();
 			return __tmp;
 		}
 

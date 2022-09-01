@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/01 14:01:50 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/01 20:16:51 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,45 @@ namespace ft
 			  >
 	class map
 	{
+		/*
+		** --------------------------------- PUBLIC MEMBERS ---------------------------
+		*/
+		// complete
+
 	public:
+		class value_compare;
 		typedef _Key key_type;
 		typedef _Tp mapped_type;
 		typedef ft::pair<_Key, _Tp> value_type;
 		typedef _Compare key_compare;
+		typedef value_compare value_compare;
 		typedef _Alloc allocator_type;
 
 	private:
+		typedef _Rb_tree<key_type, value_type, key_compare, allocator_type>
+			_Tree_type;
+		_Tree_type _t;
+
 	public:
+		typedef typename allocator_type::reference reference;
+		typedef typename allocator_type::const_reference const_reference;
+
+		typedef typename allocator_type::pointer pointer;
+		typedef typename allocator_type::const_pointer const_pointer;
+
+		typedef typename _Tree_type::iterator iterator;
+		typedef typename _Tree_type::const_iterator const_iterator;
+
+		// typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		// typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
+		typedef typename _Tree_type::difference_type difference_type;
+		typedef typename _Tree_type::size_type size_type;
+
+	public:
+		/*
+		** --------------------------------- VALUE COMPARE  ---------------------------
+		*/
 		class value_compare // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 			: public std::binary_function<value_type, value_type, bool>
 		{
@@ -79,64 +109,36 @@ namespace ft
 				return comp(__x.first, __y.first);
 			}
 		};
-
-	private:
-		/// This turns a red-black tree into a [multi]map.
-
-		typedef _Rb_tree<key_type, value_type, key_compare, allocator_type>
-			_Tree_type;
-
-		/// The actual tree structure.
-		_Tree_type _t;
-
-	public:
-		// many of these are specified differently in ISO, but the following are
-		// "functionally equivalent"
-		typedef typename allocator_type::reference reference;
-		typedef typename allocator_type::const_reference const_reference;
-
-		typedef typename allocator_type::pointer pointer;
-		typedef typename allocator_type::const_pointer const_pointer;
-
-		typedef typename _Tree_type::iterator iterator;
-		typedef typename _Tree_type::const_iterator const_iterator;
-
-		// typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-		// typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
-
-		typedef typename _Tree_type::difference_type difference_type;
-		typedef typename _Tree_type::size_type size_type;
-
-		map() : _t()
-		{
-		}
-
-		explicit map(const _Compare &__comp,
+		/*
+		** --------------------------------- CONSTRUCTORS  ---------------------------
+		*/
+		// empty (1)
+		explicit map(const _Compare &__comp = key_compare(),
 					 const allocator_type &__a = allocator_type())
-			: _t(__comp, _Pair_alloc_type(__a))
+			: _t(__comp, __a)
 		{
 		}
 
+		// range (2)
+		template <typename _InputIterator>
+		map(_InputIterator __first, _InputIterator __last,
+			const _Compare &__comp = key_compare(),
+			const allocator_type &__a = allocator_type())
+			: _t(__comp, __a)
+		{
+			insert(__first, __last);
+		}
+
+		// copy (3)
 		map(const map &__x)
 			: _t(__x._t)
 		{
+			insert(__x.begin(), __x.end());
 		}
 
-		// template <typename _InputIterator>
-		// map(_InputIterator __first, _InputIterator __last)
-		// 	: _t()
-		// {
-		// 	_t._M_insert_unique(__first, __last);
-		// }
-
-		// template <typename _InputIterator>
-		// map(_InputIterator __first, _InputIterator __last,
-		// 	const _Compare &__comp,
-		// 	const allocator_type &__a = allocator_type())
-		// 	: _t(__comp, _Pair_alloc_type(__a))
-		// {
-		// 	_t._M_insert_unique(__first, __last);
-		// }
+		/*
+		** --------------------------------- ...  ---------------------------
+		*/
 
 		map &operator=(const map &__x)
 		{
@@ -144,6 +146,9 @@ namespace ft
 			return *this;
 		}
 
+		/*
+		** --------------------------------- CONSTRUCTORS  ---------------------------
+		*/
 		allocator_type get_allocator() const
 		{
 			return _t.get_allocator();
@@ -268,10 +273,10 @@ namespace ft
 		// 	_t.swap(__x._t);
 		// }
 
-		// void clear()
-		// {
-		// 	_t.clear();
-		// }
+		void clear()
+		{
+			_t.clear();
+		}
 
 		// key_compare key_comp() const
 		// {
@@ -283,15 +288,21 @@ namespace ft
 		// 	return value_compare(_t.key_comp());
 		// }
 
-		// iterator find(const key_type &__x)
-		// {
-		// 	return _t.find(__x);
-		// }
+		iterator find(const key_type &__x)
+		{
+			value_type *tmp = _t.findNode(__x);
+			if (!tmp)
+				return iterator(_t.end());
+			return iterator(tmp);
+		}
 
-		// const_iterator find(const key_type &__x) const
-		// {
-		// 	return _t.find(__x);
-		// }
+		const_iterator find(const key_type &__x) const
+		{
+			value_type *tmp = _t.findNode(__x);
+			if (!tmp)
+				return const_iterator(_t.end());
+			return const_iterator(tmp);
+		}
 
 		// size_type count(const key_type &__x) const
 		// {

@@ -70,6 +70,16 @@ int main(int argc, char **argv)
 	map_int["7"] = 166;
 	map_int["8"] = 1166;
 	map_int["9"] = 11166;
+	ft::map<std::string, int>::const_iterator it;
+	ft::map<std::string, int> map_str_copy(map_int);
+		std::cout << "COPY MAP"
+			  << "\n";
+	for (it = map_str_copy.begin() ; it != map_str_copy.end(); it++)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+	}
+
 
 	try
 	{
@@ -82,7 +92,7 @@ int main(int argc, char **argv)
 	}
 
 	std::cout << "first\n";
-	ft::map<std::string, int>::iterator it = map_int.begin();
+	it = map_int.begin();
 	while (true)
 	{
 		if (it == map_int.end())

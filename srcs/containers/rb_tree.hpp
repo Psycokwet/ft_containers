@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/01 14:24:07 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/01 20:21:41 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include "iterator_traits.hpp"
 #include "pair.hpp"
 #include "rb_iterators.hpp"
-#include <cstdlib>
+// #include <cstdlib>
 
+#define NO_PARENT NULL
 namespace ft
 {
 
@@ -38,6 +39,7 @@ namespace ft
 	public:
 		struct _Rb_tree_node_base
 		{
+			typedef _Rb_tree_node_base _Base;
 			typedef _Rb_tree_node_base *_Base_ptr;
 			typedef const _Rb_tree_node_base *_Const_Base_ptr;
 
@@ -50,21 +52,21 @@ namespace ft
 			_Base_ptr *_endLeaf;
 
 		public:
-			_Key *key_ptr()
+			 _Key *key_ptr() 
 			{
-				return &(_val.first);
+				return &_val.first;
 			}
-			_Key key()
+			 _Key key() 
 			{
 				return _val.first;
 			}
-			_Val val()
+			_Val& val() 
 			{
 				return _val;
 			}
-			_Val *val_ptr()
+			_Val *val_ptr() 
 			{
-				return &_val;
+				return (&_val);
 			}
 			bool set_color(_Rb_tree_color color)
 			{
@@ -73,11 +75,64 @@ namespace ft
 				_color = color;
 				return true;
 			}
-			_Rb_tree_color get_color()
+			_Rb_tree_color get_color() const
 			{
 				if (_color == _S_leaf)
 					return _S_black;
 				return _color;
+			}
+
+			_Base_ptr get___Node(_Base_ptr __x,
+								 _Base_ptr *_Base::*__sideLeaf,
+								 _Base_ptr _Base::*__sideAdvance,
+								 _Base_ptr _Base::*__otherSide) 
+			{
+				if (!__x) // should  not happen
+					return NULL;
+				if (isLeaf(__x) &&
+					__x->_parent != NO_PARENT &&
+					__x != *(__x->*__sideLeaf))
+					__x = __x->_parent;
+
+				else if (isNotLeaf(__x->*__sideAdvance))
+				{
+					__x = __x->*__sideAdvance;
+					while (isNotLeaf(__x->*__otherSide))
+						__x = __x->*__otherSide;
+				}
+				else
+				{
+					_Base_ptr __y = __x->_parent;
+					while (__y != NO_PARENT && __x == __y->*__sideAdvance)
+					{
+						__x = __y;
+						__y = __y->_parent;
+					}
+					if (__x->*__sideAdvance != __y)
+					{
+						if (__y == NO_PARENT)
+							__x = *(__x->*__sideLeaf);
+						else
+							__x = __y;
+					}
+				}
+				return __x;
+			}
+
+			_Base_ptr getNextNode() 
+			{
+				return get___Node(this,
+								  &_Base::_endLeaf,
+								  &_Base::_right,
+								  &_Base::_left);
+			}
+
+			_Base_ptr getPrevNode() 
+			{
+				return get___Node(this,
+								  &_Base::_beginLeaf,
+								  &_Base::_left,
+								  &_Base::_right);
 			}
 		};
 
@@ -87,7 +142,6 @@ namespace ft
 		allocator_type _Tp_alloc_type;
 
 	private:
-#define NO_PARENT NULL
 
 		typedef _Rb_tree<_Key, _Val, _Compare, _Alloc> _Self;
 		typedef _Rb_tree_node_base _Base;
@@ -96,8 +150,9 @@ namespace ft
 		typedef const _Rb_tree_node_base *_Const_Base_ptr;
 
 		typedef _Compare _base_key_compare;
-		_Base_ptr _root;	  // m_header
+		_Compare _comp;
 		_Base_ptr _leaf;	  // end leafs
+		_Base_ptr _root;	  // m_header
 		_Base_ptr _beginLeaf; // past to begin leaf
 		_Base_ptr _endLeaf;	  // past to end leaf
 		size_t _node_count;	  // Keeps track of size of tree.
@@ -115,48 +170,39 @@ namespace ft
 		typedef size_t size_type;
 		typedef ptrdiff_t difference_type;
 
-		_Rb_tree()
+		_Rb_tree(const _Compare &__comp = _Compare(), const allocator_type &__a = allocator_type())
+			: _Tp_alloc_type(__a),
+			  _comp(__comp),
+			  _leaf(_initLeaf()),
+			  _root(_leaf),
+			  _beginLeaf(_initLeaf()),
+			  _endLeaf(_initLeaf()),
+			  _node_count(0)
 		{
-			_leaf = _initLeaf();
-			_beginLeaf = _initLeaf();
-			_endLeaf = _initLeaf();
-			_root = _leaf;
+		}
+
+		_Rb_tree(const _Rb_tree &__x) // must copy content with iterator outside from there
+			: _Tp_alloc_type(__x._Tp_alloc_type),
+			  _comp(__x._comp),
+			  _leaf(_initLeaf()),
+			  _root(_leaf),
+			  _beginLeaf(_initLeaf()),
+			  _endLeaf(_initLeaf()),
+			  _node_count(0)
+		{
+		}
+
+		void clear()
+		{
+			_delete_tree();
 			_node_count = 0;
-		}
-
-		_Rb_tree(const _Compare &__comp, const allocator_type &__a = allocator_type())
-			: _base_key_compare(__comp),
-			  allocator_type(__a),
-			  _root(NULL),
-			  _leaf(_initLeaf()),
-			  _beginLeaf(_initLeaf()),
-			  _endLeaf(_initLeaf()),
-			  _node_count(0)
-		{
-			_root = _leaf;
-		}
-
-		_Rb_tree(const _Rb_tree &__x)
-			: _base_key_compare(__x.__comp),
-			  allocator_type(__x.__a),
-			  _root(NULL),
-			  _leaf(_initLeaf()),
-			  _beginLeaf(_initLeaf()),
-			  _endLeaf(_initLeaf()),
-			  _node_count(0)
-		{
-			_root = _leaf;
-			// if (__x._root != NULL)
-			// 	_root = _copy(__x);
 		}
 
 		~_Rb_tree()
 		{
 			std::cout << "deleting tree :" << std::endl;
 			_print();
-
-			_delete_tree();
-			_node_count = 0;
+			clear();
 			std::cout << "deleting leafs" << std::endl;
 			_delete_node_clean(&_leaf);
 			_delete_node_clean(&_endLeaf);
@@ -205,59 +251,6 @@ namespace ft
 			return !isLeaf(__x);
 		}
 
-		static _Base_ptr get___Node(_Base_ptr __x,
-									_Base_ptr *_Base::*__sideLeaf,
-									_Base_ptr _Base::*__sideAdvance,
-									_Base_ptr _Base::*__otherSide)
-		{
-			if (!__x) // should  not happen
-				return NULL;
-			if (isLeaf(__x) &&
-				__x->_parent != NO_PARENT &&
-				__x != *(__x->*__sideLeaf))
-				__x = __x->_parent;
-
-			else if (isNotLeaf(__x->*__sideAdvance))
-			{
-				__x = __x->*__sideAdvance;
-				while (isNotLeaf(__x->*__otherSide))
-					__x = __x->*__otherSide;
-			}
-			else
-			{
-				_Base_ptr __y = __x->_parent;
-				while (__y != NO_PARENT && __x == __y->*__sideAdvance)
-				{
-					__x = __y;
-					__y = __y->_parent;
-				}
-				if (__x->*__sideAdvance != __y)
-				{
-					if (__y == NO_PARENT)
-						__x = *(__x->*__sideLeaf);
-					else
-						__x = __y;
-				}
-			}
-			return __x;
-		}
-
-		static _Base_ptr getNextNode(_Base_ptr __x)
-		{
-			return get___Node(__x,
-							  &_Base::_endLeaf,
-							  &_Base::_right,
-							  &_Base::_left);
-		}
-
-		static _Base_ptr getPrevNode(_Base_ptr __x)
-		{
-			return get___Node(__x,
-							  &_Base::_beginLeaf,
-							  &_Base::_left,
-							  &_Base::_right);
-		}
-
 		/*
 		** --------------------------------- ALLOCATOR --------------------------
 		*/
@@ -281,20 +274,23 @@ namespace ft
 			return iterator(tmp);
 		}
 
-		// const_iterator begin() const
-		// {
-		// 	return _t.begin();
-		// }
+		const_iterator begin() const
+		{
+			_Base_ptr tmp = _const_minimum(_root);
+			if (isLeaf(tmp))
+				return const_iterator(*(tmp->_endLeaf));
+			return const_iterator(tmp);
+		}
 
 		iterator end()
 		{
 			return iterator(_end());
 		}
 
-		// const_iterator end() const
-		// {
-		// 	return _t.end();
-		// }
+		const_iterator end() const
+		{
+			return const_iterator(_end());
+		}
 
 		bool empty() const
 		{
@@ -419,11 +415,24 @@ namespace ft
 		** --------------------------------- FIND  ---------------------------
 		*/
 
-		_Base_ptr _end()
+		_Base_ptr _end()const
 		{
 			return _endLeaf;
 		}
 
+		_Base_ptr _const_minimum(_Base_ptr __root) const
+		{
+			while (__root->_left != _leaf)
+				__root = __root->_left;
+			return __root;
+		}
+
+		_Base_ptr _const_maximum(_Base_ptr __root)const
+		{
+			while (__root->_right != _leaf)
+				__root = __root->_right;
+			return __root;
+		}
 		_Base_ptr _minimum(_Base_ptr __root)
 		{
 			while (__root->_left != _leaf)
