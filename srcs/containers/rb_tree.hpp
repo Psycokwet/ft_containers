@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/01 14:22:25 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/01 14:24:07 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -607,15 +607,12 @@ namespace ft
 				{
 					(s->*__otherSide)->set_color(_S_black);
 					s->set_color(_S_red);
-
 					_rotate(s, __otherSide, __side);
 					s = x->_parent->*__side;
 				}
-
-				s->set_color(x->_parent->_color);
+				s->set_color(x->_parent->get_color());
 				x->_parent->set_color(_S_black);
 				(s->*__side)->set_color(_S_black);
-
 				_rotate(x->_parent, __side, __otherSide);
 				x = _root;
 			}
