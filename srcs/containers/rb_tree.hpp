@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/01 14:08:31 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/01 14:22:25 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,7 @@ namespace ft
 		iterator begin()
 		{
 			_Base_ptr tmp = _minimum(_root);
-			if(isLeaf(tmp))
+			if (isLeaf(tmp))
 				return iterator(*(tmp->_endLeaf));
 			return iterator(tmp);
 		}
@@ -376,9 +376,9 @@ namespace ft
 			if ((gp->*__side)->get_color() == _S_red)
 			{
 				gp->_right->set_color(_S_black); // step a
-				gp->_left->set_color(_S_black);  // step a
-				gp->set_color(_S_red);		   // step a
-				return gp;					   // step b. gp is the new newNode
+				gp->_left->set_color(_S_black);	 // step a
+				gp->set_color(_S_red);			 // step a
+				return gp;						 // step b. gp is the new newNode
 			}
 			else
 			{
@@ -388,7 +388,7 @@ namespace ft
 					(this->*__firstRotate)(__newNode); // step d
 					return __newNode;
 				}
-				__newNode->_parent->set_color(_S_black);				  // step e
+				__newNode->_parent->set_color(_S_black);			  // step e
 				__newNode->_parent->_parent->set_color(_S_red);		  // step e
 				(this->*__secondRotate)(__newNode->_parent->_parent); // step f
 				return __newNode;
@@ -532,7 +532,7 @@ namespace ft
 				parent->_right = node;
 			else
 				parent->_left = node;				 // step 7
-			node->set_color(_S_red);					 // step 9 (no need for step 8, done at init)
+			node->set_color(_S_red);				 // step 9 (no need for step 8, done at init)
 			if (node->_parent->_parent == NO_PARENT) // parent is black since root, so work finished here
 				return node;
 
@@ -585,81 +585,50 @@ namespace ft
 			return true;
 		}
 
-
-		void deleteFixInt(_Base_ptr x)
+		_Base_ptr deleteFixInt(_Base_ptr x, _Base_ptr _Base::*__side, _Base_ptr _Base::*__otherSide)
 		{
+			_Base_ptr s = x->_parent->*__side;
+			if (s->get_color() == _S_red)
+			{
+				s->set_color(_S_black);
+				x->_parent->set_color(_S_red);
+				_rotate(x->_parent, __side, __otherSide);
+				s = x->_parent->*__side;
+			}
+
+			if ((s->*__otherSide)->get_color() == _S_black && (s->*__otherSide)->get_color() == _S_black)
+			{
+				s->set_color(_S_red);
+				x = x->_parent;
+			}
+			else
+			{
+				if ((s->*__side)->get_color() == _S_black)
+				{
+					(s->*__otherSide)->set_color(_S_black);
+					s->set_color(_S_red);
+
+					_rotate(s, __otherSide, __side);
+					s = x->_parent->*__side;
+				}
+
+				s->set_color(x->_parent->_color);
+				x->_parent->set_color(_S_black);
+				(s->*__side)->set_color(_S_black);
+
+				_rotate(x->_parent, __side, __otherSide);
+				x = _root;
+			}
+			return x;
 		}
 		void deleteFix(_Base_ptr x)
 		{
-			_Base_ptr s;
 			while (x != _root && x->get_color() == _S_black)
 			{
 				if (x == x->_parent->_left)
-				{
-					s = x->_parent->_right;
-					if (s->get_color() == _S_red)
-					{
-						s->set_color(_S_black);
-						x->_parent->set_color(_S_red);
-						_leftRotate(x->_parent);
-						s = x->_parent->_right;
-					}
-
-					if (s->_left->get_color() == _S_black && s->_right->get_color() == _S_black)
-					{
-						s->set_color(_S_red);
-						x = x->_parent;
-					}
-					else
-					{
-						if (s->_right->get_color() == _S_black)
-						{
-							s->_left->set_color(_S_black);
-							s->set_color(_S_red);
-							_rightRotate(s);
-							s = x->_parent->_right;
-						}
-
-						s->set_color(x->_parent->_color);
-						x->_parent->set_color(_S_black);
-						s->_right->set_color(_S_black);
-						_leftRotate(x->_parent);
-						x = _root;
-					}
-				}
+					x = deleteFixInt(x, &_Base::_right, &_Base::_left);
 				else
-				{
-					s = x->_parent->_left;
-					if (s->get_color() == _S_red)
-					{
-						s->set_color(_S_black);
-						x->_parent->set_color(_S_red);
-						_rightRotate(x->_parent);
-						s = x->_parent->_left;
-					}
-
-					if (s->_right->get_color() == _S_black && s->_right->get_color() == _S_black)
-					{
-						s->set_color(_S_red);
-						x = x->_parent;
-					}
-					else
-					{
-						if (s->_left->get_color() == _S_black)
-						{
-							s->_right->set_color(_S_black);
-							s->set_color(_S_red);
-							_leftRotate(s);
-							s = x->_parent->_left;
-						}
-
-						s->set_color(x->_parent->_color);
-						x->_parent->set_color(_S_black);
-						s->_left->set_color(_S_black);
-						_rightRotate(x->_parent);
-						x = _root;
-					}
-				}
+					x = deleteFixInt(x, &_Base::_left, &_Base::_right);
 			}
 			x->set_color(_S_black);
 		}
@@ -755,7 +724,8 @@ namespace ft
 				_printNodeRec(_root);
 			std::cout << "_______End print tree______\n";
 		}
-		public:
+
+	public:
 		void print()
 		{
 			_print();
