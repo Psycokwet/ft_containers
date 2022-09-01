@@ -140,10 +140,17 @@ int main(int argc, char **argv)
 				  << "val[" << it->second << "] : " << std::endl;
 	}
 
-	map_int.erase(map_int.begin());
-	std::cout << "Erased all"
+	std::cout << "Erased all start-------"
 			  << "\n";
 	map_int.erase(map_int.begin(), map_int.end());
+	std::cout << "-------Erased all done"
+			  << "\n";
+	for (it = map_int.begin() ; it != map_int.end(); it++)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+	}
+
 
 	return 0;
 	ft::vector<std::string> vectorTeststr;

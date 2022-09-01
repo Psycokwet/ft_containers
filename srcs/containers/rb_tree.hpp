@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/31 15:58:16 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/01 14:08:31 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,19 @@ namespace ft
 			_Val *val_ptr()
 			{
 				return &_val;
+			}
+			bool set_color(_Rb_tree_color color)
+			{
+				if (_color == _S_leaf)
+					return false;
+				_color = color;
+				return true;
+			}
+			_Rb_tree_color get_color()
+			{
+				if (_color == _S_leaf)
+					return _S_black;
+				return _color;
 			}
 		};
 
@@ -207,25 +220,14 @@ namespace ft
 			else if (isNotLeaf(__x->*__sideAdvance))
 			{
 				__x = __x->*__sideAdvance;
-				int i = 0;
 				while (isNotLeaf(__x->*__otherSide))
-				{
-					std::cout << "HERE " << (__x->*__otherSide)->key() << "\n";
-					std::cout << "Leaf ? " << (__x->*__otherSide)->_color << "\n";
-					std::cout << __x << ":" << (__x->*__otherSide) << "\n";
-					std::cout << __x->_endLeaf << ":" << __x->_beginLeaf << "\n";
 					__x = __x->*__otherSide;
-					i++;
-					if (i == 10)
-						exit(0);
-				}
 			}
 			else
 			{
 				_Base_ptr __y = __x->_parent;
 				while (__y != NO_PARENT && __x == __y->*__sideAdvance)
 				{
-					std::cout << "THERE \n";
 					__x = __y;
 					__y = __y->_parent;
 				}
@@ -273,7 +275,10 @@ namespace ft
 
 		iterator begin()
 		{
-			return iterator(_minimum(_root));
+			_Base_ptr tmp = _minimum(_root);
+			if(isLeaf(tmp))
+				return iterator(*(tmp->_endLeaf));
+			return iterator(tmp);
 		}
 
 		// const_iterator begin() const
@@ -322,81 +327,6 @@ namespace ft
 		** --------------------------------- ORGANIZE TREE  ---------------------------
 		*/
 
-		void deleteFix(_Base_ptr x)
-		{
-			_Base_ptr s;
-			while (x != _root && x->_color == _S_black)
-			{
-				std::cout << "HERE!\n";
-				if (x == x->_parent->_left)
-				{
-					s = x->_parent->_right;
-					if (s->_color == _S_red)
-					{
-						s->_color = _S_black;
-						x->_parent->_color = _S_red;
-						_leftRotate(x->_parent);
-						s = x->_parent->_right;
-					}
-
-					if (s->_left->_color == _S_black && s->_right->_color == _S_black)
-					{
-						s->_color = _S_red;
-						x = x->_parent;
-					}
-					else
-					{
-						if (s->_right->_color == _S_black)
-						{
-							s->_left->_color = _S_black;
-							s->_color = _S_red;
-							_rightRotate(s);
-							s = x->_parent->_right;
-						}
-
-						s->_color = x->_parent->_color;
-						x->_parent->_color = _S_black;
-						s->_right->_color = _S_black;
-						_leftRotate(x->_parent);
-						x = _root;
-					}
-				}
-				else
-				{
-					s = x->_parent->_left;
-					if (s->_color == _S_red)
-					{
-						s->_color = _S_black;
-						x->_parent->_color = _S_red;
-						_rightRotate(x->_parent);
-						s = x->_parent->_left;
-					}
-
-					if (s->_right->_color == _S_black && s->_right->_color == _S_black)
-					{
-						s->_color = _S_red;
-						x = x->_parent;
-					}
-					else
-					{
-						if (s->_left->_color == _S_black)
-						{
-							s->_right->_color = _S_black;
-							s->_color = _S_red;
-							_leftRotate(s);
-							s = x->_parent->_left;
-						}
-
-						s->_color = x->_parent->_color;
-						x->_parent->_color = _S_black;
-						s->_left->_color = _S_black;
-						_rightRotate(x->_parent);
-						x = _root;
-					}
-				}
-			}
-			x->_color = _S_black;
-		}
 		void _place_y_instead_of_x(_Base_ptr __x, _Base_ptr __y) // don't care for childs of x and y
 		{
 			if (__x->_parent == NO_PARENT)
@@ -412,8 +342,8 @@ namespace ft
 		{
 			// step 1 is condition initials
 			_Base_ptr y = __x->*__otherSide;
-			__x->*__otherSide = y->*__sideRotate;	   // step 2 :No issue if otherSide gets a leaf
-			if (isNotLeaf(y->*__sideRotate)) // fix y->sideRotate parent
+			__x->*__otherSide = y->*__sideRotate; // step 2 :No issue if otherSide gets a leaf
+			if (isNotLeaf(y->*__sideRotate))	  // fix y->sideRotate parent
 				(y->*__sideRotate)->_parent = __x;
 			y->_parent = __x->_parent;	   // No issue if y->_parent gets NO_PARENT
 			if (__x->_parent == NO_PARENT) // step 3
@@ -443,11 +373,11 @@ namespace ft
 		{
 			_Base_ptr gp = __newNode->_parent->_parent;
 
-			if ((gp->*__side)->_color == _S_red)
+			if ((gp->*__side)->get_color() == _S_red)
 			{
-				gp->_right->_color = _S_black; // step a
-				gp->_left->_color = _S_black;  // step a
-				gp->_color = _S_red;		   // step a
+				gp->_right->set_color(_S_black); // step a
+				gp->_left->set_color(_S_black);  // step a
+				gp->set_color(_S_red);		   // step a
 				return gp;					   // step b. gp is the new newNode
 			}
 			else
@@ -458,15 +388,15 @@ namespace ft
 					(this->*__firstRotate)(__newNode); // step d
 					return __newNode;
 				}
-				__newNode->_parent->_color = _S_black;				  // step e
-				__newNode->_parent->_parent->_color = _S_red;		  // step e
+				__newNode->_parent->set_color(_S_black);				  // step e
+				__newNode->_parent->_parent->set_color(_S_red);		  // step e
 				(this->*__secondRotate)(__newNode->_parent->_parent); // step f
 				return __newNode;
 			}
 		}
 		void _balanceTree(_Base_ptr __newNode)
 		{
-			while (__newNode->_parent->_color == _S_red) // step 1
+			while (__newNode->_parent->get_color() == _S_red) // step 1
 			{
 				if (__newNode->_parent == __newNode->_parent->_parent->_left) // step 2
 					__newNode = _balance_int(__newNode,						  // case 1
@@ -482,7 +412,7 @@ namespace ft
 				if (__newNode == _root)
 					break;
 			}
-			_root->_color = _S_black;
+			_root->set_color(_S_black);
 		}
 
 		/*
@@ -602,7 +532,7 @@ namespace ft
 				parent->_right = node;
 			else
 				parent->_left = node;				 // step 7
-			node->_color = _S_red;					 // step 9 (no need for step 8, done at init)
+			node->set_color(_S_red);					 // step 9 (no need for step 8, done at init)
 			if (node->_parent->_parent == NO_PARENT) // parent is black since root, so work finished here
 				return node;
 
@@ -655,17 +585,95 @@ namespace ft
 			return true;
 		}
 
+
+		void deleteFixInt(_Base_ptr x)
+		{
+		}
+		void deleteFix(_Base_ptr x)
+		{
+			_Base_ptr s;
+			while (x != _root && x->get_color() == _S_black)
+			{
+				if (x == x->_parent->_left)
+				{
+					s = x->_parent->_right;
+					if (s->get_color() == _S_red)
+					{
+						s->set_color(_S_black);
+						x->_parent->set_color(_S_red);
+						_leftRotate(x->_parent);
+						s = x->_parent->_right;
+					}
+
+					if (s->_left->get_color() == _S_black && s->_right->get_color() == _S_black)
+					{
+						s->set_color(_S_red);
+						x = x->_parent;
+					}
+					else
+					{
+						if (s->_right->get_color() == _S_black)
+						{
+							s->_left->set_color(_S_black);
+							s->set_color(_S_red);
+							_rightRotate(s);
+							s = x->_parent->_right;
+						}
+
+						s->set_color(x->_parent->_color);
+						x->_parent->set_color(_S_black);
+						s->_right->set_color(_S_black);
+						_leftRotate(x->_parent);
+						x = _root;
+					}
+				}
+				else
+				{
+					s = x->_parent->_left;
+					if (s->get_color() == _S_red)
+					{
+						s->set_color(_S_black);
+						x->_parent->set_color(_S_red);
+						_rightRotate(x->_parent);
+						s = x->_parent->_left;
+					}
+
+					if (s->_right->get_color() == _S_black && s->_right->get_color() == _S_black)
+					{
+						s->set_color(_S_red);
+						x = x->_parent;
+					}
+					else
+					{
+						if (s->_left->get_color() == _S_black)
+						{
+							s->_right->set_color(_S_black);
+							s->set_color(_S_red);
+							_leftRotate(s);
+							s = x->_parent->_left;
+						}
+
+						s->set_color(x->_parent->_color);
+						x->_parent->set_color(_S_black);
+						s->_left->set_color(_S_black);
+						_rightRotate(x->_parent);
+						x = _root;
+					}
+				}
+			}
+			x->set_color(_S_black);
+		}
+
 		_Base_ptr _replace_other_side_if_one_side_is_leaf(_Base_ptr __node, _Base_ptr _Base::*__side, _Base_ptr _Base::*__other_side)
 		{
 			_Base_ptr result = NULL;
 			if (isNotLeaf(__node->*__side))
-				return NULL;
+				return result;
 
 			result = __node->*__other_side;
 			_place_y_instead_of_x(__node, __node->*__other_side);
 			return result;
 		}
-
 		void _deleteNodeFromTree(_Base_ptr __node)
 		{
 			_node_count--;
@@ -673,25 +681,14 @@ namespace ft
 
 			y = __node;
 			_Rb_tree_color y_original_color = y->_color;
-			// one or both are leaves
-			// x = _replace_other_side_if_one_side_is_leaf(__node, &_Base::_left, &_Base::_right) ||
-			// 	_replace_other_side_if_one_side_is_leaf(__node, &_Base::_right, &_Base::_left);
-			// if (!x)
-			if (__node->_left == _leaf)
-			{
-				x = __node->_right;
-				_place_y_instead_of_x(__node, __node->_right);
-			}
-			else if (__node->_right == _leaf)
-			{
-				x = __node->_left;
-				_place_y_instead_of_x(__node, __node->_left);
-			}
-			// none are leaves
-			else
+			// one or both side are leaves
+			x = _replace_other_side_if_one_side_is_leaf(__node, &_Base::_left, &_Base::_right);
+			if (!x)
+				x = _replace_other_side_if_one_side_is_leaf(__node, &_Base::_right, &_Base::_left);
+			if (!x) // none are leaves
 			{
 				y = _minimum(__node->_right);
-				y_original_color = y->_color;
+				y_original_color = y->get_color();
 				x = y->_right;
 				if (y->_parent == __node)
 				{
@@ -707,7 +704,7 @@ namespace ft
 				_place_y_instead_of_x(__node, y);
 				y->_left = __node->_left;
 				y->_left->_parent = y;
-				y->_color = __node->_color;
+				y->set_color(__node->_color);
 			}
 			_delete_node_clean(&__node);
 			if (y_original_color == _S_black)
@@ -757,6 +754,11 @@ namespace ft
 			if (_root)
 				_printNodeRec(_root);
 			std::cout << "_______End print tree______\n";
+		}
+		public:
+		void print()
+		{
+			_print();
 		}
 	};
 
