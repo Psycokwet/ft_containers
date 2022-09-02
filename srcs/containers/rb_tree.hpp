@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 19:23:19 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 20:15:59 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,121 @@
 #define NO_PARENT NULL
 namespace ft
 {
-
 	enum _Rb_tree_color
 	{
 		_S_red = false,
 		_S_black = true,
 		_S_leaf = 2,
+	};
+
+	template <typename _Key,
+			  typename _Val = ft::pair<_Key, void> // bug indent
+			  >
+	struct Rb_tree_node_base
+	{
+		typedef Rb_tree_node_base _Base;
+		typedef Rb_tree_node_base *_Base_ptr;
+		typedef const Rb_tree_node_base *_Const_Base_ptr;
+
+		_Val _val;
+		_Rb_tree_color _color;
+		_Base_ptr _parent;
+		_Base_ptr _left;
+		_Base_ptr _right;
+		_Base_ptr *_beginLeaf;
+		_Base_ptr *_endLeaf;
+
+	public:
+		_Key *key_ptr()
+		{
+			return &_val.first;
+		}
+		_Key key()
+		{
+			return _val.first;
+		}
+		_Val &val()
+		{
+			return _val;
+		}
+		_Val *val_ptr()
+		{
+			return (&_val);
+		}
+		bool set_color(_Rb_tree_color color)
+		{
+			if (_color == _S_leaf)
+				return false;
+			_color = color;
+			return true;
+		}
+		_Rb_tree_color get_color() const
+		{
+			if (_color == _S_leaf)
+				return _S_black;
+			return _color;
+		}
+
+		bool isLeaf()
+		{
+			return _color == _S_leaf;
+		}
+		bool isNotLeaf()
+		{
+			return !isLeaf();
+		}
+		_Base_ptr get___Node(_Base_ptr __x,
+							 _Base_ptr *_Base::*__sideLeaf,
+							 _Base_ptr _Base::*__sideAdvance,
+							 _Base_ptr _Base::*__otherSide)
+		{
+			if (!__x) // should  not happen
+				return NULL;
+			if (__x->isLeaf() &&
+				__x->_parent != NO_PARENT &&
+				__x != *(__x->*__sideLeaf))
+				__x = __x->_parent;
+
+			else if ((__x->*__sideAdvance)->isNotLeaf())
+			{
+				__x = __x->*__sideAdvance;
+				while ((__x->*__otherSide)->isNotLeaf())
+					__x = __x->*__otherSide;
+			}
+			else
+			{
+				_Base_ptr __y = __x->_parent;
+				while (__y != NO_PARENT && __x == __y->*__sideAdvance)
+				{
+					__x = __y;
+					__y = __y->_parent;
+				}
+				if (__x->*__sideAdvance != __y)
+				{
+					if (__y == NO_PARENT)
+						__x = *(__x->*__sideLeaf);
+					else
+						__x = __y;
+				}
+			}
+			return __x;
+		}
+
+		_Base_ptr getNextNode()
+		{
+			return get___Node(this,
+							  &_Base::_endLeaf,
+							  &_Base::_right,
+							  &_Base::_left);
+		}
+
+		_Base_ptr getPrevNode()
+		{
+			return get___Node(this,
+							  &_Base::_beginLeaf,
+							  &_Base::_left,
+							  &_Base::_right);
+		}
 	};
 
 	template <typename _Key,
@@ -37,104 +146,7 @@ namespace ft
 	class _Rb_tree
 	{
 	public:
-		struct _Rb_tree_node_base
-		{
-			typedef _Rb_tree_node_base _Base;
-			typedef _Rb_tree_node_base *_Base_ptr;
-			typedef const _Rb_tree_node_base *_Const_Base_ptr;
-
-			_Val _val;
-			_Rb_tree_color _color;
-			_Base_ptr _parent;
-			_Base_ptr _left;
-			_Base_ptr _right;
-			_Base_ptr *_beginLeaf;
-			_Base_ptr *_endLeaf;
-
-		public:
-			_Key *key_ptr()
-			{
-				return &_val.first;
-			}
-			_Key key()
-			{
-				return _val.first;
-			}
-			_Val &val()
-			{
-				return _val;
-			}
-			_Val *val_ptr()
-			{
-				return (&_val);
-			}
-			bool set_color(_Rb_tree_color color)
-			{
-				if (_color == _S_leaf)
-					return false;
-				_color = color;
-				return true;
-			}
-			_Rb_tree_color get_color() const
-			{
-				if (_color == _S_leaf)
-					return _S_black;
-				return _color;
-			}
-
-			_Base_ptr get___Node(_Base_ptr __x,
-								 _Base_ptr *_Base::*__sideLeaf,
-								 _Base_ptr _Base::*__sideAdvance,
-								 _Base_ptr _Base::*__otherSide)
-			{
-				if (!__x) // should  not happen
-					return NULL;
-				if (isLeaf(__x) &&
-					__x->_parent != NO_PARENT &&
-					__x != *(__x->*__sideLeaf))
-					__x = __x->_parent;
-
-				else if (isNotLeaf(__x->*__sideAdvance))
-				{
-					__x = __x->*__sideAdvance;
-					while (isNotLeaf(__x->*__otherSide))
-						__x = __x->*__otherSide;
-				}
-				else
-				{
-					_Base_ptr __y = __x->_parent;
-					while (__y != NO_PARENT && __x == __y->*__sideAdvance)
-					{
-						__x = __y;
-						__y = __y->_parent;
-					}
-					if (__x->*__sideAdvance != __y)
-					{
-						if (__y == NO_PARENT)
-							__x = *(__x->*__sideLeaf);
-						else
-							__x = __y;
-					}
-				}
-				return __x;
-			}
-
-			_Base_ptr getNextNode()
-			{
-				return get___Node(this,
-								  &_Base::_endLeaf,
-								  &_Base::_right,
-								  &_Base::_left);
-			}
-
-			_Base_ptr getPrevNode()
-			{
-				return get___Node(this,
-								  &_Base::_beginLeaf,
-								  &_Base::_left,
-								  &_Base::_right);
-			}
-		};
+		typedef Rb_tree_node_base<_Key, _Val> _Rb_tree_node_base;
 
 		// https://alp.developpez.com/tutoriels/templaterebinding/
 		typedef typename _Alloc::template rebind<_Rb_tree_node_base>::other allocator_type;
@@ -143,6 +155,7 @@ namespace ft
 
 	private:
 		typedef _Rb_tree<_Key, _Val, _Compare, _Alloc> _Self;
+		// typedef Rb_tree_node_base<_Key, _Val> _Rb_tree_node_base;
 		typedef _Rb_tree_node_base _Base;
 		typedef const _Rb_tree_node_base _Const_Base;
 		typedef _Rb_tree_node_base *_Base_ptr;
@@ -251,15 +264,6 @@ namespace ft
 			return _findAndDeleteNodeFromTree(__key);
 		}
 
-		bool static isLeaf(_Base_ptr __x)
-		{
-			return __x->_color == _S_leaf;
-		}
-		bool static isNotLeaf(_Base_ptr __x)
-		{
-			return !isLeaf(__x);
-		}
-
 		/*
 		** --------------------------------- ALLOCATOR --------------------------
 		*/
@@ -278,7 +282,7 @@ namespace ft
 		iterator begin()
 		{
 			_Base_ptr tmp = _minimum(_root);
-			if (isLeaf(tmp))
+			if (tmp->isLeaf())
 				return iterator(*(tmp->_endLeaf));
 			return iterator(tmp);
 		}
@@ -286,7 +290,7 @@ namespace ft
 		const_iterator begin() const
 		{
 			_Base_ptr tmp = _const_minimum(_root);
-			if (isLeaf(tmp))
+			if (tmp->isLeaf())
 				return const_iterator(*(tmp->_endLeaf));
 			return const_iterator(tmp);
 		}
@@ -401,7 +405,7 @@ namespace ft
 			// step 1 is condition initials
 			_Base_ptr y = __x->*__otherSide;
 			__x->*__otherSide = y->*__sideRotate; // step 2 :No issue if otherSide gets a leaf
-			if (isNotLeaf(y->*__sideRotate))	  // fix y->sideRotate parent
+			if ((y->*__sideRotate)->isNotLeaf())	  // fix y->sideRotate parent
 				(y->*__sideRotate)->_parent = __x;
 			y->_parent = __x->_parent;	   // No issue if y->_parent gets NO_PARENT
 			if (__x->_parent == NO_PARENT) // step 3
@@ -515,12 +519,12 @@ namespace ft
 		{
 			_Base_ptr closestParent = NO_PARENT;
 			_Base_ptr current = __root;
-			while (isNotLeaf(current))
+			while (current->isNotLeaf())
 			{
 				closestParent = current;
 				if (__key == current->key())
 					return current;
-				current = current->key() <= __key ? current->_right : current->_left;
+				current = _comp(current->key(), __key) ? current->_right : current->_left;
 			}
 			return closestParent;
 		}
@@ -599,8 +603,8 @@ namespace ft
 				_root = node;
 				return node;
 			}
-			node->_parent = parent;			 // step 5
-			if (node->key() > parent->key()) // step 6
+			node->_parent = parent;				   // step 5
+			if (_comp(parent->key(), node->key())) // step 6
 				parent->_right = node;
 			else
 				parent->_left = node;				 // step 7
@@ -620,7 +624,7 @@ namespace ft
 
 		void _delete_sub_tree(_Base_ptr __root)
 		{
-			if (isNotLeaf(__root))
+			if (__root->isNotLeaf())
 			{
 				_delete_sub_tree(__root->_left);
 				_delete_sub_tree(__root->_right);
@@ -705,7 +709,7 @@ namespace ft
 		_Base_ptr _replace_other_side_if_one_side_is_leaf(_Base_ptr __node, _Base_ptr _Base::*__side, _Base_ptr _Base::*__other_side)
 		{
 			_Base_ptr result = NULL;
-			if (isNotLeaf(__node->*__side))
+			if ((__node->*__side)->isNotLeaf())
 				return result;
 
 			result = __node->*__other_side;
@@ -755,7 +759,7 @@ namespace ft
 
 		std::string _printNode(_Base_ptr __node, std::string __indent = "", char __src = 'R')
 		{
-			if (isLeaf(__node))
+			if (__node->isLeaf())
 				return __indent;
 			std::cout << __indent;
 			__indent += __src == 'r' ? "|" : __src == 'l' ? " "

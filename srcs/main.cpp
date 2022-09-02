@@ -123,6 +123,20 @@ int main(int argc, char **argv)
 	}
 
 	/*
+	** --------------------------------- CHANGE COMP TEST --------------------------
+	*/
+	ft::map<std::string, int, std::greater<std::string> // bug indent
+			>
+		map_str_plus;
+	map_str_plus.insert(map_str_copy.begin(), map_str_copy.end());
+	std::cout << "CHANGE COMP TEST "
+			  << "\n";
+	for (it = map_str_plus.begin(); it != map_str_plus.end(); it++)
+	{
+		std::cout << "key[" << it->first << "] : "
+				  << "val[" << it->second << "] : " << std::endl;
+	}
+	/*
 	** --------------------------------- MAP ACCESS TESTS --------------------------
 	*/
 	// https://legacy.cplusplus.com/reference/map/map/at/
