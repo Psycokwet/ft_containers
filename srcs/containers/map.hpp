@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 19:29:34 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 20:29:13 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ namespace ft
 		typedef _Rb_tree<key_type, value_type, key_compare, allocator_type>
 			_Tree_type;
 		_Tree_type _t;
+
+		typedef typename _Tree_type::_Rb_tree_node_base _Base;
+		typedef typename _Base::_Base_ptr _Base_ptr;
 
 	public:
 		typedef typename allocator_type::reference reference;
@@ -225,18 +228,18 @@ namespace ft
 		// oooops it was c++11
 		//  mapped_type &at(const key_type &__k)
 		//  {
-		//  	value_type *tmp = _t.findNode(__k);
+		//  	_Base_ptr tmp = _t.findNode(__k);
 		//  	if (!tmp)
 		//  		throw std::out_of_range("map::at");
-		//  	return tmp->second;
+		//  	return tmp->val()->second;
 		//  }
 
 		// const mapped_type &at(const key_type &__k) const
 		// {
-		// 	value_type *tmp = _t.findNode(__k);
+		// 	_Base_ptr tmp = _t.findNode(__k);
 		// 	if (!tmp)
 		// 		throw std::out_of_range("map::at");
-		// 	return tmp->second;
+		// 	return tmp->val()->second;
 		// }
 
 		/*
@@ -246,7 +249,7 @@ namespace ft
 		ft::pair<iterator, bool> insert(const value_type &__x)
 		{
 			bool second = true;
-			value_type *tmp = _t.findNode(__x.first);
+			_Base_ptr tmp = _t.findNode(__x.first);
 			if (!tmp)
 				second = false;
 			return ft::make_pair(_t.insertNodeGetIterator(__x), second);
@@ -311,7 +314,7 @@ namespace ft
 		// TODO most of it
 		iterator find(const key_type &__x)
 		{
-			value_type *tmp = _t.findNode(__x);
+			_Base_ptr tmp = _t.findNode(__x);
 			if (!tmp)
 				return iterator(_t.end());
 			return iterator(tmp);
@@ -319,16 +322,16 @@ namespace ft
 
 		const_iterator find(const key_type &__x) const
 		{
-			value_type *tmp = _t.findNode(__x);
+			_Base_ptr tmp = _t.findNode(__x);
 			if (!tmp)
 				return const_iterator(_t.end());
 			return const_iterator(tmp);
 		}
 
-		// size_type count(const key_type &__x) const
-		// {
-		// 	return _t.find(__x) == _t.end() ? 0 : 1;
-		// }
+		size_type count(const key_type &__x) const
+		{
+			return _t.find(__x) == _t.end() ? 0 : 1; // because keys are uniques
+		}
 
 		// iterator lower_bound(const key_type &__x)
 		// {

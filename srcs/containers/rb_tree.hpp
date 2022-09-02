@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 20:15:59 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 20:28:33 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,12 +252,12 @@ namespace ft
 			_print();
 			return v;
 		}
-		_Val *findNode(_Key __key)
+		_Base_ptr findNode(_Key __key)
 		{
 			_Base_ptr find = _findNode(__key);
 			if (!find)
 				return NULL;
-			return find->val_ptr();
+			return find;
 		}
 		bool deleteNode(_Key __key)
 		{
