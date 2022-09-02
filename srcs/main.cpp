@@ -52,62 +52,100 @@ public:
 	iterator end() { return this->c.end(); }
 };
 
+bool fncomp(char lhs, char rhs) { return lhs < rhs; }
+
+struct classcomp
+{
+	bool operator()(const char &lhs, const char &rhs) const
+	{
+		return lhs < rhs;
+	}
+};
+
 int main(int argc, char **argv)
 {
-	// ft::map<int, int> map_int;
-	ft::map<std::string, int> map_int;
-	// ft::map<std::string, int> map_str_int;
-	ft::map<std::string, std::string> map_str;
 
-	map_int["1"] = 2;
-	map_int["1"] = 7;
-	map_int["0"] = 5;
-	map_int["2"] = 25;
-	map_int["3"] = 42;
-	map_int["4"] = 2;
-	map_int["5"] = 6;
-	map_int["6"] = 66;
-	map_int["7"] = 166;
-	map_int["8"] = 1166;
-	map_int["9"] = 11166;
+	/*
+	** --------------------------------- MAP CONSTRUCTORS TESTS --------------------------
+	*/
+	ft::map<char, int> first;
+
+	first['a'] = 10;
+	first['b'] = 30;
+	first['c'] = 50;
+	first['d'] = 70;
+
+	ft::map<char, int> second(first.begin(), first.end());
+
+	ft::map<char, int> third(second);
+
+	ft::map<char, int, classcomp> fourth; // class as Compare
+
+	bool (*fn_pt)(char, char) = fncomp;
+	ft::map<char, int, bool (*)(char, char)> fifth(fn_pt); // function pointer as Compare
+
+	// ft::map<int, int> map_int;
+	ft::map<std::string, int> map_str;
+	// ft::map<std::string, int> map_str_int;
+	ft::map<std::string, std::string> map_str_str;
+
+	map_str["1"] = 2;
+	map_str["1"] = 7;
+	map_str["0"] = 5;
+	map_str["2"] = 25;
+	map_str["3"] = 42;
+	map_str["4"] = 2;
+	map_str["5"] = 6;
+	map_str["6"] = 66;
+	map_str["7"] = 166;
+	map_str["8"] = 1166;
+	map_str["9"] = 11166;
 	ft::map<std::string, int>::const_iterator cit;
-	ft::map<std::string, int> map_str_copy(map_int);
-		std::cout << "COPY MAP"
+	ft::map<std::string, int> map_str_copy(map_str);
+	std::cout << "COPY MAP"
 			  << "\n";
-	for (cit = map_str_copy.begin() ; cit != map_str_copy.end(); cit++)
+	for (cit = map_str_copy.begin(); cit != map_str_copy.end(); cit++)
 	{
 		std::cout << "key[" << cit->first << "] : "
 				  << "val[" << cit->second << "] : " << std::endl;
 	}
 	ft::map<std::string, int>::iterator it;
-	it= map_str_copy.begin();
-	it ++;
+	it = map_str_copy.begin();
+	it++;
 	it++;
 	ft::map<std::string, int> map_str_copy_partial(it, map_str_copy.end());
-		std::cout << "COPY partial"
+	std::cout << "COPY partial"
 			  << "\n";
-	for (it = map_str_copy_partial.begin() ; it != map_str_copy_partial.end(); it++)
+	for (it = map_str_copy_partial.begin(); it != map_str_copy_partial.end(); it++)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
 	}
 
-
+	/*
+	** --------------------------------- MAP ACCESS TESTS --------------------------
+	*/
 	try
 	{
-		map_int.at("42");
+		map_str.at("42");
 		/* code */
 	}
 	catch (const std::exception &e)
 	{
 		std::cerr << "exception : " << e.what() << '\n';
 	}
+	std::cout <<"1:val[" << map_str["1"]<< "] : " << std::endl;
+	std::cout << "5:val[" << map_str["5"]<< "] : " << std::endl;
+	std::cout << "10:val[" << map_str["10"] << "] : " << std::endl;
 
+	/*
+	** --------------------------------- MAP ITERATORS TESTS --------------------------
+	*/
 	std::cout << "first\n";
-	it = map_int.begin();
+	it = map_str.begin();
 	while (true)
 	{
-		if (it == map_int.end())
+		if (it == map_str.end())
 			break;
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
@@ -119,7 +157,7 @@ int main(int argc, char **argv)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
-		if (it == map_int.begin())
+		if (it == map_str.begin())
 			break;
 		it--;
 	}
@@ -127,7 +165,7 @@ int main(int argc, char **argv)
 	std::cout << "third\n";
 	while (true)
 	{
-		if(it == map_int.end())
+		if (it == map_str.end())
 			break;
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
@@ -139,24 +177,24 @@ int main(int argc, char **argv)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
-		if(it == map_int.begin())
+		if (it == map_str.begin())
 			break;
 		it--;
 	}
 
-	map_int.erase("5");
+	map_str.erase("5");
 	std::cout << "Erase key 5"
 			  << "\n";
-	for (it = map_int.begin() ; it != map_int.end(); it++)
+	for (it = map_str.begin(); it != map_str.end(); it++)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
 	}
 
-	map_int.erase(map_int.begin());
+	map_str.erase(map_str.begin());
 	std::cout << "Erase begin"
 			  << "\n";
-	for (it = map_int.begin() ; it != map_int.end(); it++)
+	for (it = map_str.begin(); it != map_str.end(); it++)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
@@ -164,15 +202,14 @@ int main(int argc, char **argv)
 
 	std::cout << "Erased all start-------"
 			  << "\n";
-	map_int.erase(map_int.begin(), map_int.end());
+	map_str.erase(map_str.begin(), map_str.end());
 	std::cout << "-------Erased all done"
 			  << "\n";
-	for (it = map_int.begin() ; it != map_int.end(); it++)
+	for (it = map_str.begin(); it != map_str.end(); it++)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
 	}
-
 
 	return 0;
 	ft::vector<std::string> vectorTeststr;
@@ -186,7 +223,8 @@ int main(int argc, char **argv)
 	vectorTeststr[0] += "pwett";
 	std::cout << "test str :" << vectorTeststr[0] << "\n";
 	std::cout << "all good \n";
-	ft::vector<ft::pair<int, int> > vectorTest;
+	ft::vector<ft::pair<int, int> // bug indent
+	> vectorTest;
 	vectorTest.push_back(ft::make_pair(1337, 42));
 	std::cout << vectorTest.size() << "\n";
 	std::cout << vectorTest[0].first << "\n"
@@ -296,7 +334,8 @@ int main(int argc, char **argv)
 	}
 
 	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::stack<Buffer, std::deque<Buffer> // bug indent
+	> stack_deq_buffer;
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
 	// 	std::cout << "val[it] : " << *it << std::endl;
 	// for (int i = 0; i < COUNT; i++)
@@ -327,19 +366,19 @@ int main(int argc, char **argv)
 
 	// for (int i = 0; i < COUNT; ++i)
 	// {
-	// 	map_int.insert(ft::make_pair(rand(), rand()));
+	// 	map_str.insert(ft::make_pair(rand(), rand()));
 	// }
 
 	// int sum = 0;
 	// for (int i = 0; i < 10000; i++)
 	// {
 	// 	int access = rand();
-	// 	sum += map_int[access];
+	// 	sum += map_str[access];
 	// }
 	// std::cout << "should be constant with the same seed: " << sum << std::endl;
 
 	// {
-	// 	ft::map<int, int> copy = map_int;
+	// 	ft::map<int, int> copy = map_str;
 	// }
 	// MutantStack<char> iterable_stack;
 	// for (char letter = 'a'; letter <= 'z'; letter++)

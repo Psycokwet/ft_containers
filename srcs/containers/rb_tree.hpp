@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/01 20:21:41 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 09:53:09 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,19 @@ namespace ft
 			_Base_ptr *_endLeaf;
 
 		public:
-			 _Key *key_ptr() 
+			_Key *key_ptr()
 			{
 				return &_val.first;
 			}
-			 _Key key() 
+			_Key key()
 			{
 				return _val.first;
 			}
-			_Val& val() 
+			_Val &val()
 			{
 				return _val;
 			}
-			_Val *val_ptr() 
+			_Val *val_ptr()
 			{
 				return (&_val);
 			}
@@ -85,7 +85,7 @@ namespace ft
 			_Base_ptr get___Node(_Base_ptr __x,
 								 _Base_ptr *_Base::*__sideLeaf,
 								 _Base_ptr _Base::*__sideAdvance,
-								 _Base_ptr _Base::*__otherSide) 
+								 _Base_ptr _Base::*__otherSide)
 			{
 				if (!__x) // should  not happen
 					return NULL;
@@ -119,7 +119,7 @@ namespace ft
 				return __x;
 			}
 
-			_Base_ptr getNextNode() 
+			_Base_ptr getNextNode()
 			{
 				return get___Node(this,
 								  &_Base::_endLeaf,
@@ -127,7 +127,7 @@ namespace ft
 								  &_Base::_left);
 			}
 
-			_Base_ptr getPrevNode() 
+			_Base_ptr getPrevNode()
 			{
 				return get___Node(this,
 								  &_Base::_beginLeaf,
@@ -142,7 +142,6 @@ namespace ft
 		allocator_type _Tp_alloc_type;
 
 	private:
-
 		typedef _Rb_tree<_Key, _Val, _Compare, _Alloc> _Self;
 		typedef _Rb_tree_node_base _Base;
 		typedef const _Rb_tree_node_base _Const_Base;
@@ -192,6 +191,14 @@ namespace ft
 		{
 		}
 
+		_Rb_tree &operator=(const _Rb_tree &__x) // prefer to refill using iterator so must do outside
+		{
+			clear();
+			_Tp_alloc_type = __x._Tp_alloc_type;
+			_comp = __x._comp;
+			return *this;
+		}
+
 		void clear()
 		{
 			_delete_tree();
@@ -213,19 +220,19 @@ namespace ft
 	public:
 		iterator insertNodeGetIterator(_Val __val)
 		{
-			return insertNodeGetIterator(__val.first, __val);
+			return insertNodeGetIterator(__val.first, __val, true);
 		}
-		iterator insertNodeGetIterator(_Key __key, _Val __val = _Val())
+		iterator insertNodeGetIterator(_Key __key, _Val __val = _Val(), bool replaceIfPresent = false)
 		{
-			return iterator(_insert(__key, __val));
+			return iterator(_insert(__key, __val, replaceIfPresent));
 		}
 		_Val *insertNode(_Val __val)
 		{
 			return insertNode(__val.first, __val);
 		}
-		_Val *insertNode(_Key __key, _Val __val = _Val())
+		_Val *insertNode(_Key __key, _Val __val = _Val(), bool replaceIfPresent = false)
 		{
-			_Val *v = _insert(__key, __val)->val_ptr();
+			_Val *v = _insert(__key, __val, replaceIfPresent)->val_ptr();
 			std::cout << "Added node in tree :" << std::endl;
 			_print();
 			return v;
@@ -415,7 +422,7 @@ namespace ft
 		** --------------------------------- FIND  ---------------------------
 		*/
 
-		_Base_ptr _end()const
+		_Base_ptr _end() const
 		{
 			return _endLeaf;
 		}
@@ -427,7 +434,7 @@ namespace ft
 			return __root;
 		}
 
-		_Base_ptr _const_maximum(_Base_ptr __root)const
+		_Base_ptr _const_maximum(_Base_ptr __root) const
 		{
 			while (__root->_right != _leaf)
 				__root = __root->_right;
@@ -497,12 +504,12 @@ namespace ft
 			node = _init_node(node);
 			return node;
 		}
-		_Base_ptr _insert(_Key __key, _Val __val)
+		_Base_ptr _insert(_Key __key, _Val __val, bool replaceIfPresent = false)
 		{
 			_Base_ptr node = _create_node();
 			node->_val = __val;
 			*(node->key_ptr()) = __key; // never set key value before val, since val encompass it
-			return _addNode(node);
+			return _addNode(node, replaceIfPresent);
 		}
 		_Base_ptr _init_node(_Base_ptr __node)
 		{
@@ -519,13 +526,14 @@ namespace ft
 			return __node;
 		}
 
-		_Base_ptr _addNode(_Base_ptr node)
+		_Base_ptr _addNode(_Base_ptr node, bool replaceIfPresent)
 		{
 			_Base_ptr parent = _findClosest(_root, node->key()); // step 4 (works to find if root == null for step 3 later)
 			if (parent != NO_PARENT && parent->key() == node->key())
 			{
 				// Node exist with same key, abort and replace content
-				parent->_val = node->_val; // should I use construct ?
+				if (replaceIfPresent)
+					parent->_val = node->_val; // should I use construct ?
 				_delete_node_clean(&node);
 				return parent; // obv not parent in this case
 			}

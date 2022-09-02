@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 09:09:56 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 09:52:33 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,12 +138,13 @@ namespace ft
 		}
 
 		/*
-		** --------------------------------- ...  ---------------------------
+		** --------------------------------- Copy container content  ---------------------------
 		*/
 
 		map &operator=(const map &__x)
 		{
 			_t = __x._t;
+			insert(__x.begin(), __x.end());
 			return *this;
 		}
 
@@ -210,6 +211,9 @@ namespace ft
 			return _t.max_size();
 		}
 
+		/*
+		** --------------------------------- ELEMENTS ACCESS  ---------------------------
+		*/
 		mapped_type &operator[](const key_type &__k)
 		{
 			return _t.insertNode(__k)->second;
@@ -231,6 +235,9 @@ namespace ft
 			return tmp->second;
 		}
 
+		/*
+		** --------------------------------- ... ---------------------------
+		*/
 		ft::pair<iterator, bool> insert(const value_type &__x)
 		{
 			bool second = true;
