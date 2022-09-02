@@ -125,17 +125,19 @@ int main(int argc, char **argv)
 	/*
 	** --------------------------------- MAP ACCESS TESTS --------------------------
 	*/
-	try
-	{
-		map_str.at("42");
-		/* code */
-	}
-	catch (const std::exception &e)
-	{
-		std::cerr << "exception : " << e.what() << '\n';
-	}
-	std::cout <<"1:val[" << map_str["1"]<< "] : " << std::endl;
-	std::cout << "5:val[" << map_str["5"]<< "] : " << std::endl;
+//https://legacy.cplusplus.com/reference/map/map/at/
+	// woops c++11
+	//  try
+	//  {
+	//  	map_str.at("42");
+	//  	/* code */
+	//  }
+	//  catch (const std::exception &e)
+	//  {
+	//  	std::cerr << "exception : " << e.what() << '\n';
+	//  }
+	std::cout << "1:val[" << map_str["1"] << "] : " << std::endl;
+	std::cout << "5:val[" << map_str["5"] << "] : " << std::endl;
 	std::cout << "10:val[" << map_str["10"] << "] : " << std::endl;
 
 	/*
@@ -224,7 +226,8 @@ int main(int argc, char **argv)
 	std::cout << "test str :" << vectorTeststr[0] << "\n";
 	std::cout << "all good \n";
 	ft::vector<ft::pair<int, int> // bug indent
-	> vectorTest;
+			   >
+		vectorTest;
 	vectorTest.push_back(ft::make_pair(1337, 42));
 	std::cout << vectorTest.size() << "\n";
 	std::cout << vectorTest[0].first << "\n"
@@ -335,7 +338,8 @@ int main(int argc, char **argv)
 
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> // bug indent
-	> stack_deq_buffer;
+			  >
+		stack_deq_buffer;
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
 	// 	std::cout << "val[it] : " << *it << std::endl;
 	// for (int i = 0; i < COUNT; i++)

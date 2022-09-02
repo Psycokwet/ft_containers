@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 09:52:33 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 10:02:36 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,13 +149,9 @@ namespace ft
 		}
 
 		/*
-		** --------------------------------- CONSTRUCTORS  ---------------------------
+		** --------------------------------- ITERATORS ---------------------------
 		*/
-		allocator_type get_allocator() const
-		{
-			return _t.get_allocator();
-		}
-
+		// reverse_iterators TODO
 		iterator begin()
 		{
 			return _t.begin();
@@ -196,6 +192,9 @@ namespace ft
 		// 	return _t.rend();
 		// }
 
+		/*
+		** --------------------------------- CAPACITY ---------------------------
+		*/
 		bool empty() const
 		{
 			return _t.empty();
@@ -214,30 +213,33 @@ namespace ft
 		/*
 		** --------------------------------- ELEMENTS ACCESS  ---------------------------
 		*/
+		// done
 		mapped_type &operator[](const key_type &__k)
 		{
 			return _t.insertNode(__k)->second;
 		}
 
-		mapped_type &at(const key_type &__k)
-		{
-			value_type *tmp = _t.findNode(__k);
-			if (!tmp)
-				throw std::out_of_range("map::at");
-			return tmp->second;
-		}
+		// oooops it was c++11
+		//  mapped_type &at(const key_type &__k)
+		//  {
+		//  	value_type *tmp = _t.findNode(__k);
+		//  	if (!tmp)
+		//  		throw std::out_of_range("map::at");
+		//  	return tmp->second;
+		//  }
 
-		const mapped_type &at(const key_type &__k) const
-		{
-			value_type *tmp = _t.findNode(__k);
-			if (!tmp)
-				throw std::out_of_range("map::at");
-			return tmp->second;
-		}
+		// const mapped_type &at(const key_type &__k) const
+		// {
+		// 	value_type *tmp = _t.findNode(__k);
+		// 	if (!tmp)
+		// 		throw std::out_of_range("map::at");
+		// 	return tmp->second;
+		// }
 
 		/*
-		** --------------------------------- ... ---------------------------
+		** --------------------------------- MODIFIERS ---------------------------
 		*/
+		// TODO swap
 		ft::pair<iterator, bool> insert(const value_type &__x)
 		{
 			bool second = true;
@@ -286,16 +288,24 @@ namespace ft
 			_t.clear();
 		}
 
-		// key_compare key_comp() const
-		// {
-		// 	return _t.key_comp();
-		// }
+		/*
+		** --------------------------------- OBSERVERS ---------------------------
+		*/
+		// TODO
+		//  key_compare key_comp() const
+		//  {
+		//  	return _t.key_comp();
+		//  }
 
 		// value_compare value_comp() const
 		// {
 		// 	return value_compare(_t.key_comp());
 		// }
 
+		/*
+		** --------------------------------- OPERATIONS ---------------------------
+		*/
+		// TODO most of it
 		iterator find(const key_type &__x)
 		{
 			value_type *tmp = _t.findNode(__x);
@@ -346,6 +356,14 @@ namespace ft
 		// {
 		// 	return _t.equal_range(__x);
 		// }
+
+		/*
+		** --------------------------------- ALLOCATOR ---------------------------
+		*/
+		allocator_type get_allocator() const
+		{
+			return _t.get_allocator();
+		}
 
 		template <typename _K1, typename _T1, typename _C1, typename _A1>
 		friend bool operator==(const map<_K1, _T1, _C1, _A1> &,
