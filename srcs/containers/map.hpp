@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 10:19:31 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 19:10:56 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ namespace ft
 		/*
 		** --------------------------------- Copy container content  ---------------------------
 		*/
+		// done
 
 		map &operator=(const map &__x)
 		{
@@ -152,7 +153,7 @@ namespace ft
 		/*
 		** --------------------------------- ITERATORS ---------------------------
 		*/
-		// reverse_iterators TODO
+		// done
 		iterator begin()
 		{
 			return _t.begin();
@@ -196,6 +197,7 @@ namespace ft
 		/*
 		** --------------------------------- CAPACITY ---------------------------
 		*/
+		// done
 		bool empty() const
 		{
 			return _t.empty();
@@ -240,7 +242,7 @@ namespace ft
 		/*
 		** --------------------------------- MODIFIERS ---------------------------
 		*/
-		// TODO swap
+		// done
 		ft::pair<iterator, bool> insert(const value_type &__x)
 		{
 			bool second = true;
@@ -279,10 +281,10 @@ namespace ft
 				this->erase(__first++);
 		}
 
-		// void swap(map &__x)
-		// {
-		// 	_t.swap(__x._t);
-		// }
+		void swap(map &__x)
+		{
+			_t.swap(__x._t);
+		}
 
 		void clear()
 		{
@@ -417,12 +419,12 @@ namespace ft
 		return !(__x < __y);
 	}
 
-	// template <typename _Key, typename _Tp, typename _Compare, typename _Alloc>
-	// void swap(map<_Key, _Tp, _Compare, _Alloc> &__x,
-	// 		  map<_Key, _Tp, _Compare, _Alloc> &__y)
-	// {
-	// 	__x.swap(__y);
-	// }
+	template <typename _Key, typename _Tp, typename _Compare, typename _Alloc>
+	void swap(map<_Key, _Tp, _Compare, _Alloc> &__x,
+			  map<_Key, _Tp, _Compare, _Alloc> &__y)
+	{
+		__x.swap(__y);
+	}
 
 }
 

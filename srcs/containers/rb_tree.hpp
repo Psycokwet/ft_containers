@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 18:01:48 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 19:11:53 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,8 +150,8 @@ namespace ft
 
 		typedef _Compare _base_key_compare;
 		_Compare _comp;
-		_Base_ptr _leaf;	  // end leafs
-		_Base_ptr _root;	  // m_header
+		_Base_ptr _leaf; // end leafs
+		_Base_ptr _root;
 		_Base_ptr _beginLeaf; // past to begin leaf
 		_Base_ptr _endLeaf;	  // past to end leaf
 		size_t _node_count;	  // Keeps track of size of tree.
@@ -301,7 +301,6 @@ namespace ft
 			return const_iterator(_end());
 		}
 
-
 		reverse_iterator rbegin()
 		{
 			return reverse_iterator(end());
@@ -322,7 +321,6 @@ namespace ft
 			return const_reverse_iterator(begin());
 		}
 
-
 		bool empty() const
 		{
 			return !size();
@@ -336,6 +334,34 @@ namespace ft
 		size_type max_size() const
 		{
 			return _Tp_alloc_type.max_size();
+		}
+
+		void swap(_Rb_tree &__x)
+		{
+
+			allocator_type _Tp_alloc_type_tmp = _Tp_alloc_type;
+			_Compare _comp_tmp = _comp;
+			_Base_ptr _leaf_tmp = _leaf;
+			_Base_ptr _root_tmp = _root;
+			_Base_ptr _beginLeaf_tmp = _beginLeaf;
+			_Base_ptr _endLeaf_tmp = _endLeaf;
+			size_t _node_count_tmp = _node_count;
+
+			_Tp_alloc_type = __x._Tp_alloc_type;
+			_comp = __x._comp;
+			_leaf = __x._leaf;
+			_root = __x._root;
+			_beginLeaf = __x._beginLeaf;
+			_endLeaf = __x._endLeaf;
+			_node_count = __x._node_count;
+
+			__x._Tp_alloc_type = _Tp_alloc_type_tmp;
+			__x._comp = _comp_tmp;
+			__x._leaf = _leaf_tmp;
+			__x._root = _root_tmp;
+			__x._beginLeaf = _beginLeaf_tmp;
+			__x._endLeaf = _endLeaf_tmp;
+			__x._node_count = _node_count_tmp;
 		}
 
 	private:
