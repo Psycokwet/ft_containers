@@ -70,11 +70,23 @@ int main(int argc, char **argv)
 	map_int["7"] = 166;
 	map_int["8"] = 1166;
 	map_int["9"] = 11166;
-	ft::map<std::string, int>::const_iterator it;
+	ft::map<std::string, int>::const_iterator cit;
 	ft::map<std::string, int> map_str_copy(map_int);
 		std::cout << "COPY MAP"
 			  << "\n";
-	for (it = map_str_copy.begin() ; it != map_str_copy.end(); it++)
+	for (cit = map_str_copy.begin() ; cit != map_str_copy.end(); cit++)
+	{
+		std::cout << "key[" << cit->first << "] : "
+				  << "val[" << cit->second << "] : " << std::endl;
+	}
+	ft::map<std::string, int>::iterator it;
+	it= map_str_copy.begin();
+	it ++;
+	it++;
+	ft::map<std::string, int> map_str_copy_partial(it, map_str_copy.end());
+		std::cout << "COPY partial"
+			  << "\n";
+	for (it = map_str_copy_partial.begin() ; it != map_str_copy_partial.end(); it++)
 	{
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;

@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/01 20:16:51 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 09:09:56 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ namespace ft
 		/*
 		** --------------------------------- CONSTRUCTORS  ---------------------------
 		*/
-		// empty (1)
+		// done
+		//  empty (1)
 		explicit map(const _Compare &__comp = key_compare(),
 					 const allocator_type &__a = allocator_type())
 			: _t(__comp, __a)
