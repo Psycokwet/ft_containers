@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 10:02:36 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 10:19:31 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "pair.hpp"
 #include "rb_tree.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -67,8 +68,8 @@ namespace ft
 		typedef typename _Tree_type::iterator iterator;
 		typedef typename _Tree_type::const_iterator const_iterator;
 
-		// typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-		// typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		typedef typename _Tree_type::difference_type difference_type;
 		typedef typename _Tree_type::size_type size_type;
@@ -172,25 +173,25 @@ namespace ft
 			return _t.end();
 		}
 
-		// reverse_iterator rbegin()
-		// {
-		// 	return _t.rbegin();
-		// }
+		reverse_iterator rbegin()
+		{
+			return _t.rbegin();
+		}
 
-		// const_reverse_iterator rbegin() const
-		// {
-		// 	return _t.rbegin();
-		// }
+		const_reverse_iterator rbegin() const
+		{
+			return _t.rbegin();
+		}
 
-		// reverse_iterator rend()
-		// {
-		// 	return _t.rend();
-		// }
+		reverse_iterator rend()
+		{
+			return _t.rend();
+		}
 
-		// const_reverse_iterator rend() const
-		// {
-		// 	return _t.rend();
-		// }
+		const_reverse_iterator rend() const
+		{
+			return _t.rend();
+		}
 
 		/*
 		** --------------------------------- CAPACITY ---------------------------

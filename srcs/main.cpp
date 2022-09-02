@@ -125,17 +125,17 @@ int main(int argc, char **argv)
 	/*
 	** --------------------------------- MAP ACCESS TESTS --------------------------
 	*/
-//https://legacy.cplusplus.com/reference/map/map/at/
-	// woops c++11
-	//  try
-	//  {
-	//  	map_str.at("42");
-	//  	/* code */
-	//  }
-	//  catch (const std::exception &e)
-	//  {
-	//  	std::cerr << "exception : " << e.what() << '\n';
-	//  }
+	// https://legacy.cplusplus.com/reference/map/map/at/
+	//  woops c++11
+	//   try
+	//   {
+	//   	map_str.at("42");
+	//   	/* code */
+	//   }
+	//   catch (const std::exception &e)
+	//   {
+	//   	std::cerr << "exception : " << e.what() << '\n';
+	//   }
 	std::cout << "1:val[" << map_str["1"] << "] : " << std::endl;
 	std::cout << "5:val[" << map_str["5"] << "] : " << std::endl;
 	std::cout << "10:val[" << map_str["10"] << "] : " << std::endl;
@@ -212,6 +212,20 @@ int main(int argc, char **argv)
 		std::cout << "key[" << it->first << "] : "
 				  << "val[" << it->second << "] : " << std::endl;
 	}
+
+	/*
+	** --------------------------------- MAP reverse ITERATORS TESTS --------------------------
+	*/
+	ft::map<char, int> mymap;
+
+	mymap['x'] = 100;
+	mymap['y'] = 200;
+	mymap['z'] = 300;
+
+	// show content:
+	ft::map<char, int>::reverse_iterator rit;
+	for (rit = mymap.rbegin(); rit != mymap.rend(); rit++)
+		std::cout << rit->first << " => " << rit->second << '\n';
 
 	return 0;
 	ft::vector<std::string> vectorTeststr;

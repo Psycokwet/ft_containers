@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 09:53:09 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 18:01:48 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "iterator_traits.hpp"
 #include "pair.hpp"
 #include "rb_iterators.hpp"
-// #include <cstdlib>
+#include "reverse_iterator.hpp"
 
 #define NO_PARENT NULL
 namespace ft
@@ -159,6 +159,8 @@ namespace ft
 	public:
 		typedef _Rb_tree_iterator<_Self, _Val, false> iterator;
 		typedef _Rb_tree_iterator<_Self, _Val, true> const_iterator;
+		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		typedef _Key key_type;
 		typedef _Val value_type;
@@ -298,6 +300,28 @@ namespace ft
 		{
 			return const_iterator(_end());
 		}
+
+
+		reverse_iterator rbegin()
+		{
+			return reverse_iterator(end());
+		}
+
+		const_reverse_iterator rbegin() const
+		{
+			return reverse_iterator(end());
+		}
+
+		reverse_iterator rend()
+		{
+			return reverse_iterator(begin());
+		}
+
+		const_reverse_iterator rend() const
+		{
+			return const_reverse_iterator(begin());
+		}
+
 
 		bool empty() const
 		{

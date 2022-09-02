@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/31 13:46:20 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 10:16:14 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ namespace ft
 		typedef ft::__normal_iterator<pointer, vector> iterator;
 		typedef ft::__normal_iterator<const_pointer, vector> const_iterator;
 
-		// typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
-		// typedef ft::reverse_iterator<iterator> reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator> reverse_iterator;
 
 	private:
 		allocator_type _Tp_alloc_type;
@@ -255,15 +255,15 @@ namespace ft
 		// Notice that unlike member vector::back, which returns a reference to this same element,
 		// this function returns a reverse random access iterator.
 
-		// reverse_iterator rbegin()
-		// {
-		// 	return reverse_iterator(end());
-		// }
+		reverse_iterator rbegin()
+		{
+			return reverse_iterator(end());
+		}
 
-		// const_reverse_iterator rbegin() const
-		// {
-		// 	return const_reverse_iterator(end());
-		// }
+		const_reverse_iterator rbegin() const
+		{
+			return const_reverse_iterator(end());
+		}
 
 		// // Return reverse iterator to reverse end
 		// // Returns a reverse iterator pointing to the theoretical element preceding the first element
@@ -271,15 +271,15 @@ namespace ft
 
 		// // The range between vector::rbegin and vector::rend contains all the elements of the vector (in reverse order).
 
-		// reverse_iterator rend()
-		// {
-		// 	return reverse_iterator(begin());
-		// }
+		reverse_iterator rend()
+		{
+			return reverse_iterator(begin());
+		}
 
-		// const_reverse_iterator rend() const
-		// {
-		// 	return const_reverse_iterator(begin());
-		// }
+		const_reverse_iterator rend() const
+		{
+			return const_reverse_iterator(begin());
+		}
 
 		/*
 		 ** --------------------------------- CAPACITY --------------------------
