@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 19:11:53 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 19:23:19 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ namespace ft
 		typedef _Rb_tree_node_base *_Base_ptr;
 		typedef const _Rb_tree_node_base *_Const_Base_ptr;
 
-		typedef _Compare _base_key_compare;
+		typedef _Compare key_compare;
 		_Compare _comp;
 		_Base_ptr _leaf; // end leafs
 		_Base_ptr _root;
@@ -362,6 +362,11 @@ namespace ft
 			__x._beginLeaf = _beginLeaf_tmp;
 			__x._endLeaf = _endLeaf_tmp;
 			__x._node_count = _node_count_tmp;
+		}
+
+		key_compare key_comp() const
+		{
+			return _comp;
 		}
 
 	private:

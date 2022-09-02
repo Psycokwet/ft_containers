@@ -216,17 +216,42 @@ int main(int argc, char **argv)
 	/*
 	** --------------------------------- MAP reverse ITERATORS TESTS --------------------------
 	*/
-	ft::map<char, int> mymap;
+	{
+		ft::map<char, int> mymap;
 
-	mymap['x'] = 100;
-	mymap['y'] = 200;
-	mymap['z'] = 300;
+		mymap['x'] = 100;
+		mymap['y'] = 200;
+		mymap['z'] = 300;
 
-	// show content:
-	ft::map<char, int>::reverse_iterator rit;
-	for (rit = mymap.rbegin(); rit != mymap.rend(); rit++)
-		std::cout << rit->first << " => " << rit->second << '\n';
+		// show content:
+		ft::map<char, int>::reverse_iterator rit;
+		for (rit = mymap.rbegin(); rit != mymap.rend(); rit++)
+			std::cout << rit->first << " => " << rit->second << '\n';
+	}
+	/*
+	** --------------------------------- MAP keycomp TESTS --------------------------
+	*/
+	{
+		ft::map<char, int> mymap;
 
+		ft::map<char, int>::key_compare mycomp = mymap.key_comp();
+
+		mymap['a'] = 100;
+		mymap['b'] = 200;
+		mymap['c'] = 300;
+
+		std::cout << "mymap contains:\n";
+
+		char highest = mymap.rbegin()->first; // key value of last element
+
+		ft::map<char, int>::iterator it = mymap.begin();
+		do
+		{
+			std::cout << it->first << " => " << it->second << '\n';
+		} while (mycomp((*it++).first, highest));
+
+		std::cout << '\n';
+	}
 	return 0;
 	ft::vector<std::string> vectorTeststr;
 	std::cout << "pushback str :"

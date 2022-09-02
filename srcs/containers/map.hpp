@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 19:10:56 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/02 19:29:34 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,16 +294,16 @@ namespace ft
 		/*
 		** --------------------------------- OBSERVERS ---------------------------
 		*/
-		// TODO
-		//  key_compare key_comp() const
-		//  {
-		//  	return _t.key_comp();
-		//  }
+		// done
+		 key_compare key_comp() const
+		 {
+		 	return _t.key_comp();
+		 }
 
-		// value_compare value_comp() const
-		// {
-		// 	return value_compare(_t.key_comp());
-		// }
+		value_compare value_comp() const
+		{
+			return value_compare(_t.key_comp());
+		}
 
 		/*
 		** --------------------------------- OPERATIONS ---------------------------
