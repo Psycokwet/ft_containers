@@ -175,7 +175,6 @@ int main(int argc, char **argv)
 		lower bound points to: 'b' => 20
 		upper bound points to: 'c' => 30
 		 */
-		return 0;
 	}
 	/*
 	** --------------------------------- Find test --------------------------

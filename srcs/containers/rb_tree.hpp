@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 09:18:31 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 09:32:52 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,14 +222,14 @@ namespace ft
 
 		~_Rb_tree()
 		{
-			std::cout << "deleting tree :" << std::endl;
-			_print();
+			// std::cout << "deleting tree :" << std::endl;
+			// _print();
 			clear();
-			std::cout << "deleting leafs" << std::endl;
+			// std::cout << "deleting leafs" << std::endl;
 			_delete_node_clean(&_leaf);
 			_delete_node_clean(&_endLeaf);
 			_delete_node_clean(&_beginLeaf);
-			std::cout << "deleted" << std::endl;
+			// std::cout << "deleted" << std::endl;
 		}
 
 	public:
@@ -248,8 +248,8 @@ namespace ft
 		_Val *insertNode(_Key __key, _Val __val = _Val(), bool replaceIfPresent = false)
 		{
 			_Val *v = _insert(__key, __val, replaceIfPresent)->val_ptr();
-			std::cout << "Added node in tree :" << std::endl;
-			_print();
+			// std::cout << "Added node in tree :" << std::endl;
+			// _print();
 			return v;
 		}
 		_Base_ptr findNode(_Key __key)
@@ -658,8 +658,8 @@ namespace ft
 
 		void _delete_node(_Base_ptr __node)
 		{
-			std::cout << "deleting node :" << __node << std::endl;
-			_printNode(__node);
+			// std::cout << "deleting node :" << __node << std::endl;
+			// _printNode(__node);
 			_Tp_alloc_type.deallocate(__node, 1);
 		}
 
@@ -818,10 +818,10 @@ namespace ft
 		}
 
 	public:
-		void print()
-		{
-			_print();
-		}
+		// void print()
+		// {
+		// 	_print();
+		// }
 	};
 
 }
