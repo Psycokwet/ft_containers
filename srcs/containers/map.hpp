@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 09:27:45 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 09:35:32 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,7 +311,6 @@ namespace ft
 		/*
 		** --------------------------------- OPERATIONS ---------------------------
 		*/
-		// TODO most of it
 		iterator find(const key_type &__x)
 		{
 			_Base_ptr tmp = _t.findNode(__x);
@@ -330,7 +329,7 @@ namespace ft
 
 		size_type count(const key_type &__x) const
 		{
-			return _t.find(__x) == _t.end() ? 0 : 1; // because keys are uniques
+			return _t.find(__x) == _t.end() ? 0 : 1; // because keys are uniques in map
 		}
 
 		iterator lower_bound(const key_type &__x)
@@ -371,6 +370,9 @@ namespace ft
 			return _t.get_allocator();
 		}
 
+		/*
+		** --------------------------------- OPERATOR ---------------------------
+		*/
 		template <typename _K1, typename _T1, typename _C1, typename _A1>
 		friend bool operator==(const map<_K1, _T1, _C1, _A1> &,
 							   const map<_K1, _T1, _C1, _A1> &);
