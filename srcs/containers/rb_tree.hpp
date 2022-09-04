@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 20:28:33 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 09:18:31 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,7 +342,6 @@ namespace ft
 
 		void swap(_Rb_tree &__x)
 		{
-
 			allocator_type _Tp_alloc_type_tmp = _Tp_alloc_type;
 			_Compare _comp_tmp = _comp;
 			_Base_ptr _leaf_tmp = _leaf;
@@ -366,6 +365,26 @@ namespace ft
 			__x._beginLeaf = _beginLeaf_tmp;
 			__x._endLeaf = _endLeaf_tmp;
 			__x._node_count = _node_count_tmp;
+		}
+
+		iterator lower_bound(const _Key &__k)
+		{
+			return iterator(_findClosest(_root, __k));
+		}
+
+		const_iterator lower_bound(const _Key &__k) const
+		{
+			return const_iterator(_findClosest(_root, __k));
+		}
+
+		iterator upper_bound(const _Key &__k)
+		{
+			return iterator(_findClosest(_root, __k)->getNextNode());
+		}
+
+		const_iterator upper_bound(const _Key &__k) const
+		{
+			return const_iterator(_findClosest(_root, __k)->getNextNode());
 		}
 
 		key_compare key_comp() const
@@ -405,7 +424,7 @@ namespace ft
 			// step 1 is condition initials
 			_Base_ptr y = __x->*__otherSide;
 			__x->*__otherSide = y->*__sideRotate; // step 2 :No issue if otherSide gets a leaf
-			if ((y->*__sideRotate)->isNotLeaf())	  // fix y->sideRotate parent
+			if ((y->*__sideRotate)->isNotLeaf())  // fix y->sideRotate parent
 				(y->*__sideRotate)->_parent = __x;
 			y->_parent = __x->_parent;	   // No issue if y->_parent gets NO_PARENT
 			if (__x->_parent == NO_PARENT) // step 3
@@ -515,7 +534,7 @@ namespace ft
 			return __root;
 		}
 
-		_Base_ptr _findClosest(_Base_ptr __root, _Key __key)
+		_Base_ptr _findClosest(_Base_ptr __root, const _Key __key) const
 		{
 			_Base_ptr closestParent = NO_PARENT;
 			_Base_ptr current = __root;

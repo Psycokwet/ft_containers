@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 20:29:13 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 09:13:30 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,25 +333,25 @@ namespace ft
 			return _t.find(__x) == _t.end() ? 0 : 1; // because keys are uniques
 		}
 
-		// iterator lower_bound(const key_type &__x)
-		// {
-		// 	return _t.lower_bound(__x);
-		// }
+		iterator lower_bound(const key_type &__x)
+		{
+			return _t.lower_bound(__x);
+		}
 
-		// const_iterator lower_bound(const key_type &__x) const
-		// {
-		// 	return _t.lower_bound(__x);
-		// }
+		const_iterator lower_bound(const key_type &__x) const
+		{
+			return _t.lower_bound(__x);
+		}
 
-		// iterator upper_bound(const key_type &__x)
-		// {
-		// 	return _t.upper_bound(__x);
-		// }
+		iterator upper_bound(const key_type &__x)
+		{
+			return _t.upper_bound(__x);
+		}
 
-		// const_iterator upper_bound(const key_type &__x) const
-		// {
-		// 	return _t.upper_bound(__x);
-		// }
+		const_iterator upper_bound(const key_type &__x) const
+		{
+			return _t.upper_bound(__x);
+		}
 
 		// ft::pair<iterator, iterator> equal_range(const key_type &__x)
 		// {
