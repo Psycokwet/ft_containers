@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 20:57:18 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 20:59:24 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -599,6 +599,7 @@ namespace ft
 			_insert_dispatch(__position, __first, __last, _Integral());
 		}
 
+// https://legacy.cplusplus.com/reference/vector/vector/swap/
 		/*
 		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		 */
