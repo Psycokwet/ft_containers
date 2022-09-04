@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/02 10:16:14 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 10:08:51 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 namespace ft
 {
 
-	template <typename _Tp, typename _Alloc = std::allocator<_Tp> >
+	template <typename _Tp, typename _Alloc = std::allocator<_Tp> // bug indent
+			  >
 	class vector
 	{
 	public:
@@ -71,6 +72,7 @@ namespace ft
 
 		void _fill(size_type __n, const value_type &__value = value_type())
 		{
+			std::cout << "trying to fill up "<<__n<< " with "<< std::endl;
 			for (size_type i = 0; i < __n; i++)
 				push_back(__value);
 		}
@@ -83,7 +85,7 @@ namespace ft
 
 		template <typename _InputIterator>
 		void _initialize_dispatch(_InputIterator __first, _InputIterator __last,
-									false_type)
+								  false_type)
 		{
 			_create_storage(__last - __first);
 			_copy(__first, __last);
@@ -96,13 +98,13 @@ namespace ft
 		void _create_storage(size_t __n)
 		{
 			_create_storage(this->_start,
-							  this->_finish,
-							  this->_end_of_storage, __n);
+							this->_finish,
+							this->_end_of_storage, __n);
 		}
 
 		void _create_storage(pointer &_start,
-							   pointer &_finish,
-							   pointer &_end_of_storage, size_t __n)
+							 pointer &_finish,
+							 pointer &_end_of_storage, size_t __n)
 		{
 			_start = _allocate(__n);
 			_finish = _start;
@@ -112,9 +114,9 @@ namespace ft
 		{
 			if (__n >= this->size())
 				throw std::out_of_range(SSTR("vector::_range_check: __n (which is ") //
-										+ SSTR(__n)									   //
-										+ SSTR(" ) >= this->size() (which is ")		   //
-										+ SSTR(this->size()) + SSTR(")"));			   //
+										+ SSTR(__n)									 //
+										+ SSTR(" ) >= this->size() (which is ")		 //
+										+ SSTR(this->size()) + SSTR(")"));			 //
 		}
 
 	public:
@@ -203,18 +205,14 @@ namespace ft
 		/*
 		** --------------------------------- ITERATORS --------------------------
 		*/
-		/*
-		 * begin //done
-		 * end
-		 * rbegin
-		 * rend
-		 */
+		// done
 
-		// Return iterator to beginning
-		// Returns an iterator pointing to the first element in the vector.
-		// Notice that, unlike member vector::front, which returns a reference to the first element,
-		// this function returns a random access iterator pointing to it.
-		// If the container is empty, the returned iterator value shall not be dereferenced.
+		/* Return iterator to beginning
+		 * Returns an iterator pointing to the first element in the vector.
+		 * Notice that, unlike member vector::front, which returns a reference to the first element,
+		 * this function returns a random access iterator pointing to it.
+		 * If the container is empty, the returned iterator value shall not be dereferenced.
+		 */
 
 		iterator begin()
 		{
@@ -226,14 +224,15 @@ namespace ft
 			return const_iterator(this->_start);
 		}
 
-		// Return iterator to end
-		// Returns an iterator referring to the past-the-end element in the vector container.
-		// The past-the-end element is the theoretical element that would follow the last element in the vector.
-		// It does not point to any element, and thus shall not be dereferenced.
-		// Because the ranges used by functions of the standard library do not include the element pointed by
-		// their closing iterator, this function is often used in combination with vector::begin to specify a
-		// range including all the elements in the container.
-		// If the container is empty, this function returns the same as vector::begin.
+		/* Return iterator to end
+		 * Returns an iterator referring to the past-the-end element in the vector container.
+		 * The past-the-end element is the theoretical element that would follow the last element in the vector.
+		 * It does not point to any element, and thus shall not be dereferenced.
+		 * Because the ranges used by functions of the standard library do not include the element pointed by
+		 * their closing iterator, this function is often used in combination with vector::begin to specify a
+		 * range including all the elements in the container.
+		 * If the container is empty, this function returns the same as vector::begin.
+		 */
 
 		iterator end()
 		{
@@ -245,16 +244,16 @@ namespace ft
 			return const_iterator(this->_finish);
 		}
 
-		// Return reverse iterator to reverse beginning
-		// Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
-
-		// Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
-
-		// rbegin points to the element right before the one that would be pointed to by member end.
-
-		// Notice that unlike member vector::back, which returns a reference to this same element,
-		// this function returns a reverse random access iterator.
-
+		/* Return reverse iterator to reverse beginning
+		 * Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
+		 *
+		 * Reverse iterators iterate backwards: increasing them moves them towards the beginning of the container.
+		 *
+		 * rbegin points to the element right before the one that would be pointed to by member end.
+		 *
+		 * Notice that unlike member vector::back, which returns a reference to this same element,
+		 *		 this function returns a reverse random access iterator.
+		 */
 		reverse_iterator rbegin()
 		{
 			return reverse_iterator(end());
@@ -265,12 +264,12 @@ namespace ft
 			return const_reverse_iterator(end());
 		}
 
-		// // Return reverse iterator to reverse end
-		// // Returns a reverse iterator pointing to the theoretical element preceding the first element
-		// //  in the vector (which is considered its reverse end).
-
-		// // The range between vector::rbegin and vector::rend contains all the elements of the vector (in reverse order).
-
+		/* Return reverse iterator to reverse end
+		 * Returns a reverse iterator pointing to the theoretical element preceding the first element
+		 * in the vector (which is considered its reverse end).
+		 *
+		 * The range between vector::rbegin and vector::rend contains all the elements of the vector (in reverse order).
+		 */
 		reverse_iterator rend()
 		{
 			return reverse_iterator(begin());
@@ -304,13 +303,19 @@ namespace ft
 		{
 			return _Tp_alloc_type.max_size();
 		}
-		// Change size
-		// Resizes the container so that it contains n elements.
-		// If n is smaller than the current container size, the content is reduced to its first n elements, removing those beyond (and destroying them).
-		// If n is greater than the current container size, the content is expanded by inserting at the end as many elements as needed to reach a size of n. If val is specified, the new elements are initialized as copies of val, otherwise, they are value-initialized.
-		// If n is also greater than the current container capacity, an automatic reallocation of the allocated storage space takes place.
-		// Notice that this function changes the actual content of the container by inserting or erasing elements from it.
-
+		/* Change size
+		 * Resizes the container so that it contains n elements.
+		 * If n is smaller than the current container size, the content is reduced
+		 * to its first n elements, removing those beyond (and destroying them).
+		 * If n is greater than the current container size, the content is expanded
+		 * by inserting at the end as many elements as needed to reach a size of n.
+		 * If val is specified, the new elements are initialized as copies of val,
+		 * otherwise, they are value-initialized.
+		 * If n is also greater than the current container capacity, an automatic
+		 * reallocation of the allocated storage space takes place.
+		 * Notice that this function changes the actual content of the container
+		 * by inserting or erasing elements from it.
+		 */
 		void resize(size_type __new_size, value_type __x = value_type())
 		{
 			if (__new_size > capacity())
@@ -485,10 +490,7 @@ namespace ft
 		void push_back(const value_type &__val)
 		{
 			if (this->_finish == this->_end_of_storage)
-			{
-				resize((capacity() | 1) * 1.5, __val);
-				return;
-			}
+				reserve((capacity() == 0 ? 1 : capacity() * 2) );
 			_Tp_alloc_type.construct(_finish, __val);
 			this->_finish++;
 		}

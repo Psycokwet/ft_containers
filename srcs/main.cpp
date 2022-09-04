@@ -342,7 +342,6 @@ int main(int argc, char **argv)
 
 		std::cout << '\n';
 	}
-	return 0;
 	ft::vector<std::string> vectorTeststr;
 	std::cout << "pushback str :"
 			  << "\n";
@@ -469,6 +468,50 @@ int main(int argc, char **argv)
 	ft::stack<Buffer, std::deque<Buffer> // bug indent
 			  >
 		stack_deq_buffer;
+	{
+		std::cout << "Test reserve" << std::endl;
+		ft::vector<int>::size_type sz;
+
+		ft::vector<int> foo;
+		sz = foo.capacity();
+		std::cout << "making foo grow:" << sz << "\n";
+		for (int i = 0; i < 100; ++i)
+		{
+			foo.push_back(i);
+			if (sz != foo.capacity())
+			{
+				sz = foo.capacity();
+				std::cout << "capacity changed: " << sz << '\n';
+			}
+		}
+
+		ft::vector<int> bar;
+		sz = bar.capacity();
+		bar.reserve(100); // this is the only difference with foo above
+		std::cout << "making bar grow:" << sz << "\n";
+		for (int i = 0; i < 100; ++i)
+		{
+			bar.push_back(i);
+			if (sz != bar.capacity())
+			{
+				sz = bar.capacity();
+				std::cout << "capacity changed: " << sz << '\n';
+			}
+		}
+		/*expected output
+		 * making foo grow:0
+		 * capacity changed: 1
+		 * capacity changed: 2
+		 * capacity changed: 4
+		 * capacity changed: 8
+		 * capacity changed: 16
+		 * capacity changed: 32
+		 * capacity changed: 64
+		 * capacity changed: 128
+		 * making bar grow:0
+		 * capacity changed: 100
+		 */
+	}
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
 	// 	std::cout << "val[it] : " << *it << std::endl;
 	// for (int i = 0; i < COUNT; i++)
