@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 20:54:44 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 20:57:18 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,62 @@ namespace ft
 		pointer _start;
 		pointer _finish;
 		pointer _end_of_storage;
+
+		iterator _insert_range(iterator __position, const size_type __n, const value_type &__val)
+		{
+			iterator new_position = _resize_and_move_at_end(__position, __n);
+			for (size_type i = 0; i < __n; i++)
+				new_position = _insert_single(new_position, __val);
+			return new_position;
+		}
+
+		iterator _insert_dispatch(iterator __position,
+								  size_type __n,
+								  value_type &__val,
+								  true_type)
+		{
+			return _insert_range(__position, __n, __val);
+		}
+
+		template <typename _InputIterator1, typename _InputIterator2>
+		iterator _insert_dispatch(_InputIterator1 __position,
+								  _InputIterator2 __first,
+								  _InputIterator2 __last,
+								  false_type)
+		{
+			iterator new_position = _resize_and_move_at_end(__position, __last - __first);
+			while (__first != __last)
+			{
+				new_position = _insert_single(new_position, *__first);
+				__first++;
+			}
+			return new_position;
+		}
+		iterator _insert_single(iterator __position, const value_type &__x) // must reserve and move next first
+		{
+			*__position = __x;
+			return ++__position;
+		}
+		iterator _resize_and_move_at_end(iterator __position, size_type __add)
+		{
+			size_type diff_end = this->end() - __position;
+			size_type diff_start = __position - this->begin();
+			if (capacity() < size() + __add)
+				reserve(_next_capacity());
+			iterator it_end = this->end();
+			_finish += __add;
+			pointer _current = _finish - 1;
+			while (diff_end != 0)
+			{
+				diff_end--;
+				it_end--;
+				_Tp_alloc_type.construct(_current, *(it_end));
+				_current--;
+			}
+			iterator position = begin();
+			position += diff_start;
+			return position;
+		}
 
 		size_type _next_capacity()
 		{
@@ -512,50 +568,6 @@ namespace ft
 		 * Insert elements
 		 * The vector is extended by inserting new elements before the element at the specified position,
 		 * effectively increasing the container size by the number of elements inserted.
-		 * This causes an automatic reallocation of the allocated storage space if -and only if-
-		 * the new vector size surpasses the current vector capacity.
-		 * Because vectors use an array as their underlying storage, inserting elements in positions
-		 * other than the vector end causes the container to relocate all the elements that were after
-		 * position to their new positions. This is generally an inefficient operation compared to the
-		 * one performed for the same operation by other kinds of sequence containers (such as list or forward_list).
-		 * The parameters determine how many elements are inserted and to which values they are initialized:
-		 */
-
-		iterator _insert_range(iterator __position, const size_type __n, const value_type &__val)
-		{
-			iterator new_position = _resize_and_move_at_end(__position, __n);
-			for (size_type i = 0; i < __n; i++)
-				new_position = _insert_single(new_position, __val);
-			return new_position;
-		}
-
-		iterator _insert_dispatch(iterator __position,
-								  size_type __n,
-								  value_type &__val,
-								  true_type)
-		{
-			return _insert_range(__position, __n, __val);
-		}
-
-		template <typename _InputIterator1, typename _InputIterator2>
-		iterator _insert_dispatch(_InputIterator1 __position,
-								  _InputIterator2 __first,
-								  _InputIterator2 __last,
-								  false_type)
-		{
-			iterator new_position = _resize_and_move_at_end(__position, __last - __first);
-			while (__first != __last)
-			{
-				new_position = _insert_single(new_position, *__first);
-				__first++;
-			}
-			return new_position;
-		}
-
-		/*
-		 * Insert elements
-		 * The vector is extended by inserting new elements before the element at the specified position,
-		 * effectively increasing the container size by the number of elements inserted.
 		 *
 		 * This causes an automatic reallocation of the allocated storage space if -and only if- the new
 		 * vector size surpasses the current vector capacity.
@@ -568,31 +580,6 @@ namespace ft
 		 * The parameters determine how many elements are inserted and to which values they are initialized:
 		 *
 		 */
-		iterator _insert_single(iterator __position, const value_type &__x) // must reserve and move next first
-		{
-			*__position = __x;
-			return ++__position;
-		}
-		iterator _resize_and_move_at_end(iterator __position, size_type __add)
-		{
-			size_type diff_end = this->end() - __position;
-			size_type diff_start = __position - this->begin();
-			if (capacity() < size() + __add)
-				reserve(_next_capacity());
-			iterator it_end = this->end();
-			_finish += __add;
-			pointer _current = _finish - 1;
-			while (diff_end != 0)
-			{
-				diff_end--;
-				it_end--;
-				_Tp_alloc_type.construct(_current, *(it_end));
-				_current--;
-			}
-			iterator position = begin();
-			position += diff_start;
-			return position;
-		}
 		iterator insert(iterator __position, const value_type &__x)
 		{
 			iterator new_position = _resize_and_move_at_end(__position, 1);
