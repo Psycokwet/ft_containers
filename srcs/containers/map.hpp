@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 09:13:30 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 09:27:45 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,15 +353,15 @@ namespace ft
 			return _t.upper_bound(__x);
 		}
 
-		// ft::pair<iterator, iterator> equal_range(const key_type &__x)
-		// {
-		// 	return _t.equal_range(__x);
-		// }
+		ft::pair<iterator, iterator> equal_range(const key_type &__x)
+		{
+			return ft::make_pair(lower_bound(__x),upper_bound(__x));
+		}
 
-		// ft::pair<const_iterator, const_iterator> equal_range(const key_type &__x) const
-		// {
-		// 	return _t.equal_range(__x);
-		// }
+		ft::pair<const_iterator, const_iterator> equal_range(const key_type &__x) const
+		{
+			return ft::make_pair(lower_bound(__x),upper_bound(__x));
+		}
 
 		/*
 		** --------------------------------- ALLOCATOR ---------------------------

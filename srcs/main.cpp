@@ -149,6 +149,32 @@ int main(int argc, char **argv)
 		a => 20
 		e => 100
 		*/
+	}
+	/*
+	** --------------------------------- equal_range test --------------------------
+	*/
+	std::cout << "equal_range test"
+			  << "\n";
+	{
+		ft::map<char, int> mymap;
+
+		mymap['a'] = 10;
+		mymap['b'] = 20;
+		mymap['c'] = 30;
+
+		ft::pair<ft::map<char, int>::iterator, ft::map<char, int>::iterator> ret;
+		ret = mymap.equal_range('b');
+
+		std::cout << "lower bound points to: ";
+		std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+		std::cout << "upper bound points to: ";
+		std::cout << ret.second->first << " => " << ret.second->second << '\n';
+
+		/* expected output :
+		lower bound points to: 'b' => 20
+		upper bound points to: 'c' => 30
+		 */
 		return 0;
 	}
 	/*
