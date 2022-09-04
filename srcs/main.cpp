@@ -498,6 +498,22 @@ int main(int argc, char **argv)
 				std::cout << "capacity changed: " << sz << '\n';
 			}
 		}
+		int i = 0;
+		std::cout << "check foo content:"
+				  << "\n";
+		for (ft::vector<int>::const_iterator it = foo.begin(); it != foo.end(); it++)
+		{
+			std::cout << "val[" << i++ << "] : " << *it << std::endl;
+		}
+
+		 i = 0;
+		std::cout << "check bar content:"
+				  << "\n";
+		for (ft::vector<int>::const_iterator it = bar.begin(); it != bar.end(); it++)
+		{
+			std::cout << "val[" << i++ << "] : " << *it << std::endl;
+		}
+
 		/*expected output
 		 * making foo grow:0
 		 * capacity changed: 1
