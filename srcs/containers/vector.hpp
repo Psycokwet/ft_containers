@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 10:08:51 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/04 20:54:44 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,31 @@ namespace ft
 		pointer _finish;
 		pointer _end_of_storage;
 
+		size_type _next_capacity()
+		{
+			return (capacity() == 0 ? 1 : capacity() * 2);
+		}
+		template <typename _Integer>
+		void _assign_dispatch(_Integer __n, _Integer __val, true_type)
+		{
+			_destroy();
+			_build(__n, __val);
+		}
+
+		template <typename _InputIterator>
+		void _assign_dispatch(_InputIterator __first, _InputIterator __last, false_type)
+		{
+			_destroy();
+			reserve(__last - __first);
+			while (__first != __last)
+				push_back(*__first++);
+		}
+
 		void _destroy()
 		{
 			// clear();
 			_Tp_alloc_type.deallocate(_start, _end_of_storage - _start);
+			_build(0);
 		}
 
 		void _build(size_type __n, const value_type &__value = value_type())
@@ -72,7 +93,6 @@ namespace ft
 
 		void _fill(size_type __n, const value_type &__value = value_type())
 		{
-			std::cout << "trying to fill up "<<__n<< " with "<< std::endl;
 			for (size_type i = 0; i < __n; i++)
 				push_back(__value);
 		}
@@ -196,8 +216,8 @@ namespace ft
 		vector &operator=(const vector &__x)
 		{
 			this->clear();
-			if (this->m_capacity < __x.m_capacity)
-				this->reserve(__x.m_capacity);
+			if (this->capacity() < __x.capacity())
+				this->reserve(__x.capacity());
 			_copy(__x.begin(), __x.end());
 			return (*this);
 		}
@@ -283,14 +303,7 @@ namespace ft
 		/*
 		 ** --------------------------------- CAPACITY --------------------------
 		 */
-		/*
-		 * size //done
-		 * max_size//done
-		 * resize //done
-		 * capacity //done
-		 * empty //done
-		 * reserve //wip ITERATOR
-		 */
+		// done
 
 		/*  Returns the number of elements in the vector.  */
 		size_type size() const _GLIBCXX_NOEXCEPT
@@ -363,22 +376,15 @@ namespace ft
 			pointer _start_tmp = this->_start;
 			pointer _end_of_storage_tmp = this->_end_of_storage;
 			_create_storage(__n);
-			// size_type current_size = size();
-			// _fill(current_size, 42); // replace iterator
 			_copy(it_begin, it_end);
 			_Tp_alloc_type.deallocate(_start_tmp, _end_of_storage_tmp - _start_tmp);
-			// _Tp_alloc_type.deallocate(_start_tmp, _end_of_storage_tmp - _start_tmp);
 		}
 
 		/*
 		** --------------------------------- ELEMENT ACCESS --------------------------
 		*/
-		/*
-		 * operator[] //done
-		 * at //done
-		 * front // done
-		 * back //done
-		 */
+		// done
+
 		/* const_reference operator[] (size_type n) const;
 		 * Access element
 		 * Returns a reference to the element at position n in the vector container.
@@ -454,7 +460,7 @@ namespace ft
 		/*
 		** --------------------------------- MODIFIERS --------------------------
 		*/
-		// assign //done but iterator
+		// assign //done
 		// push_back //done
 		// pop_back //done
 		// insert
@@ -465,20 +471,15 @@ namespace ft
 		/* Assign vector content
 		 * Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly.
 		 */
-		// template <class InputIterator>
-		// void assign(InputIterator first, InputIterator last) // iterator
-		// {
-		// 	_destroy();
-		// }
+		template <class InputIterator>
+		void assign(InputIterator __first, InputIterator __last) // iterator
+		{
+			typedef typename ft::is_integral<InputIterator>::type _Integral;
+			_assign_dispatch(__first, __last, _Integral());
+		}
 		void assign(size_type __n, const value_type &__value)
 		{
-			if (capacity() < __n)
-			{
-				_destroy();
-				_build(__n, __value);
-				return;
-			}
-			_fill(__n, __value);
+			_assign_dispatch(__n, __value, true_type());
 		}
 
 		/*Add element at the end
@@ -490,7 +491,7 @@ namespace ft
 		void push_back(const value_type &__val)
 		{
 			if (this->_finish == this->_end_of_storage)
-				reserve((capacity() == 0 ? 1 : capacity() * 2) );
+				reserve(_next_capacity());
 			_Tp_alloc_type.construct(_finish, __val);
 			this->_finish++;
 		}
@@ -520,25 +521,105 @@ namespace ft
 		 * The parameters determine how many elements are inserted and to which values they are initialized:
 		 */
 
-		// iterator insert(iterator __position, const value_type &__x);
-		// {
-		// }
-		// void insert(iterator __position, size_type __n, const value_type &__x)
-		// {
-		// }
-		// template <class InputIterator>
-		// void insert(iterator __position, _InputIterator __first,
-		// 			_InputIterator __last)
-		// {
-		// }
+		iterator _insert_range(iterator __position, const size_type __n, const value_type &__val)
+		{
+			iterator new_position = _resize_and_move_at_end(__position, __n);
+			for (size_type i = 0; i < __n; i++)
+				new_position = _insert_single(new_position, __val);
+			return new_position;
+		}
+
+		iterator _insert_dispatch(iterator __position,
+								  size_type __n,
+								  value_type &__val,
+								  true_type)
+		{
+			return _insert_range(__position, __n, __val);
+		}
+
+		template <typename _InputIterator1, typename _InputIterator2>
+		iterator _insert_dispatch(_InputIterator1 __position,
+								  _InputIterator2 __first,
+								  _InputIterator2 __last,
+								  false_type)
+		{
+			iterator new_position = _resize_and_move_at_end(__position, __last - __first);
+			while (__first != __last)
+			{
+				new_position = _insert_single(new_position, *__first);
+				__first++;
+			}
+			return new_position;
+		}
+
+		/*
+		 * Insert elements
+		 * The vector is extended by inserting new elements before the element at the specified position,
+		 * effectively increasing the container size by the number of elements inserted.
+		 *
+		 * This causes an automatic reallocation of the allocated storage space if -and only if- the new
+		 * vector size surpasses the current vector capacity.
+		 *
+		 * Because vectors use an array as their underlying storage, inserting elements in positions other
+		 * than the vector end causes the container to relocate all the elements that were after position
+		 * to their new positions. This is generally an inefficient operation compared to the one performed
+		 * for the same operation by other kinds of sequence containers (such as list or forward_list).
+		 *
+		 * The parameters determine how many elements are inserted and to which values they are initialized:
+		 *
+		 */
+		iterator _insert_single(iterator __position, const value_type &__x) // must reserve and move next first
+		{
+			*__position = __x;
+			return ++__position;
+		}
+		iterator _resize_and_move_at_end(iterator __position, size_type __add)
+		{
+			size_type diff_end = this->end() - __position;
+			size_type diff_start = __position - this->begin();
+			if (capacity() < size() + __add)
+				reserve(_next_capacity());
+			iterator it_end = this->end();
+			_finish += __add;
+			pointer _current = _finish - 1;
+			while (diff_end != 0)
+			{
+				diff_end--;
+				it_end--;
+				_Tp_alloc_type.construct(_current, *(it_end));
+				_current--;
+			}
+			iterator position = begin();
+			position += diff_start;
+			return position;
+		}
+		iterator insert(iterator __position, const value_type &__x)
+		{
+			iterator new_position = _resize_and_move_at_end(__position, 1);
+			_insert_single(new_position, __x);
+			return new_position;
+			// // return _insert_dispatch(__position, 1, __x, true_type());
+			// return _insert_range(__position, 1, __x);
+		}
+		void insert(iterator __position, size_type __n, const value_type &__x)
+		{
+			_insert_range(__position, __n, __x);
+		}
+		template <class _InputIterator>
+		void insert(iterator __position, _InputIterator __first, _InputIterator __last)
+		{
+			typedef typename ft::is_integral<_InputIterator>::type _Integral;
+			_insert_dispatch(__position, __first, __last, _Integral());
+		}
 
 		/*
 		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		 */
 		void clear()
 		{
-			while (size())
-				pop_back();
+			_destroy();
+			// while (size())
+			// 	pop_back();
 		}
 
 		/*
