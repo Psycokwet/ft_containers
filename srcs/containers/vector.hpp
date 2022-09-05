@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/05 11:10:59 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 12:38:18 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 #include <algorithm.hpp> //swap
 
-#include "../util/macros.hpp" //SSTR
-#include <sstream>			  //SSTR
+#include "macros.hpp" //SSTR
+#include <sstream>	  //SSTR
 #include "iterator.hpp"
 #include "reverse_iterator.hpp"
 
@@ -210,10 +210,10 @@ namespace ft
 		void _range_check(size_type __n) const
 		{
 			if (__n >= this->size())
-				throw std::out_of_range(SSTR("vector::_range_check: __n (which is ") //
-										+ SSTR(__n)									 //
-										+ SSTR(" ) >= this->size() (which is ")		 //
-										+ SSTR(this->size()) + SSTR(")"));			 //
+				throw std::out_of_range(SSTR("vector::_M_range_check: __n (which is ") //
+										+ SSTR(__n)									   //
+										+ SSTR(" ) >= this->size() (which is ")		   //
+										+ SSTR(this->size()) + SSTR(")"));			   //
 		}
 
 	public:
@@ -644,9 +644,9 @@ namespace ft
 				__first++;
 				__last++;
 			}
-			_finish -= __last-__first;
+			_finish -= __last - __first;
 			return __first;
-		}//https://legacy.cplusplus.com/reference/vector/vector/swap/
+		} // https://legacy.cplusplus.com/reference/vector/vector/swap/
 		iterator erase(iterator __position)
 		{
 			iterator __position_end = __position;
@@ -655,7 +655,7 @@ namespace ft
 		}
 		iterator erase(iterator __first, iterator __last)
 		{
-			return _move_from_end( __first,  __last);
+			return _move_from_end(__first, __last);
 		}
 		/*
 		 * 	Swap content

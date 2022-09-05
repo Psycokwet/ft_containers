@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/28 20:30:57 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 13:26:30 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define ITERATOR_HPP
 
 #include "iterator_traits.hpp"
-// #include "iterator_base.hpp"
+#include "type_traits.hpp"
 
 namespace ft
 {

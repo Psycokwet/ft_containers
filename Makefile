@@ -1,3 +1,5 @@
+
+
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
@@ -5,285 +7,97 @@
 #                                                     +:+ +:+         +:+      #
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/09/05 08:37:59 by scarboni         ###   ########.fr        #
+#    Created: 2021/09/28 22:36:55 by saray             #+#    #+#              #
+#    Updated: 2022/03/15 15:58:38 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#
-# -------------------------------- COLORS --------------------------------
-#
+NAME 				= executable
+NAME_TEST_MISC_STL 	= _TEST_MISC_STL
+NAME_TEST_MISC_MINE	= _TEST_MISC_MINE
+NAME_TEST_42_STL 	= _TEST_42_STL
+NAME_TEST_42_MINE	= _TEST_42_MINE
+NAME_TEST_TIME_STL 	= _TEST_TIME_STL
+NAME_TEST_TIME_MINE	= _TEST_TIME_MINE
 
-RESET			= "\033[0m"
-BLACK			= "\033[30m"
-RED				= "\033[31m"
-GREEN			= "\033[32m"
-YELLOW			= "\033[33m"
-BLUE			= "\033[34m"
-MAGENTA			= "\033[35m"
-CYAN			= "\033[36m"
-WHITE			= "\033[37m"
-BOLDBLACK		= "\033[1m\033[30m"
-BOLDRED			= "\033[1m\033[31m"
-BOLDGREEN		= "\033[1m\033[32m"
-BOLDYELLOW		= "\033[1m\033[33m"
-BOLDBLUE		= "\033[1m\033[34m"
-BOLDMAGENTA		= "\033[1m\033[35m"
-BOLDCYAN		= "\033[1m\033[36m"
-BOLDWHITE		= "\033[1m\033[37m"
+OBJ_PATH			= bin/
 
-$(RESET)		= RESET
-$(BLACK)		= BLACK
-$(RED)			= RED
-$(GREEN)		= GREEN
-$(YELLOW)		= YELLOW
-$(BLUE)			= BLUE
-$(MAGENTA)		= MAGENTA
-$(CYAN)			= CYAN
-$(WHITE)		= WHITE
-$(BOLDBLACK)	= BOLDBLACK
-$(BOLDRED)		= BOLDRED
-$(BOLDGREEN)	= BOLDGREEN
-$(BOLDYELLOW)	= BOLDYELLOW
-$(BOLDBLUE)		= BOLDBLUE
-$(BOLDMAGENTA)	= BOLDMAGENTA
-$(BOLDCYAN)		= BOLDCYAN
-$(BOLDWHITE)	= BOLDWHITE
+CXX 				= c++
 
-COLORS = 		$($(RESET))\
-				$($(BLACK))\
-				$($(RED))\
-				$($(GREEN))\
-				$($(YELLOW))\
-				$($(BLUE))\
-				$($(MAGENTA))\
-				$($(CYAN))\
-				$($(WHITE))\
-				$($(BOLDBLACK))\
-				$($(BOLDRED))\
-				$($(BOLDGREEN))\
-				$($(BOLDYELLOW))\
-				$($(BOLDBLUE))\
-				$($(BOLDMAGENTA))\
-				$($(BOLDCYAN))\
-				$($(BOLDWHITE))
+CPPFLAGS 			= -Wall -Wextra -Werror -g3 -std=c++98
 
-DCOLORS :=  	$($(RESET))=$(RESET)\
-				$($(BLACK))=$(BLACK)\
-				$($(RED))=$(RED)\
-				$($(GREEN))=$(GREEN)\
-				$($(YELLOW))=$(YELLOW)\
-				$($(BLUE))=$(BLUE)\
-				$($(MAGENTA))=$(MAGENTA)\
-				$($(CYAN))=$(CYAN)\
-				$($(WHITE))=$(WHITE)\
-				$($(BOLDBLACK))=$(BOLDBLACK)\
-				$($(BOLDRED))=$(BOLDRED)\
-				$($(BOLDGREEN))=$(BOLDGREEN)\
-				$($(BOLDYELLOW))=$(BOLDYELLOW)\
-				$($(BOLDBLUE))=$(BOLDBLUE)\
-				$($(BOLDMAGENTA))=$(BOLDMAGENTA)\
-				$($(BOLDCYAN))=$(BOLDCYAN)\
-				$($(BOLDWHITE))=$(BOLDWHITE)
+SRC_PATH			= ./srcs/
 
-DCOLORS :=  	$(addprefix -D, $(DCOLORS))
+SRCS = 	main.cpp 	main_42.cpp 	main_time.cpp 
 
-#
-# -------------------------------- Paths --------------------------------
-#
+LDFLAGS			= -Isrcs/containers/
 
-INC_DIR					= srcs/containers/
+SRC_FILES	+=	$(SRCS)
 
-LAST_RUN_LOGS_FOLDER	= logs
-SAVED_LOGS_FOLDER		= pastLogs
+OBJ_TEST_MISC 		= 	$(addprefix $(OBJ_PATH), $(SRC_FILES:cpp=o))
 
-TEST_SRCS				= test_srcs/
-TEST_DATAS				= test_datas/
-TEST_DATAS_GENERATED	= $(TEST_DATAS)generated/
+OBJ_PATHS_INIT			= $(OBJ_PATH)
 
-OBJ_PATH				= bin/
+all: $(NAME)
 
-SRC_PATH				= srcs/
-
-CPP_EXTENSION 			= .cpp
-
-UTIL_PATH				= util/
-CONTAINERS_PATH			= containers/
-
-OBJ_PATHS				+= $(OBJ_PATH) $(addprefix $(OBJ_PATH), $(UTIL_PATH) $(NETWORK_PATH) $(SERVER_PATH) )
-
-ALL_PATHS_TO_INIT		= $(SAVED_LOGS_FOLDER) $(LAST_RUN_LOGS_FOLDER)
-
-#
-# -------------------------------- Rules names --------------------------------
-#
-
-CLEAN_UNWANTED_PATHS 	= CleanPreviousPaths
-SAVE_LAST_LOGS 			= SaveLastLogs
-NAME_STL				= containers_stl
-NAME_MINE				= containers_moi
-NAME					= containers
-CLEAN_LOGS				= cleanLogs
-COMPILE 				= compile
-
-
-ALL_RULES_NAMES =		$(CLEAN_UNWANTED_PATHS) \
-						$(SAVE_LAST_LOGS) \
-						$(CLEAN_LOGS) \
-						$(COMPILE)
-
-ALL_EXECS_NAMES =		$(NAME_MINE) $(NAME_STL)
-
-#
-# -------------------------------- TEST SRCS definitions --------------------------------
-#
-
-GENERATE_EXAMPLES_REQUESTS_FILES = 	writeRequestsExamples
-
-GENERATE_EXAMPLES_REQUESTS_SRCS_RAW += $(addprefix $(TEST_SRCS), $(GENERATE_EXAMPLES_REQUESTS_FILES))
-GENERATE_EXAMPLES_REQUESTS_SRCS_RAW += $(UTIL_PATH)logger
-
-GENERATE_EXAMPLES_REQUESTS_SRCS_EXT = $(addsuffix  $(CPP_EXTENSION), $(GENERATE_EXAMPLES_REQUESTS_SRCS_RAW))
-
-GENERATE_EXAMPLES_REQUESTS_SRCS = $(addprefix  $(SRC_PATH), $(GENERATE_EXAMPLES_REQUESTS_SRCS_EXT))
-#
-# -------------------------------- SRCS definitions --------------------------------
-#
-
-CONTAINERS_FILES = 	#HERE
-SRCS_FILES += $(addprefix $(CONTAINERS_PATH), $(CONTAINERS_FILES))
-
-UTIL_FILES =	logger
-SRCS_FILES += $(addprefix $(UTIL_PATH), $(UTIL_FILES))
-
-#
-# -------------------------------- Building configurations --------------------------------
-#
-
-CXX				= c++
-CPPFLAGS		= -Wall -Wextra -Werror -std=c++98 -g  -MD  #-fsanitize=address
-CPPFLAGS 		+= -DLOGS_FOLDER='"$(LAST_RUN_LOGS_FOLDER)"'
-
-RM				= rm -f
-# CPPFLAGS		+= $(DCOLORS)
-
-LDFLAGS			= -I$(INC_DIR)
-
-#
-# -------------------------------- automated tests treatments --------------------------------
-#
-
-ifndef LEAKS
-	# LEAKS = 
-	LEAKS = valgrind --leak-check=full --show-leak-kinds=all
-endif
-
-ifndef TESTS
-	TESTS=""
-	SRCS_FILES += 	main
-	CPPFLAGS += -DDEBUG=false
-else
-	CPPFLAGS += -DDEBUG=true
-endif
-
-SRCS_FILES_EXT 		+= 	$(addsuffix $(CPP_EXTENSION), $(SRCS_FILES))
-SRCS 				+= 	$(addprefix $(SRC_PATH), $(SRCS_FILES_EXT))
-OBJS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o))
-OBJS_MINE			= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=o_mine.o))
-DEPS 				= 	$(addprefix $(OBJ_PATH), $(SRCS_FILES_EXT:cpp=d))
--include $(DEPS)
-
-#
-# -------------------------------- FUNCTIONS --------------------------------
-#
-
-define colorize
-	@echo -n $(1)
-	@$(2)
-	@echo -n $(RESET)
-endef
-
-#
-# -------------------------------- Rules implementations --------------------------------
-#
-
-#
-## -------------------------------- COMPILE --------------------------------
-#
-
-all: | $(CLEAN_UNWANTED_PATHS) $(ALL_PATHS_TO_INIT) $(NAME)
-
-# $(OBJ_PATH)_mine/%.o: $(SRC_PATH)%.cpp 
-# 	@mkdir -p $(dir $@)
-$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp 
-	@mkdir -p $(dir $@)
-	${CXX} ${CPPFLAGS} $(LDFLAGS) -c $< -o $@
-	${CXX} ${CPPFLAGS} $(LDFLAGS) -DSTL=true -c $< -o $@_mine.o
-
-# $(COMPILE): $(OBJS)
-# 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
-
-$(NAME_MINE):  $(OBJS)
-	$(CXX) $(CPPFLAGS) $(LDFLAGS) -o $(NAME_MINE) $(OBJS_MINE)
-
-$(NAME_STL):  $(OBJS)
-	$(CXX) $(CPPFLAGS) $(LDFLAGS) -DSTL=true -o $(NAME_STL) $(OBJS)
-
-$(NAME): $(NAME_MINE) $(NAME_STL) 
-
-
-SEED =42
-
-test_main_42: re
-	$(LEAKS) ./$(NAME_STL) $(SEED) > $(LAST_RUN_LOGS_FOLDER)/STL_misc.log
-	@printf "\n____.--.--.____.--.--.____.--.--.____.--.--.__Weeeeeeeeee__.--.--.____.--.--.____.--.--.____.--.--.____\n\n"
-	$(LEAKS) ./$(NAME_MINE) $(SEED)> $(LAST_RUN_LOGS_FOLDER)/MINE_misc.log
-
-#
-## -------------------------------- LOGS --------------------------------
-#
-
-$(SAVE_LAST_LOGS)	:
-	@echo "Saving previous logs"
-	@mv  $(LAST_RUN_LOGS_FOLDER)  $(SAVED_LOGS_FOLDER)/$(shell date "+%y_%m_%d_%H_%M_%S")
-
-$(CLEAN_UNWANTED_PATHS)	: 
-	@echo "deleting previous run special paths..." $(LAST_RUN_LOGS_FOLDER)
-	@rm -rf  $(LAST_RUN_LOGS_FOLDER) 
-
-#
-## -------------------------------- TESTS --------------------------------
-#
-
-
-
-#
-## -------------------------------- OTHERS --------------------------------
-#
-
-$(ALL_PATHS_TO_INIT): 
+$(OBJ_PATHS_INIT)	:
 	@echo "Generating bin folder and subfolders" $@
 	@mkdir -p  $@  
 
-$(CLEAN_LOGS):
-	$(call colorize, $(YELLOW), \
-		echo "Deleting last logs...";\
-		rm -rf $(LAST_RUN_LOGS_FOLDER);\
-	)
-	
-clean:  $(CLEAN_LOGS)
-	$(call colorize, $(MAGENTA), \
-		echo "Deleting objects...";\
-		rm -rf $(OBJ_PATH);\
-		echo "Deleted all but executable";\
-	)
+$(NAME_TEST_MISC_STL): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
+	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_MISC_STL) $(OBJ_PATH)main.o $(LDFLAGS) -DSTL=true
+$(NAME_TEST_MISC_MINE): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
+	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_MISC_MINE) $(OBJ_PATH)main.omine.o $(LDFLAGS)
 
-fclean:		clean
-	$(call colorize, $(RED), \
-		$(RM) $(ALL_EXECS_NAMES);\
-		echo "Everything deleted";\
-	)
+$(NAME_TEST_42_STL): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
+	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_42_STL) $(OBJ_PATH)main_42.o $(LDFLAGS) -DSTL=true
+$(NAME_TEST_42_MINE): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
+	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_42_MINE) $(OBJ_PATH)main_42.omine.o $(LDFLAGS)
 
-re:			fclean all
+$(NAME_TEST_TIME_STL): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
+	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_TIME_STL) $(OBJ_PATH)main_time.o $(LDFLAGS) -DSTL=true
+$(NAME_TEST_TIME_MINE): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
+	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_TIME_MINE) $(OBJ_PATH)main_time.omine.o $(LDFLAGS)
 
-.PHONY:		all clean fclean re $(ALL_RULES_NAMES)
+$(NAME): $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)
+
+test_misc: $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)
+	valgrind ./$(NAME_TEST_MISC_STL) > logs/$(NAME_TEST_MISC_STL) 
+	valgrind ./$(NAME_TEST_MISC_MINE) > logs/$(NAME_TEST_MISC_MINE) 
+	diff logs/$(NAME_TEST_MISC_STL) logs/$(NAME_TEST_MISC_MINE) 
+
+test_42: $(NAME_TEST_42_STL)  $(NAME_TEST_42_MINE)
+	valgrind ./$(NAME_TEST_42_STL) 42 > logs/$(NAME_TEST_42_STL) 
+	valgrind ./$(NAME_TEST_42_MINE) 42 > logs/$(NAME_TEST_42_MINE) 
+	diff logs/$(NAME_TEST_42_STL) logs/$(NAME_TEST_42_MINE) 
+
+test_time: $(NAME_TEST_TIME_STL)  $(NAME_TEST_TIME_MINE)
+	 ./$(NAME_TEST_TIME_STL) 42 > logs/$(NAME_TEST_TIME_STL) 
+	 ./$(NAME_TEST_TIME_MINE) 42 > logs/$(NAME_TEST_TIME_MINE) 
+	diff logs/$(NAME_TEST_TIME_STL) logs/$(NAME_TEST_TIME_MINE) 
+
+$(OBJ_PATH)%.o: $(SRC_PATH)%.cpp $(HEADERS_FILES)
+	${CXX} ${CPPFLAGS}   -c $< -o $@  $(LDFLAGS) 
+	${CXX} ${CPPFLAGS}   -c $< -o $@mine.o -DSTL=true $(LDFLAGS) 
+
+clean:
+	@echo "\033[0;31m\nDeleting objects..."
+	@rm -rf $(OBJ_PATH)
+	@echo "\033[0m"
+
+fclean:
+	@echo "\033[0;31m\nDeleting objects..."
+	@rm -rf $(OBJ_PATH)
+	@echo "\nDeleting executable..."
+	@rm -f $(NAME) $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)
+	@echo "\033[0m"		
+
+re: fclean all
+
+# LEAKS = valgrind 
+LEAKS = 
+
+test:	$(NAME)
+	$(LEAKS) ./$(NAME)
+
+.PHONY: clean fclean re bonus

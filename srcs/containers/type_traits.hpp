@@ -6,14 +6,14 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/08/18 10:32:44 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 12:38:23 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPE_TRAITS_HPP
 #define TYPE_TRAITS_HPP
 
-#include "../util/macros.hpp" // FOR_EACH_MACRO
+#include "macros.hpp" // FOR_EACH_MACRO
 
 namespace ft
 {

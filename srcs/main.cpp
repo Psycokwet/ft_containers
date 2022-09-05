@@ -9,8 +9,6 @@
 #include <vector>
 namespace ft = std;
 #else
-#include <type_traits.hpp>
-#include <pair.hpp>
 #include <map.hpp>
 #include <stack.hpp>
 #include <vector.hpp>
@@ -62,7 +60,7 @@ struct classcomp
 	}
 };
 
-int main(int argc, char **argv)
+int main()
 {
 
 	/*
@@ -372,15 +370,6 @@ int main(int argc, char **argv)
 	// 	std::cout << ft::is_integral<int>::value << ":" << true << std::endl;
 	// 	std::cout << ft::is_integral<bool>::value << ":" << true << std::endl;
 	// #endif
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./test seed" << std::endl;
-		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
-		return 1;
-	}
-	const int seed = atoi(argv[1]);
-	srand(seed);
 
 	ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
