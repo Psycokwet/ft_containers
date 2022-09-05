@@ -28,13 +28,13 @@ int main()
 		clock_t start, end;
 		start = clock();
 		ft::map<int, int> map_test;
-		for (int i = 0; i < 1000000; i++)
+		for (int i = 0; i < 1000; i++)
 			map_test[i] = i;
 
 		end = clock();
 		std::cout << "Process took: " << (double(end - start) / CLOCKS_PER_SEC) << " seconds" << "\n";
 		start = clock();
-		for (int i = 0; i < 1000000; i++)
+		for (int i = 0; i < 1000; i++)
 			map_test[i] = i;
 
 		end = clock();
@@ -55,13 +55,13 @@ int main()
 		clock_t start, end;
 		start = clock();
 		ft::vector<int> vector_test;
-		for (int i = 0; i < 1000000; i++)
+		for (int i = 0; i < 1000; i++)
 			vector_test.push_back(i);
 
 		end = clock();
 		std::cout << "Process took: " << (double(end - start) / CLOCKS_PER_SEC) << " seconds" << "\n";
 		start = clock();
-		for (int i = 0; i < 1000000; i++)
+		for (int i = 0; i < 1000; i++)
 			vector_test[i] = i;
 
 		end = clock();

@@ -1,0 +1,586 @@
+COPY MAP
+key[0] : val[5] : 
+key[1] : val[7] : 
+key[2] : val[25] : 
+key[3] : val[42] : 
+key[4] : val[2] : 
+key[5] : val[6] : 
+key[6] : val[66] : 
+key[7] : val[166] : 
+key[8] : val[1166] : 
+key[9] : val[11166] : 
+COPY partial
+key[2] : val[25] : 
+key[3] : val[42] : 
+key[4] : val[2] : 
+key[5] : val[6] : 
+key[6] : val[66] : 
+key[7] : val[166] : 
+key[8] : val[1166] : 
+key[9] : val[11166] : 
+Lower/upper bound test
+a => 20
+e => 100
+equal_range test
+lower bound points to: b => 20
+upper bound points to: c => 30
+elements in mymap:
+a => 50
+c => 150
+d => 200
+CHANGE COMP TEST 
+key[9] : val[11166] : 
+key[8] : val[1166] : 
+key[7] : val[166] : 
+key[6] : val[66] : 
+key[5] : val[6] : 
+key[4] : val[2] : 
+key[3] : val[42] : 
+key[2] : val[25] : 
+key[1] : val[7] : 
+key[0] : val[5] : 
+1:val[7] : 
+5:val[6] : 
+10:val[0] : 
+first
+key[0] : val[5] : 
+key[1] : val[7] : 
+key[10] : val[0] : 
+key[2] : val[25] : 
+key[3] : val[42] : 
+key[4] : val[2] : 
+key[5] : val[6] : 
+key[6] : val[66] : 
+key[7] : val[166] : 
+key[8] : val[1166] : 
+key[9] : val[11166] : 
+second
+key[9] : val[11166] : 
+key[8] : val[1166] : 
+key[7] : val[166] : 
+key[6] : val[66] : 
+key[5] : val[6] : 
+key[4] : val[2] : 
+key[3] : val[42] : 
+key[2] : val[25] : 
+key[10] : val[0] : 
+key[1] : val[7] : 
+key[0] : val[5] : 
+third
+key[0] : val[5] : 
+key[1] : val[7] : 
+key[10] : val[0] : 
+key[2] : val[25] : 
+key[3] : val[42] : 
+key[4] : val[2] : 
+key[5] : val[6] : 
+key[6] : val[66] : 
+key[7] : val[166] : 
+key[8] : val[1166] : 
+key[9] : val[11166] : 
+last
+key[9] : val[11166] : 
+key[8] : val[1166] : 
+key[7] : val[166] : 
+key[6] : val[66] : 
+key[5] : val[6] : 
+key[4] : val[2] : 
+key[3] : val[42] : 
+key[2] : val[25] : 
+key[10] : val[0] : 
+key[1] : val[7] : 
+key[0] : val[5] : 
+Erase key 5
+key[0] : val[5] : 
+key[1] : val[7] : 
+key[10] : val[0] : 
+key[2] : val[25] : 
+key[3] : val[42] : 
+key[4] : val[2] : 
+key[6] : val[66] : 
+key[7] : val[166] : 
+key[8] : val[1166] : 
+key[9] : val[11166] : 
+Erase begin
+key[1] : val[7] : 
+key[10] : val[0] : 
+key[2] : val[25] : 
+key[3] : val[42] : 
+key[4] : val[2] : 
+key[6] : val[66] : 
+key[7] : val[166] : 
+key[8] : val[1166] : 
+key[9] : val[11166] : 
+Erased all start-------
+-------Erased all done
+z => 300
+y => 200
+x => 100
+mymap contains:
+a => 100
+b => 200
+c => 300
+
+pushback str :
+end pushback str :
+test str :1
+test str :cc
+test str :ccpwett
+all good 
+1
+1337
+:42
+MAX_SIZE : 2305843009213693951
+MAX_SIZE : 2305843009213693951
+SIZE : 0
+SIZE : 42
+CAPACITY : 0
+CAPACITY : 42
+val.at(0) : val[0] : 42
+MAX_SIZE : 2305843009213693951
+MAX_SIZE : 2305843009213693951
+SIZE : 32
+SIZE : 32
+CAPACITY : 32
+CAPACITY : 42
+val[0] : 0
+val[0] : 42
+MAX_SIZE : 2305843009213693951
+MAX_SIZE : 2305843009213693951
+SIZE : 0
+SIZE : 0
+CAPACITY : 32
+CAPACITY : 42
+MAX_SIZE : 2305843009213693951
+MAX_SIZE : 2305843009213693951
+SIZE : 50
+SIZE : 22
+CAPACITY : 50
+CAPACITY : 42
+val[0] : 99
+val[0] : 64
+val[0] : 56
+val[0] : 56
+full content int
+val[0] : 56
+val[0] : 56
+val[1] : 99
+val[1] : 99
+val[2] : 99
+val[2] : 99
+val[3] : 99
+val[3] : 99
+val[4] : 99
+val[4] : 99
+val[5] : 99
+val[5] : 99
+val[6] : 99
+val[6] : 99
+val[7] : 99
+val[7] : 99
+val[8] : 99
+val[8] : 99
+val[9] : 99
+val[9] : 99
+val[10] : 99
+val[10] : 99
+val[11] : 99
+val[11] : 99
+val[12] : 99
+val[12] : 99
+val[13] : 99
+val[13] : 99
+val[14] : 99
+val[14] : 99
+val[15] : 99
+val[15] : 99
+val[16] : 99
+val[16] : 99
+val[17] : 99
+val[17] : 99
+val[18] : 99
+val[18] : 99
+val[19] : 99
+val[19] : 99
+val[20] : 99
+val[20] : 99
+val[21] : 99
+val[21] : 99
+val[22] : 99
+val[22] : 99
+val[23] : 99
+val[23] : 99
+val[24] : 99
+val[24] : 99
+val[25] : 99
+val[25] : 99
+val[26] : 99
+val[26] : 99
+val[27] : 99
+val[27] : 99
+val[28] : 99
+val[28] : 99
+val[29] : 99
+val[29] : 99
+val[30] : 99
+val[30] : 99
+val[31] : 99
+val[31] : 99
+val[32] : 99
+val[32] : 99
+val[33] : 99
+val[33] : 99
+val[34] : 99
+val[34] : 99
+val[35] : 99
+val[35] : 99
+val[36] : 99
+val[36] : 99
+val[37] : 99
+val[37] : 99
+val[38] : 99
+val[38] : 99
+val[39] : 99
+val[39] : 99
+val[40] : 99
+val[40] : 99
+val[41] : 99
+val[41] : 99
+val[42] : 99
+val[42] : 99
+val[43] : 99
+val[43] : 99
+val[44] : 99
+val[44] : 99
+val[45] : 99
+val[45] : 99
+val[46] : 99
+val[46] : 99
+val[47] : 99
+val[47] : 99
+val[48] : 99
+val[48] : 99
+val[49] : 99
+val[49] : 99
+full content int
+val[0] : 56
+val[0] : 56
+val[1] : 99
+val[1] : 99
+val[2] : 99
+val[2] : 99
+val[3] : 99
+val[3] : 99
+val[4] : 99
+val[4] : 99
+val[5] : 99
+val[5] : 99
+val[6] : 99
+val[6] : 99
+val[7] : 99
+val[7] : 99
+val[8] : 99
+val[8] : 99
+val[9] : 99
+val[9] : 99
+val[10] : 99
+val[10] : 99
+val[11] : 99
+val[11] : 99
+val[12] : 99
+val[12] : 99
+val[13] : 99
+val[13] : 99
+val[14] : 99
+val[14] : 99
+val[15] : 99
+val[15] : 99
+val[16] : 99
+val[16] : 99
+val[17] : 99
+val[17] : 99
+val[18] : 99
+val[18] : 99
+val[19] : 99
+val[19] : 99
+val[20] : 99
+val[20] : 99
+val[21] : 99
+val[21] : 99
+val[22] : 99
+val[22] : 99
+val[23] : 99
+val[23] : 99
+val[24] : 99
+val[24] : 99
+val[25] : 99
+val[25] : 99
+val[26] : 99
+val[26] : 99
+val[27] : 99
+val[27] : 99
+val[28] : 99
+val[28] : 99
+val[29] : 99
+val[29] : 99
+val[30] : 99
+val[30] : 99
+val[31] : 99
+val[31] : 99
+val[32] : 99
+val[32] : 99
+val[33] : 99
+val[33] : 99
+val[34] : 99
+val[34] : 99
+val[35] : 99
+val[35] : 99
+val[36] : 99
+val[36] : 99
+val[37] : 99
+val[37] : 99
+val[38] : 99
+val[38] : 99
+val[39] : 99
+val[39] : 99
+val[40] : 99
+val[40] : 99
+val[41] : 99
+val[41] : 99
+val[42] : 99
+val[42] : 99
+val[43] : 99
+val[43] : 99
+val[44] : 99
+val[44] : 99
+val[45] : 99
+val[45] : 99
+val[46] : 99
+val[46] : 99
+val[47] : 99
+val[47] : 99
+val[48] : 99
+val[48] : 99
+val[49] : 99
+val[49] : 99
+Test reserve
+making foo grow:0
+capacity changed: 1
+capacity changed: 2
+capacity changed: 4
+capacity changed: 8
+capacity changed: 16
+capacity changed: 32
+capacity changed: 64
+capacity changed: 128
+making bar grow:0
+capacity changed: 100
+check foo content:
+val[0] : 0
+val[1] : 1
+val[2] : 2
+val[3] : 3
+val[4] : 4
+val[5] : 5
+val[6] : 6
+val[7] : 7
+val[8] : 8
+val[9] : 9
+val[10] : 10
+val[11] : 11
+val[12] : 12
+val[13] : 13
+val[14] : 14
+val[15] : 15
+val[16] : 16
+val[17] : 17
+val[18] : 18
+val[19] : 19
+val[20] : 20
+val[21] : 21
+val[22] : 22
+val[23] : 23
+val[24] : 24
+val[25] : 25
+val[26] : 26
+val[27] : 27
+val[28] : 28
+val[29] : 29
+val[30] : 30
+val[31] : 31
+val[32] : 32
+val[33] : 33
+val[34] : 34
+val[35] : 35
+val[36] : 36
+val[37] : 37
+val[38] : 38
+val[39] : 39
+val[40] : 40
+val[41] : 41
+val[42] : 42
+val[43] : 43
+val[44] : 44
+val[45] : 45
+val[46] : 46
+val[47] : 47
+val[48] : 48
+val[49] : 49
+val[50] : 50
+val[51] : 51
+val[52] : 52
+val[53] : 53
+val[54] : 54
+val[55] : 55
+val[56] : 56
+val[57] : 57
+val[58] : 58
+val[59] : 59
+val[60] : 60
+val[61] : 61
+val[62] : 62
+val[63] : 63
+val[64] : 64
+val[65] : 65
+val[66] : 66
+val[67] : 67
+val[68] : 68
+val[69] : 69
+val[70] : 70
+val[71] : 71
+val[72] : 72
+val[73] : 73
+val[74] : 74
+val[75] : 75
+val[76] : 76
+val[77] : 77
+val[78] : 78
+val[79] : 79
+val[80] : 80
+val[81] : 81
+val[82] : 82
+val[83] : 83
+val[84] : 84
+val[85] : 85
+val[86] : 86
+val[87] : 87
+val[88] : 88
+val[89] : 89
+val[90] : 90
+val[91] : 91
+val[92] : 92
+val[93] : 93
+val[94] : 94
+val[95] : 95
+val[96] : 96
+val[97] : 97
+val[98] : 98
+val[99] : 99
+check bar content:
+val[0] : 0
+val[1] : 1
+val[2] : 2
+val[3] : 3
+val[4] : 4
+val[5] : 5
+val[6] : 6
+val[7] : 7
+val[8] : 8
+val[9] : 9
+val[10] : 10
+val[11] : 11
+val[12] : 12
+val[13] : 13
+val[14] : 14
+val[15] : 15
+val[16] : 16
+val[17] : 17
+val[18] : 18
+val[19] : 19
+val[20] : 20
+val[21] : 21
+val[22] : 22
+val[23] : 23
+val[24] : 24
+val[25] : 25
+val[26] : 26
+val[27] : 27
+val[28] : 28
+val[29] : 29
+val[30] : 30
+val[31] : 31
+val[32] : 32
+val[33] : 33
+val[34] : 34
+val[35] : 35
+val[36] : 36
+val[37] : 37
+val[38] : 38
+val[39] : 39
+val[40] : 40
+val[41] : 41
+val[42] : 42
+val[43] : 43
+val[44] : 44
+val[45] : 45
+val[46] : 46
+val[47] : 47
+val[48] : 48
+val[49] : 49
+val[50] : 50
+val[51] : 51
+val[52] : 52
+val[53] : 53
+val[54] : 54
+val[55] : 55
+val[56] : 56
+val[57] : 57
+val[58] : 58
+val[59] : 59
+val[60] : 60
+val[61] : 61
+val[62] : 62
+val[63] : 63
+val[64] : 64
+val[65] : 65
+val[66] : 66
+val[67] : 67
+val[68] : 68
+val[69] : 69
+val[70] : 70
+val[71] : 71
+val[72] : 72
+val[73] : 73
+val[74] : 74
+val[75] : 75
+val[76] : 76
+val[77] : 77
+val[78] : 78
+val[79] : 79
+val[80] : 80
+val[81] : 81
+val[82] : 82
+val[83] : 83
+val[84] : 84
+val[85] : 85
+val[86] : 86
+val[87] : 87
+val[88] : 88
+val[89] : 89
+val[90] : 90
+val[91] : 91
+val[92] : 92
+val[93] : 93
+val[94] : 94
+val[95] : 95
+val[96] : 96
+val[97] : 97
+val[98] : 98
+val[99] : 99
+Size of first: 7
+Size of second: 5
+Size of third: 3
+myvector contains: 501 502 503 300 300 400 400 200 100 100 100
+foo contains: 200 200 200 200 200
+bar contains: 100 100 100
+myvector contains: 4 5 7 8 9 10

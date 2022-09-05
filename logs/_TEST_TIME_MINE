@@ -1,8 +1,8 @@
 MAP TEST: 
-Process took: 1.15114 seconds
-Process took: 0.389437 seconds
-Process took: 0.789325 seconds
+Process took: 0.000544 seconds
+Process took: 0.000252 seconds
+Process took: 0.000341 seconds
 VECTOR TEST: 
-Process took: 0.031467 seconds
-Process took: 0.00377 seconds
-Process took: 1e-06 seconds
+Process took: 3.8e-05 seconds
+Process took: 5e-06 seconds
+Process took: 0.005558 seconds

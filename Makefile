@@ -59,7 +59,7 @@ $(NAME_TEST_TIME_STL): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
 $(NAME_TEST_TIME_MINE): $(OBJ_PATHS_INIT)  $(OBJ_TEST_MISC)
 	$(CXX) $(CPPFLAGS) -o $(NAME_TEST_TIME_MINE) $(OBJ_PATH)main_time.omine.o $(LDFLAGS)
 
-$(NAME): $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)
+$(NAME): test_misc test_42 test_time
 
 test_misc: $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)
 	valgrind ./$(NAME_TEST_MISC_STL) > logs/$(NAME_TEST_MISC_STL) 
@@ -89,7 +89,7 @@ fclean:
 	@echo "\033[0;31m\nDeleting objects..."
 	@rm -rf $(OBJ_PATH)
 	@echo "\nDeleting executable..."
-	@rm -f $(NAME) $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)
+	@rm -f $(NAME) $(NAME_TEST_MISC_STL)  $(NAME_TEST_MISC_MINE)  $(NAME_TEST_42_STL)  $(NAME_TEST_42_MINE)  $(NAME_TEST_TIME_STL)  $(NAME_TEST_TIME_MINE)
 	@echo "\033[0m"		
 
 re: fclean all
