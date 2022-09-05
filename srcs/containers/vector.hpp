@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 20:59:24 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 08:37:42 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,15 +112,36 @@ namespace ft
 		template <typename _Integer>
 		void _assign_dispatch(_Integer __n, _Integer __val, true_type)
 		{
-			_destroy();
-			_build(__n, __val);
+			if (__n < 0)
+				return;
+			size_type n = __n;
+			if (capacity() >= n)
+			{
+				clear();
+				_fill(__n, __val);
+			}
+			else
+			{
+				_destroy();
+				_build(__n, __val);
+			}
 		}
 
 		template <typename _InputIterator>
 		void _assign_dispatch(_InputIterator __first, _InputIterator __last, false_type)
 		{
-			_destroy();
-			reserve(__last - __first);
+			if ((__last - __first) < 0)
+				return;
+			size_type n = (__last - __first);
+			if (capacity() >= n)
+			{
+				clear();
+			}
+			else
+			{
+				_destroy();
+				reserve(n);
+			}
 			while (__first != __last)
 				push_back(*__first++);
 		}
@@ -271,7 +292,8 @@ namespace ft
 		 */
 		vector &operator=(const vector &__x)
 		{
-			this->clear();
+			_destroy();
+			// this->clear();
 			if (this->capacity() < __x.capacity())
 				this->reserve(__x.capacity());
 			_copy(__x.begin(), __x.end());
@@ -599,13 +621,21 @@ namespace ft
 			_insert_dispatch(__position, __first, __last, _Integral());
 		}
 
-// https://legacy.cplusplus.com/reference/vector/vector/swap/
+		// https://legacy.cplusplus.com/reference/vector/vector/swap/
+		void swap(vector &__x)
+		{
+			_swap(_Tp_alloc_type, __x._Tp_alloc_type);
+			_swap(_start, __x._start);
+			_swap(_finish, __x._finish);
+			_swap(_end_of_storage, __x._end_of_storage);
+		}
 		/*
 		 *  Removes all elements from the vector (which are destroyed), leaving the container with a size of 0.
 		 */
 		void clear()
 		{
-			_destroy();
+			_finish = _start;
+			// _destroy();
 			// while (size())
 			// 	pop_back();
 		}

@@ -6,7 +6,7 @@
 #    By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/19 22:03:00 by scarboni          #+#    #+#              #
-#    Updated: 2022/08/25 13:57:11 by scarboni         ###   ########.fr        #
+#    Updated: 2022/09/05 08:37:59 by scarboni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -235,9 +235,9 @@ $(NAME): $(NAME_MINE) $(NAME_STL)
 SEED =42
 
 test_main_42: re
-	$(LEAKS) ./$(NAME_STL) $(SEED)
+	$(LEAKS) ./$(NAME_STL) $(SEED) > $(LAST_RUN_LOGS_FOLDER)/STL_misc.log
 	@printf "\n____.--.--.____.--.--.____.--.--.____.--.--.__Weeeeeeeeee__.--.--.____.--.--.____.--.--.____.--.--.____\n\n"
-	$(LEAKS) ./$(NAME_MINE) $(SEED)
+	$(LEAKS) ./$(NAME_MINE) $(SEED)> $(LAST_RUN_LOGS_FOLDER)/MINE_misc.log
 
 #
 ## -------------------------------- LOGS --------------------------------

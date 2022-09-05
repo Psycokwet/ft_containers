@@ -570,7 +570,22 @@ int main(int argc, char **argv)
 			std::cout << ' ' << *it;
 		std::cout << '\n';
 	}
+	{
+		ft::vector<int> foo(3, 100); // three ints with a value of 100
+		ft::vector<int> bar(5, 200); // five ints with a value of 200
 
+		foo.swap(bar);
+
+		std::cout << "foo contains:";
+		for (unsigned i = 0; i < foo.size(); i++)
+			std::cout << ' ' << foo[i];
+		std::cout << '\n';
+
+		std::cout << "bar contains:";
+		for (unsigned i = 0; i < bar.size(); i++)
+			std::cout << ' ' << bar[i];
+		std::cout << '\n';
+	}
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
 	// 	std::cout << "val[it] : " << *it << std::endl;
 	// for (int i = 0; i < COUNT; i++)

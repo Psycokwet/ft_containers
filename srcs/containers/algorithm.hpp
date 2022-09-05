@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:11:55 by scarboni          #+#    #+#             */
-/*   Updated: 2022/06/24 15:01:16 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 08:14:00 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,20 @@ namespace ft
 			++__first1, ++__first2;
 		}
 		return (*__first1 == *__first2);
+	}
+	// template <typename Something>
+	// void _swap(Something *__x, Something *__y)
+	// {
+	// 	Something *tmp = *__x;
+	// 	*__x = *__y;
+	// 	*__y = *tmp;
+	// }
+	template <typename Something>
+	void _swap(Something &__x, Something &__y)
+	{
+		Something tmp = __x;
+		__x = __y;
+		__y = tmp;
 	}
 }
 #endif

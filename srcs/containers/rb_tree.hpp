@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 10:05:33 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/04 09:32:52 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 08:14:30 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define RB_TREE_HPP
 
 #include "iterator_traits.hpp"
+#include <algorithm.hpp> //swap
 #include "pair.hpp"
 #include "rb_iterators.hpp"
 #include "reverse_iterator.hpp"
@@ -342,29 +343,13 @@ namespace ft
 
 		void swap(_Rb_tree &__x)
 		{
-			allocator_type _Tp_alloc_type_tmp = _Tp_alloc_type;
-			_Compare _comp_tmp = _comp;
-			_Base_ptr _leaf_tmp = _leaf;
-			_Base_ptr _root_tmp = _root;
-			_Base_ptr _beginLeaf_tmp = _beginLeaf;
-			_Base_ptr _endLeaf_tmp = _endLeaf;
-			size_t _node_count_tmp = _node_count;
-
-			_Tp_alloc_type = __x._Tp_alloc_type;
-			_comp = __x._comp;
-			_leaf = __x._leaf;
-			_root = __x._root;
-			_beginLeaf = __x._beginLeaf;
-			_endLeaf = __x._endLeaf;
-			_node_count = __x._node_count;
-
-			__x._Tp_alloc_type = _Tp_alloc_type_tmp;
-			__x._comp = _comp_tmp;
-			__x._leaf = _leaf_tmp;
-			__x._root = _root_tmp;
-			__x._beginLeaf = _beginLeaf_tmp;
-			__x._endLeaf = _endLeaf_tmp;
-			__x._node_count = _node_count_tmp;
+			_swap(_Tp_alloc_type, __x._Tp_alloc_type);
+			_swap(_comp, __x._comp);
+			_swap(_leaf, __x._leaf);
+			_swap(_root, __x._root);
+			_swap(_beginLeaf, __x._beginLeaf);
+			_swap(_endLeaf, __x._endLeaf);
+			_swap(_node_count, __x._node_count);
 		}
 
 		iterator lower_bound(const _Key &__k)
