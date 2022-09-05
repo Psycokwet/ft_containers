@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/05 08:37:42 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 08:48:09 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -620,8 +620,53 @@ namespace ft
 			typedef typename ft::is_integral<_InputIterator>::type _Integral;
 			_insert_dispatch(__position, __first, __last, _Integral());
 		}
+		/*
+		 * Erase elements
+		 * Removes from the vector either a single element (position) or a range
+		 * of elements ([first,last)).
+		 *
+		 * This effectively reduces the container size by the number of elements
+		 * removed, which are destroyed.
+		 *
+		 * Because vectors use an array as their underlying storage, erasing
+		 * elements in positions other than the vector end causes the container
+		 * to relocate all the elements after the segment erased to their new
+		 * positions. This is generally an inefficient operation compared to the
+		 * one performed for the same operation by other kinds of sequence
+		 * containers (such as list or forward_list).
+		 */
 
-		// https://legacy.cplusplus.com/reference/vector/vector/swap/
+		iterator _move_from_end(iterator __first, iterator __last)
+		{
+			while (__last != end())
+				*__first = *__last;
+			_finish -= __last-__first;
+			return __first;
+		}
+		iterator erase(iterator __position)
+		{
+			iterator __position_end = __position;
+			__position_end++;
+			return erase(__position, __position_end);
+		}
+		iterator erase(iterator __first, iterator __last)
+		{
+			return _move_from_end( __first,  __last);
+		}
+		/*
+		 * 	Swap content
+		 * Exchanges the content of the container by the content of x, which
+		 * is another vector object of the same type. Sizes may differ.
+		 *
+		 * After the call to this member function, the elements in this
+		 * container are those which were in x before the call, and the
+		 * elements of x are those which were in this. All iterators,
+		 * references and pointers remain valid for the swapped objects.
+		 *
+		 * Notice that a non-member function exists with the same name,
+		 * swap, overloading that algorithm with an optimization that
+		 * behaves like this member function.
+		 */
 		void swap(vector &__x)
 		{
 			_swap(_Tp_alloc_type, __x._Tp_alloc_type);

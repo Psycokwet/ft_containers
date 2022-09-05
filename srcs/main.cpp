@@ -586,6 +586,24 @@ int main(int argc, char **argv)
 			std::cout << ' ' << bar[i];
 		std::cout << '\n';
 	}
+	{
+		ft::vector<int> myvector;
+
+		// set some values (from 1 to 10)
+		for (int i = 1; i <= 10; i++)
+			myvector.push_back(i);
+
+		// erase the 6th element
+		myvector.erase(myvector.begin() + 5);
+
+		// erase the first 3 elements:
+		myvector.erase(myvector.begin(), myvector.begin() + 3);
+
+		std::cout << "myvector contains:";
+		for (unsigned i = 0; i < myvector.size(); ++i)
+			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
+	}
 	// for (ft::vector<int>::iterator it = vector_int.begin(); it != vector_int.end(); it++)
 	// 	std::cout << "val[it] : " << *it << std::endl;
 	// for (int i = 0; i < COUNT; i++)
