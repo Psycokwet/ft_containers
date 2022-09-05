@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/05 08:48:09 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 09:14:53 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -642,7 +642,7 @@ namespace ft
 				*__first = *__last;
 			_finish -= __last-__first;
 			return __first;
-		}
+		}//https://legacy.cplusplus.com/reference/vector/vector/swap/
 		iterator erase(iterator __position)
 		{
 			iterator __position_end = __position;
