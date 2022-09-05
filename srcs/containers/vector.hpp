@@ -6,7 +6,7 @@
 /*   By: scarboni <scarboni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 15:15:42 by scarboni          #+#    #+#             */
-/*   Updated: 2022/09/05 09:14:53 by scarboni         ###   ########.fr       */
+/*   Updated: 2022/09/05 11:10:59 by scarboni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -639,7 +639,11 @@ namespace ft
 		iterator _move_from_end(iterator __first, iterator __last)
 		{
 			while (__last != end())
+			{
 				*__first = *__last;
+				__first++;
+				__last++;
+			}
 			_finish -= __last-__first;
 			return __first;
 		}//https://legacy.cplusplus.com/reference/vector/vector/swap/
